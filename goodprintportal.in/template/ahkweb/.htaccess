@@ -1,0 +1,65 @@
+RewriteEngine On
+
+# Step 1: Try rewriting to .php if no extension and not a real file/dir
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9/_-]+)$ $1.php [NC]
+
+# Step 2: If under /members/ and file still not found → go to /members/404.php
+RewriteCond %{REQUEST_URI} ^/members/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ /template/ahkweb/404.php [L]
+
+# Step 3: All other missing files → redirect to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ /template/ahkweb/index.php [L]
+
+
+# Security for specific file types
+<Files 403.shtml>
+    Order allow,deny
+    Allow from all
+</Files>
+
+<FilesMatch ".*\.(zip|json)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# BEGIN cPanel-generated php ini directives, do not edit
+# Manual editing of this file may result in unexpected behavior.
+# To make changes to this file, use the cPanel MultiPHP INI Editor (Home >> Software >> MultiPHP INI Editor)
+# For more information, read our documentation (https://go.cpanel.net/EA4ModifyINI)
+# <IfModule php8_module>
+#   php_flag display_errors Off
+#   php_value max_execution_time 30
+#   php_value max_input_time 60
+#   php_value max_input_vars 1000
+#   php_value memory_limit 128M
+#   php_value post_max_size 8M
+#   php_value session.gc_maxlifetime 1440
+#   php_value upload_max_filesize 2M
+#   php_flag zlib.output_compression Off
+# </IfModule>
+# <IfModule lsapi_module>
+#   php_flag display_errors Off
+#   php_value max_execution_time 30
+#   php_value max_input_time 60
+#   php_value max_input_vars 1000
+#   php_value memory_limit 128M
+#   php_value post_max_size 8M
+#   php_value session.gc_maxlifetime 1440
+#   php_value upload_max_filesize 2M
+#   php_flag zlib.output_compression Off
+# </IfModule>
+# END cPanel-generated php ini directives, do not edit
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php74” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php74 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

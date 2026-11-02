@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<path d="M10 40l34-12 40 12 34-12v64l-34 12-40-12-34 12z" fill="#dcfce7" stroke="#86efac" stroke-width="2"/>
+<path d="M44 28v64M84 40v64" stroke="#86efac" stroke-width="2"/>
+<path d="M64 16c-15 0-26 11-26 25 0 19 26 45 26 45s26-26 26-45c0-14-11-25-26-25z" fill="#dc2626"/><circle cx="64" cy="41" r="10" fill="#fff"/>
+<rect x="28" y="98" width="72" height="22" rx="6" fill="#0f172a"/><text x="64" y="114" font-family="Arial,sans-serif" font-size="13" font-weight="900" fill="#fff" text-anchor="middle" letter-spacing="2">PINCODE</text>
+</svg>

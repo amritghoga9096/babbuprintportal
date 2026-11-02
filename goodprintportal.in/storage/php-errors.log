@@ -1,0 +1,8 @@
+[31-Jul-2026 11:30:27 Asia/Kolkata] PHP Parse error:  syntax error, unexpected identifier "fw" in /home/goodprintportal/public_html/template/ahkweb/settings.php on line 665
+[31-Jul-2026 06:01:51 UTC] PHP Deprecated:  Optional parameter $url declared before required parameter $time is implicitly treated as a required parameter in /home/goodprintportal/public_html/includes/config.php on line 222
+[31-Jul-2026 11:31:51 Asia/Kolkata] PHP Parse error:  syntax error, unexpected identifier "fw" in /home/goodprintportal/public_html/template/ahkweb/settings.php on line 665
+[31-Jul-2026 06:06:06 UTC] PHP Deprecated:  Optional parameter $url declared before required parameter $time is implicitly treated as a required parameter in /home/goodprintportal/public_html/includes/config.php on line 222
+[31-Jul-2026 11:36:07 Asia/Kolkata] PHP Parse error:  syntax error, unexpected identifier "fw" in /home/goodprintportal/public_html/template/ahkweb/settings.php on line 665
+[31-Jul-2026 11:36:20 Asia/Kolkata] PHP Parse error:  syntax error, unexpected identifier "fw" in /home/goodprintportal/public_html/template/ahkweb/settings.php on line 665
+[31-Jul-2026 12:10:00 Asia/Kolkata] PHP Parse error:  syntax error, unexpected identifier "in" in /home/goodprintportal/public_html/template/ahkweb/settings.php on line 497
+[31-Jul-2026 12:12:19 Asia/Kolkata] PHP Parse error:  syntax error, unexpected identifier "in" in /home/goodprintportal/public_html/template/ahkweb/settings.php on line 497

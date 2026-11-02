@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<rect x="8" y="26" width="112" height="72" rx="10" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<path d="M8 36a10 10 0 0 1 10-10h92a10 10 0 0 1 10 10v8H8z" fill="#0ea5e9"/><text x="64" y="40" font-family="Arial,sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">ABHA CARD</text>
+<circle cx="30" cy="64" r="10" fill="#bae6fd"/><path d="M16 86c2-8 8-11 14-11s12 3 14 11z" fill="#bae6fd"/>
+<rect x="52" y="56" width="40" height="4" rx="2" fill="#94a3b8"/><rect x="52" y="66" width="30" height="4" rx="2" fill="#cbd5e1"/><rect x="52" y="76" width="34" height="4" rx="2" fill="#cbd5e1"/>
+<circle cx="104" cy="100" r="20" fill="#16a34a"/><path d="M104 90v20M94 100h20" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+</svg>

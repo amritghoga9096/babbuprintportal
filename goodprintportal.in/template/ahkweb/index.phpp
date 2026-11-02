@@ -1,0 +1,818 @@
+<?php 
+include('header.php');
+
+// UTF-8 safe output
+header('Content-Type: text/html; charset=UTF-8');
+
+// ================== NOTIFICATION ==================
+$query = "SELECT * FROM notification WHERE id='1'";
+$res = mysqli_query($ahk_conn, $query);
+$row = mysqli_fetch_assoc($res);
+$message = $row ? $row['message'] : "No message found";
+?>
+
+<!-- SweetAlert -->
+<script>
+window.onload = function() {
+    if (!localStorage.getItem("alertShown")) {
+        Swal.fire({
+            title: '🎉 Welcome to <?php echo ahkweb("webname"); ?>',
+            text: 'Join our Telegram group for instant updates!',
+            icon: 'success',
+            confirmButtonText: 'Join Now'
+        });
+        localStorage.setItem("alertShown", "true");
+    }
+};
+</script>
+
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== Global Theme ===== */
+body {
+  background: #f5f7fa;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===== Typography ===== */
+h1, h2, h3, .service-title, .contact-banner {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  color: #222;
+}
+.metric-value { font-family: 'Inter', sans-serif; font-weight: 700; }
+
+/* ===== Dashboard Cards ===== */
+.dashboard-card {
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 1.2rem;
+  transition: all 0.3s ease;
+  border: 1px solid #eaeaea;
+}
+.dashboard-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+}
+.card-icon {
+  font-size: 34px;
+  color: #007bff;
+}
+.small-title { font-size: 14px; font-weight: 600; opacity: 0.7; }
+.metric-value { font-size: 24px; font-weight: 700; }
+
+/* ===== Banner (updated & polished) ===== */
+.contact-banner {
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: linear-gradient(120deg,#09a30b 0%, #10b31e 60%);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+  min-height: 140px;
+  font-family: 'Nunito', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* subtle overlay texture */
+.contact-banner:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.04), transparent 8%),
+              radial-gradient(circle at 80% 80%, rgba(255,255,255,0.03), transparent 6%);
+  pointer-events: none;
+}
+
+/* left-side text area */
+.contact-banner .banner-text {
+  z-index: 2;
+  flex: 1 1 auto;
+  text-align: left;
+  min-width: 0;
+}
+.contact-banner .banner-title {
+  font-weight: 800;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+/* subtitle */
+.contact-banner .banner-sub {
+  font-size: 14px;
+  line-height: 1.4;
+  opacity: 0.98;
+  margin-bottom: 8px;
+}
+
+/* note pill */
+.contact-banner .note {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.08);
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+/* whatsapp row */
+.contact-banner .wa-row {
+  margin-top: 12px;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* whatsapp link (icon + number) */
+.contact-banner .wa-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.06);
+  padding: 6px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.contact-banner .wa-link:focus,
+.contact-banner .wa-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+  background: rgba(0,0,0,0.08);
+  outline: none;
+}
+
+/* whatsapp icon */
+.contact-banner .wa-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* right-side image container */
+.contact-banner .banner-image {
+  flex: 0 0 170px;
+  width: 170px;
+  height: 120px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.04);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+.contact-banner .banner-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* responsive: hide image on small screens and center text */
+@media (max-width: 768px) {
+  .contact-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 14px;
+    min-height: auto;
+  }
+  .contact-banner .banner-text { width: 100%; }
+  .contact-banner .banner-image { display: none; }
+  .contact-banner .banner-title { justify-content: center; }
+  .contact-banner .wa-row { justify-content: center; }
+}
+
+
+/* ===== Services ===== */
+.services-section {
+  padding: 50px 20px;
+  width: 100%;          /* Full width */
+  max-width: 100%;
+  box-sizing: border-box;
+  background: #f9fafe;
+}
+.services-section h2 {
+  font-weight: 800;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
+.services-section h3 {
+  font-weight: 600;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Custom 5-column grid */
+.col-custom-5 {
+  flex: 0 0 20%;
+  max-width: 20%;
+}
+@media (max-width: 1200px) {
+  .col-custom-5 { flex: 0 0 25%; max-width: 25%; } /* 4 per row */
+}
+@media (max-width: 992px) {
+  .col-custom-5 { flex: 0 0 33.33%; max-width: 33.33%; } /* 3 per row */
+}
+@media (max-width: 768px) {
+  .col-custom-5 { flex: 0 0 50%; max-width: 50%; } /* 2 per row */
+}
+@media (max-width: 576px) {
+  .col-custom-5 { flex: 0 0 100%; max-width: 100%; } /* 1 per row */
+}
+
+/* ===== Service Card ===== */
+.service-card {
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  padding: 28px 20px;
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+.service-card:hover {
+  transform: translateY(-8px);
+  background: linear-gradient(#82c48c, #63c271, #3dbf50);
+  color: #fff;
+}
+.service-card:hover .service-title { color: #fff; }
+.service-card:hover .price-badge { background: #fff; color: #2575fc; }
+
+.service-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
+  background: #f0f4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.service-icon img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+.service-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+}
+.price-badge {
+  font-size: 0.8rem;
+  background: #2575fc;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.badge-new {
+  background: #ff4b2b;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 5px 10px;
+  border-radius: 10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.wa-timing.custom-color {
+  color: #fae102; /* pinkish red */
+  font-size: 14px;
+  font-weight: 500;
+}
+
+</style>
+ 
+<!-- ================== DASHBOARD ================== -->
+<div class="page-wrapper">
+  <div class="page-content">
+    <div class="row g-3 row-cols-1 row-cols-md-2 row-cols-lg-4">
+<?php
+if (checkAdmin($udata['type']) == true) {
+
+    /* ================= CURRENT VERSION ================= */
+
+    $versionFile = $_SERVER['DOCUMENT_ROOT'] . '/update/current_version.txt';
+
+    if (!file_exists($versionFile)) {
+        file_put_contents($versionFile, '1.0.0');
+    }
+
+    $currentVersion = trim(file_get_contents($versionFile));
+
+    /* ================= FETCH UPDATE INFO ================= */
+
+    $updateAvailable = false;
+    $latestVersion   = null;
+    $updateInfo      = [];
+
+    $updateInfoUrl = "https://" . htmlspecialchars($flexsecureapiurl ?? 'goodprintportal.in') ."/update/update_info.json";
+
+    $ch = curl_init($updateInfoUrl);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => true
+    ]);
+
+    $updateJson = curl_exec($ch);
+    curl_close($ch);
+
+    $updateInfo = json_decode($updateJson, true);
+
+    if (
+        !empty($updateInfo['version']) &&
+        preg_match('/^\d+\.\d+\.\d+$/', $updateInfo['version'])
+    ) {
+        $latestVersion = trim($updateInfo['version']);
+
+        if ($latestVersion !== $currentVersion) {
+            $updateAvailable = true;
+        }
+    }
+
+    /* ================= API BALANCE (PARIPRINT.IN) ================= */
+
+$buttonText = "Check Balance";
+
+if (isset($_POST['check_balance'])) {
+    global $pariprint_api_key;
+
+    $apiBase = (function_exists('get_central_api_domain') ? rtrim(get_central_api_domain(), '/') : 'https://pariprint.in');
+    $apiUrl = $apiBase . "/api-balance.php?" . http_build_query([
+        'api_key' => $pariprint_api_key
+    ]);
+
+    $ch = curl_init($apiUrl);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => true,
+        CURLOPT_USERAGENT => 'goodprintportal.in-balance-check'
+    ]);
+
+    $responseApi = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        $buttonText = "Net Error";
+    } else {
+        $response = json_decode($responseApi, true);
+
+        if (isset($response['status']) && $response['status'] === "success" && isset($response['balance'])) {
+            $balance = (float) $response['balance'];
+            $buttonText = "₹ " . htmlspecialchars(number_format($balance, 2));
+        } elseif (isset($response['message'])) {
+            $msg = $response['message'];
+            $buttonText = strlen($msg) < 25 ? htmlspecialchars($msg) : "Error";
+        } else {
+            $buttonText = "Error";
+        }
+    }
+
+    curl_close($ch);
+}
+?>
+
+    <!-- Total Users -->
+    <div class="col-lg-3 col-md-6 d-flex">
+      <div class="dashboard-card w-100">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="small-title">Total Users</div>
+            <div class="metric-value"><?php echo (int)($allusersforadmin ?? 0); ?></div>
+          </div>
+          <i class="bx bx-user card-icon"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Balance -->
+    <div class="col-lg-3 col-md-6 d-flex">
+      <div class="dashboard-card w-100">
+        <form method="POST">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="small-title">API Balance</div>
+            <i class="bx bx-wallet card-icon"></i>
+          </div>
+          <button type="submit" name="check_balance" class="btn btn-primary btn-sm w-100">
+            <?php echo $buttonText; ?>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- SYSTEM UPDATE -->
+<div class="col-lg-3 col-md-6 d-flex">
+  <div class="dashboard-card w-100">
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="small-title">System Update</div>
+      <i class="bx bx-cloud-download card-icon"></i>
+    </div>
+
+<?php if ($updateAvailable) { ?>
+    <!-- UPDATE AVAILABLE -->
+    <div class="alert alert-warning text-center p-2">
+        <strong>Update Available</strong><br>
+        <small>
+            Current: v<?php echo $currentVersion; ?><br>
+            Latest: v<?php echo $latestVersion; ?>
+        </small>
+
+        <!-- Directly call applyUpdate() -->
+        <button class="btn btn-danger btn-sm w-100 mt-2"
+                onclick="applyUpdate()">
+            Update Now
+        </button>
+    </div>
+<?php } else { ?>
+    <!-- ALREADY UPDATED -->
+    <div class="alert alert-success text-center p-2">
+        ✅ Update Successful<br>
+        <small>Version: v<?php echo $currentVersion; ?></small>
+    </div>
+<?php } ?>
+
+  </div>
+</div>
+
+<?php } ?>
+  </div>
+</div>
+
+<script>
+function applyUpdate() {
+    if (!confirm("Are you sure you want to apply the update?")) return;
+
+    const updateUrl = "<?php echo isset($updateInfo['update_url']) ? $updateInfo['update_url'] : ''; ?>";
+    const version   = "<?php echo isset($updateInfo['version']) ? $updateInfo['version'] : ''; ?>";
+
+    if (!updateUrl || !version) {
+        alert("❌ Update information not available.");
+        return;
+    }
+
+    fetch('../update/update.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            update_url: updateUrl,
+            version: version
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if (data.success) location.reload();
+    })
+    .catch(err => {
+        alert("❌ Update Failed");
+        console.error(err);
+    });
+}
+</script>
+
+
+
+
+
+
+
+<div class="container-fluid">
+  <div class="contact-banner shadow-sm d-flex justify-content-between align-items-center flex-wrap" role="region" aria-label="Customer Care banner">
+
+    <!-- Left Content -->
+    <div class="banner-text" style="flex: 1; min-width: 280px;">
+      <div class="banner-title" aria-hidden="false">
+        <i class="bx bx-phone-call banner-icon" style="font-size: 20px; opacity: 0.95;"></i>
+        Customer Care
+      </div>
+
+      <div class="banner-sub mt-2">
+        Hello <strong><?php echo htmlspecialchars($displayName ?? 'User'); ?></strong>,
+        please use our services on <strong>Desktop / Laptop</strong> with
+        <strong>Chrome</strong> or <strong>Mozilla</strong> —
+        <strong><?php echo htmlspecialchars($webname ?? ($webdata['webname'] ?? 'Good Print Portal')); ?></strong>
+      </div>
+
+      <span class="note d-block mt-2">⚠️ Please don’t try double and resubmit call</span>
+
+      <div class="wa-row mt-3" aria-hidden="false">
+        <a
+          class="wa-link d-flex align-items-center"
+          href="https://wa.me/<?php echo ahkweb('phone');  ?>"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on WhatsApp with <?php echo ahkweb('phone');  ?>"
+          title="Chat on WhatsApp"
+        >
+          <img class="wa-icon me-2" src="/assets/img/whatsapp_icon.png" alt="WhatsApp icon">
+          <div>
+            <div class="wa-number fw-bold text-white"><?php echo ahkweb('phone');  ?></div>
+           <div class="wa-timing custom-color">
+  🕒 Responses sent during working hours only.
+</div>
+
+
+          </div>
+        </a>
+<a
+  class="wa-link d-flex align-items-center"
+  href="https://t.me/<?php echo ahkweb('payu_mkey'); ?>"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Chat on Telegram with @<?php echo ahkweb('payu_mkey'); ?>"
+  title="Chat on Telegram"
+>
+  <i class="fab fa-telegram-plane me-2" style="font-size: 22px; color: #8820f7;"></i>
+  <div>
+    <div class="wa-number fw-bold text-white">
+      @<?php echo ahkweb('payu_mkey'); ?>
+    </div>
+    <div class="wa-timing custom-color">
+      🕒 Telegram replies sent during working hours.
+    </div>
+  </div>
+</a>
+
+          <a
+          class="wa-link d-flex align-items-center"
+          href="<?php echo ahkweb('salt');   ?>"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on Telegram with Member Group"
+          title="Chat on Members"
+        >
+         <i class="fas fa-users me-2" style="font-size: 22px; color: #ffbb00;"></i>
+          <div>
+            <div class="wa-number fw-bold text-white">Member Group</div>
+           <div class="wa-timing custom-color">
+  🕒 Join Our Member Group
+</div>
+
+
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Image -->
+    <div class="banner-image ms-auto" style="min-width: 120px;" aria-hidden="true">
+      <img src="/assets/img/care.jpg" alt="Customer care image" loading="lazy" class="rounded-circle banner-care-img">
+    </div>
+  </div>
+</div>
+
+<!-- ================== SERVICES ================== -->
+<?php
+$services = [
+    // [
+    //     "name" => "Add Balance Instant",
+    //     "link" => "wallet",
+    //     "image" => "../admin/uploads/Services/wallet.png",
+    //     "price_key" => "",
+    //     "badge" => "Instant"
+    // ],
+    // [
+    //     "name" => "Mobile/DTH Recharge",
+    //     "link" => "mobileRecharge",
+    //     "image" => "../admin/uploads/Services/recharge2.png",
+    //     "price_key" => "",
+    //     "badge" => "Instant"
+    // ],
+    [
+        "name" => "Samagra Portal Services",
+        "link" => "Samagra_card_service",
+        "image" => "https://goodprintportal.in/smg.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    [
+        "name" => "TRICK Buy Services",
+        "link" => "trick_buy_card",
+        "image" => "https://goodprintportal.in/trick.png",
+        "price_key" => "",
+        "badge" => "New"
+    ],
+
+    [
+        "name" => "ElectriBill Services",
+        "link" => "ElectriBill_card_service",
+        "image" => "../admin/uploads/Services/electricBill.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    
+    [
+        "name" => "Aadhaar Services",
+        "link" => "Uid_Flx-Services",
+        "image" => "../admin/uploads/Services/aadhar.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+
+     [
+        "name" => "Pan Services",
+        "link" => "pan_card_service",
+        "image" => "../admin/uploads/Services/panservices.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    
+    [
+        "name" => "Vahicle Services",
+        "link" => "vahicle_card_service",
+        "image" => "../admin/uploads/Services/Yamaha-Bike-PNG.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    
+    
+    [
+        "name" => "Voter Services",
+        "link" => "Voter_card_service",
+        "image" => "../admin/uploads/Services/voter.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    
+        [
+        "name" => "Ration Services",
+        "link" => "Ration_card_service",
+        "image" => "../admin/uploads/Services/ration1.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    [
+        "name" => "Farmer Services",
+        "link" => "FarmerStackService",
+        "image" => "../admin/uploads/Services/farmerLogo.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    
+    //  [
+    //     "name" => "JanAdhaar Services",
+    //     "link" => "JanAdhaarServices",
+    //     "image" => "../admin/uploads/Services/janaadhar.png",
+    //     "price_key" => "",
+    //     "badge" => ""
+    // ],
+    
+     
+    
+     [
+        "name" => "Passbook Services",
+        "link" => "Passbook_card_service",
+        "image" => "../admin/uploads/Services/1771198.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    
+     [
+        "name" => "Other Services",
+        "link" => "Other_card_service",
+        "image" => "../admin/uploads/Services/dlpng.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    
+    [
+        "name" => "Bihar RTPS Services",
+        "link" => "bihar_rtps_all",
+        "image" => "../admin/uploads/Services/rtps.png",
+        "price_key" => "",
+        "badge" => ""
+    ],
+    // [
+    //     "name" => "FamilyID Services",
+    //     "link" => "HrFaimlyCard",
+    //     "image" => "../admin/uploads/Services/familyidLogo.png",
+    //     "price_key" => "",
+    //     "badge" => ""
+    // ],
+    
+    //  [
+    //     "name" => "Aadhaar Seeding",
+    //     "link" => "npci_status_check",
+    //     "image" => "../admin/uploads/Services/npci.png",
+    //     "price_key" => "",
+    //     "badge" => ""
+    // ],
+
+];
+
+// Filter: Hide TRICK Buy Services card from non-admin users when service is disabled in settings
+$_trickEnabled = isset($webdata['trick_service_enabled']) ? (int)$webdata['trick_service_enabled'] : 1;
+$_trickIsAdmin = false;
+if (!empty($udata)) {
+    $_trickRole = strtolower(trim((string)($udata['role'] ?? $udata['type'] ?? '')));
+    $_trickIsAdmin = ($_trickRole === 'admin' || $_trickRole === 'super admin' || $_trickRole === 'super_admin' || !empty($udata['is_admin']));
+}
+if ($_trickEnabled !== 1 && !$_trickIsAdmin) {
+    $services = array_values(array_filter($services, function($svc) {
+        return !isset($svc['link']) || strpos((string)$svc['link'], 'trick_buy') !== 0;
+    }));
+}
+unset($_trickEnabled, $_trickIsAdmin, $_trickRole);
+
+// Prices
+$prices = [];
+$res = mysqli_query($ahk_conn, "SELECT service_name, price FROM pricing");
+while ($row = mysqli_fetch_assoc($res)) {
+    $prices[$row['service_name']] = $row['price'];
+}
+?>
+<!-- Services (Full Width) -->
+<div class="services-section">
+  <div class="text-center mb-4">
+    <h2>⚡ Explore 40+ Services</h2>
+    <h3>✅ Reliable | 🔒 Secure | 🚀 Fast</h3>
+  </div>
+
+  <div class="row g-4 justify-content-center">
+    <?php foreach ($services as $service): ?>
+      <div class="col-custom-5 d-flex">
+        <a href="<?php echo $service['link']; ?>" 
+           <?php echo (strpos($service['link'], 'http') === 0) ? 'target="_blank"' : ''; ?> 
+           class="text-decoration-none w-100">
+          <div class="service-card w-100">
+
+            <!-- Badge -->
+            <?php if (!empty($service['badge'])): ?>
+              <span class="badge-new"><?php echo $service['badge']; ?></span>
+            <?php endif; ?>
+
+            <!-- Price -->
+            <?php if (!empty($prices[$service['price_key']])): ?>
+              <span class="price-badge">
+                ₹<?php echo htmlspecialchars($prices[$service['price_key']]); ?>
+              </span>
+            <?php endif; ?>
+
+            <!-- Icon -->
+            <div class="service-icon">
+              <img src="<?php echo $service['image']; ?>" alt="icon">
+            </div>
+
+            <!-- Title -->
+            <div class="service-title"><?php echo $service['name']; ?></div>
+          </div>
+        </a>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+
+
+<?php include('../admin/footers.php'); ?>
+
+
+
+
+
+
+	
+<!-- Scripts -->
+<script src="../template/ahkweb/assets/js/bootstrap.bundle.min.js"></script>
+<script src="../template/ahkweb/assets/js/jquery.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/simplebar/js/simplebar.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+<script src="../template/ahkweb/assets/plugins/chartjs/chart.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js"></script>
+<script src="../template/ahkweb/assets/js/app.js"></script>
+</body>
+</html>

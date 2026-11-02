@@ -1,0 +1,1006 @@
+<?php 
+    include('header.php');
+
+define('GPP_VPDF_FEE', 50);
+
+function _gpp_col_exists($ahk_conn, string $table, string $col): bool {
+    static $cache = [];
+    $key = strtolower($table.'.'.$col);
+    if (isset($cache[$key])) return $cache[$key];
+    $q = @mysqli_query($ahk_conn, "SHOW COLUMNS FROM `".mysqli_real_escape_string($ahk_conn, $table)."` LIKE '".mysqli_real_escape_string($ahk_conn, $col)."'");
+    $ok = $q && mysqli_num_rows($q) > 0;
+    if ($q) mysqli_free_result($q);
+    $cache[$key] = $ok;
+    return $ok;
+}
+
+function _gpp_ensure_voter_schema($ahk_conn): void {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    $addCol = static function(string $sql) use ($ahk_conn): void { @mysqli_query($ahk_conn, $sql); };
+    if (!_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refunded'))       $addCol("ALTER TABLE voter_pdf_list ADD COLUMN refunded TINYINT(1) NOT NULL DEFAULT 0");
+    if (!_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refunded_at'))   $addCol("ALTER TABLE voter_pdf_list ADD COLUMN refunded_at DATETIME NULL DEFAULT NULL");
+    if (!_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'gpp_status'))    $addCol("ALTER TABLE voter_pdf_list ADD COLUMN gpp_status VARCHAR(20) NOT NULL DEFAULT 'pending'");
+    if (!_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refund_amount')) $addCol("ALTER TABLE voter_pdf_list ADD COLUMN refund_amount DECIMAL(10,2) NOT NULL DEFAULT 0");
+}
+_gpp_ensure_voter_schema($ahk_conn);
+
+function _gpp_norm_phone(string $p): string {
+    $digits = preg_replace('/[^0-9]/', '', $p);
+    if (strlen($digits) >= 12) $digits = substr($digits, -10);
+    elseif (strlen($digits) === 11 && $digits[0] === '0') $digits = substr($digits, 1);
+    return $digits;
+}
+
+function _gpp_apply_refund_vpdf($ahk_conn, string $userPhone, int $vpdfListId, int $fee = GPP_VPDF_FEE): array {
+    $debug = [];
+    if ($fee <= 0) return ['ok' => false, 'message' => 'Fee amount invalid.', 'refund_amount' => 0, 'debug' => $debug];
+    $phoneRaw = trim($userPhone);
+    $phoneNorm = _gpp_norm_phone($phoneRaw);
+    $phoneEsc = mysqli_real_escape_string($ahk_conn, $phoneRaw);
+    $id = (int)$vpdfListId;
+    $debug['input_phone_raw'] = $phoneRaw;
+    $debug['input_phone_norm_10d'] = $phoneNorm;
+    $debug['fee'] = $fee;
+    $debug['list_id'] = $id;
+
+    $curQ = mysqli_query($ahk_conn, "SELECT * FROM voter_pdf_list WHERE id=$id LIMIT 1");
+    $debug['q_list_err'] = $curQ ? null : mysqli_error($ahk_conn);
+    if (!$curQ || !mysqli_num_rows($curQ)) {
+        $debug['q_list_num_rows'] = $curQ ? mysqli_num_rows($curQ) : 0;
+        return ['ok' => false, 'message' => 'Record not found (id='.$id.').', 'refund_amount' => 0, 'debug' => $debug];
+    }
+    $row = mysqli_fetch_assoc($curQ);
+    mysqli_free_result($curQ);
+    $rowUserIdNorm = _gpp_norm_phone((string)($row['userid'] ?? ''));
+    $debug['stored_userid_raw'] = (string)($row['userid'] ?? '');
+    $debug['stored_userid_norm_10d'] = $rowUserIdNorm;
+
+    $phoneMatch = ($phoneNorm !== '' && $rowUserIdNorm !== '' && $phoneNorm === $rowUserIdNorm);
+    if (!$phoneMatch) {
+        $debug['phone_match'] = false;
+        return ['ok' => false, 'message' => 'Security: voter_pdf_list userid ('.$rowUserIdNorm.') does not belong to session user ('.$phoneNorm.').', 'refund_amount' => 0, 'debug' => $debug];
+    }
+    $debug['phone_match'] = true;
+
+    $alreadyRefunded = false;
+    if (_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refunded')) {
+        $alreadyRefunded = (int)($row['refunded'] ?? 0) === 1;
+    }
+    if ($alreadyRefunded) {
+        $refAmt = _gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refund_amount') ? (float)($row['refund_amount'] ?? 0) : (float)$fee;
+        return ['ok' => true, 'already' => true, 'message' => 'Already refunded earlier.', 'refund_amount' => $refAmt, 'debug' => $debug];
+    }
+
+    $userQ = mysqli_query($ahk_conn, "SELECT id, phone, balance FROM users WHERE phone='$phoneEsc' LIMIT 1");
+    $debug['q_user_err'] = $userQ ? null : mysqli_error($ahk_conn);
+    if (!$userQ || !mysqli_num_rows($userQ)) {
+        $debug['q_user_num_rows'] = $userQ ? mysqli_num_rows($userQ) : 0;
+        $userAlt = '';
+        if ($phoneNorm !== '' && $phoneNorm !== $phoneRaw) {
+            $nEsc = mysqli_real_escape_string($ahk_conn, $phoneNorm);
+            $userQ2 = mysqli_query($ahk_conn, "SELECT id, phone, balance FROM users WHERE phone LIKE '%$nEsc' LIMIT 1");
+            if ($userQ2 && mysqli_num_rows($userQ2)) {
+                $userAlt = 'FOUND via norm';
+                $uAlt = mysqli_fetch_assoc($userQ2);
+                $phoneEsc = mysqli_real_escape_string($ahk_conn, (string)$uAlt['phone']);
+                $u = $uAlt;
+                mysqli_free_result($userQ2);
+            } elseif ($userQ2) {
+                mysqli_free_result($userQ2);
+            }
+        }
+        if ($userAlt === '') {
+            return ['ok' => false, 'message' => 'User not found (phone='.$phoneEsc.').', 'refund_amount' => 0, 'debug' => $debug];
+        }
+    } else {
+        $u = mysqli_fetch_assoc($userQ);
+        mysqli_free_result($userQ);
+    }
+    $oldBalance = (float)($u['balance'] ?? 0);
+    $debug['user_phone_used'] = (string)($u['phone'] ?? $phoneEsc);
+    $debug['old_balance'] = $oldBalance;
+    $newBalance = $oldBalance + $fee;
+    $debug['expected_new_balance'] = $newBalance;
+
+    $upd = mysqli_query($ahk_conn, "UPDATE users SET balance = balance + $fee WHERE phone='$phoneEsc' LIMIT 1");
+    $debug['wallet_update_ok'] = (bool)$upd;
+    $debug['wallet_update_affected'] = $upd ? (int)mysqli_affected_rows($ahk_conn) : -1;
+    $debug['wallet_update_err'] = $upd ? null : mysqli_error($ahk_conn);
+    if (!$upd || $debug['wallet_update_affected'] < 1) {
+        return ['ok' => false, 'message' => 'Wallet balance UPDATE failed. DB error: '.($debug['wallet_update_err'] ?: 'no rows changed ('.(int)$debug['wallet_update_affected'].')'), 'refund_amount' => 0, 'debug' => $debug];
+    }
+
+    $confirmQ = mysqli_query($ahk_conn, "SELECT balance FROM users WHERE phone='$phoneEsc' LIMIT 1");
+    if ($confirmQ && mysqli_num_rows($confirmQ)) {
+        $c = mysqli_fetch_assoc($confirmQ);
+        $debug['confirmed_new_balance'] = (float)($c['balance'] ?? 0);
+        mysqli_free_result($confirmQ);
+    }
+
+    $epic = isset($row['epic_no']) ? mysqli_real_escape_string($ahk_conn, (string)$row['epic_no']) : '';
+    $purpose = mysqli_real_escape_string($ahk_conn, trim($epic . ' Voter PDF Refund #'.$id));
+    $historyPhone = mysqli_real_escape_string($ahk_conn, (string)($u['phone'] ?? $phoneRaw));
+    $ins = mysqli_query($ahk_conn, "INSERT INTO wallethistory(userid, amount, balance, purpose, status, type) VALUES ('$historyPhone',$fee,$newBalance,'$purpose','1','Credit')");
+    $debug['wh_insert_ok'] = (bool)$ins;
+    $debug['wh_insert_id'] = $ins ? (int)mysqli_insert_id($ahk_conn) : 0;
+    $debug['wh_insert_err'] = $ins ? null : mysqli_error($ahk_conn);
+    if (!$ins || $debug['wh_insert_id'] < 1) {
+        return ['ok' => false, 'message' => 'WalletHistory INSERT failed. DB error: '.($debug['wh_insert_err'] ?: 'no insert id.'), 'refund_amount' => 0, 'debug' => $debug];
+    }
+
+    $updates = [];
+    if (_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refunded'))       $updates[] = "refunded = 1";
+    if (_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refunded_at'))   $updates[] = "refunded_at = NOW()";
+    if (_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refund_amount')) $updates[] = "refund_amount = $fee";
+    if (_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'gpp_status'))    $updates[] = "gpp_status = 'failed_refunded'";
+    $debug['list_updates_cols'] = $updates;
+    $listUpdOk = true;
+    if (!empty($updates)) {
+        $lu = mysqli_query($ahk_conn, "UPDATE voter_pdf_list SET ".implode(', ', $updates)." WHERE id=$id LIMIT 1");
+        $debug['list_update_ok'] = (bool)$lu;
+        $debug['list_update_affected'] = $lu ? (int)mysqli_affected_rows($ahk_conn) : -1;
+        $debug['list_update_err'] = $lu ? null : mysqli_error($ahk_conn);
+        $listUpdOk = (bool)$lu && $debug['list_update_affected'] >= 0;
+    }
+
+    return [
+        'ok' => true,
+        'already' => false,
+        'message' => 'Wallet refund successful (balance + Rs '.$fee.', wh_id='.(int)$debug['wh_insert_id'].', list_flag='.($listUpdOk ? 'OK' : 'WARN').').',
+        'refund_amount' => $fee,
+        'old_balance' => $oldBalance,
+        'new_balance' => $newBalance,
+        'debug' => $debug,
+    ];
+}
+
+function _gpp_curl_status_hit(string $url, string $method = 'GET', array $body = []): array {
+    if (!function_exists('curl_init')) return ['response' => false, 'http_code' => 0, 'curl_error' => 'cURL not available', 'content_type' => ''];
+    $ch = curl_init();
+    $realUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36';
+    $headers = [
+        'Accept: application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language: en-US,en;q=0.9,hi;q=0.8',
+        'Cache-Control: max-age=0',
+        'Sec-Ch-Ua: "Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
+        'Sec-Ch-Ua-Mobile: ?0',
+        'Sec-Ch-Ua-Platform: "Windows"',
+        'Sec-Fetch-Dest: empty',
+        'Sec-Fetch-Mode: cors',
+        'Sec-Fetch-Site: cross-site',
+        'Upgrade-Insecure-Requests: 1',
+        'Priority: u=0, i',
+    ];
+    if (strtoupper($method) === 'POST') $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+    $opts = [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "gzip, deflate, br",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 25,
+        CURLOPT_CONNECTTIMEOUT => 12,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_CUSTOMREQUEST => strtoupper($method),
+        CURLOPT_USERAGENT => $realUA,
+        CURLOPT_HTTPHEADER => $headers,
+        CURLOPT_FAILONERROR => false,
+        CURLOPT_REFERER => 'https://pariprint.in/',
+        CURLOPT_AUTOREFERER => true,
+    ];
+    if (strtoupper($method) === 'POST' && !empty($body)) {
+        $opts[CURLOPT_POST] = true;
+        $opts[CURLOPT_POSTFIELDS] = http_build_query($body);
+    }
+    curl_setopt_array($ch, $opts);
+    $response = curl_exec($ch);
+    $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+    $contentType = (string) curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+    curl_close($ch);
+    return [
+        'response'   => $response,
+        'http_code'  => $httpCode,
+        'curl_error' => $curlError,
+        'content_type' => $contentType,
+    ];
+}
+
+function fetch_pariprint_voter_status_GPP($requestId) {
+    global $pariprint_api_key;
+    if ($requestId === '' || !preg_match('/^[0-9]+$/', $requestId)) return ['_empty' => true];
+    $internalSecret = 'gpp-pp-vpdf-2026-x9k2';
+    $urls = [
+        'slug'            => ['method' => 'POST', 'url' => 'https://pariprint.in/api-proxy.php',                  'body' => ['slug' => 'instant-voter-pdf', 'order_id' => $requestId, 'api_key' => $pariprint_api_key]],
+        'alias_slug'      => ['method' => 'POST', 'url' => 'https://pariprint.in/api-proxy.php',                  'body' => ['slug' => 'instant-number-link-with-voter', 'order_id' => $requestId, 'api_key' => $pariprint_api_key]],
+        'standalone_json' => ['method' => 'POST', 'url' => 'https://pariprint.in/voter-pdf-api-download.php',    'body' => ['order_id' => $requestId, 'api_key' => $pariprint_api_key, 'format' => 'json']],
+        'internal'        => ['method' => 'POST', 'url' => 'https://pariprint.in/voter-pdf-api-internal.php',     'body' => ['action' => 'status', 'order_id' => $requestId, 'api_key' => $pariprint_api_key, 'secret' => $internalSecret]],
+        'standalone_get'  => ['method' => 'GET',  'url' => 'https://pariprint.in/voter-pdf-api-download.php?order_id=' . urlencode($requestId) . '&api_key=' . urlencode($pariprint_api_key) . '&format=json'],
+    ];
+
+    $combined = [];
+    $lastHttp = 0; $lastCurl = ''; $lastRaw = ''; $attempts = [];
+    foreach ($urls as $label => $spec) {
+        $method = $spec['method'] ?? 'GET';
+        $body = $spec['body'] ?? [];
+        $r = _gpp_curl_status_hit($spec['url'], $method, $body);
+        $resp = $r['response'];
+        $code = (int)$r['http_code'];
+        $err = (string)$r['curl_error'];
+        $attempts[] = ['label' => $label, 'method' => $method, 'http_code' => $code];
+        $lastHttp = $code; $lastCurl = $err; $lastRaw = is_string($resp) ? $resp : '';
+        if ($resp !== false && $code >= 200 && $code < 400) {
+            $dec = null;
+            if (is_string($resp) && trim($resp) !== '') {
+                $t = trim($resp);
+                if ($t !== '' && ($t[0] === '{' || $t[0] === '[')) {
+                    $dec = json_decode($t, true);
+                } elseif (preg_match('/\{[\s\S]*\}/', $t, $match)) {
+                    $cand = json_decode($match[0], true);
+                    if (is_array($cand)) $dec = $cand;
+                }
+            }
+            if (is_array($dec)) {
+                $dec['_http_code'] = $code;
+                $dec['_url_used'] = $label;
+                $dec['_status_check_url'] = $spec['url'];
+                $dec['_curl_error'] = $err;
+                $dec['_attempts'] = $attempts;
+                if ($label === 'standalone_json' || $label === 'standalone_get' || $label === 'internal') {
+                    $fb = 'https://pariprint.in/voter-pdf-api-download.php?order_id=' . urlencode($requestId) . '&api_key=' . urlencode($GLOBALS['pariprint_api_key']);
+                    if (empty($dec['direct_download_url'])) $dec['direct_download_url'] = $fb;
+                    if (empty($dec['simple_download_url'])) $dec['simple_download_url'] = $fb;
+                    if (empty($dec['download_url']) && !empty($dec['direct_download_url'])) $dec['download_url'] = $dec['direct_download_url'];
+                }
+                $combined = $dec;
+                break;
+            }
+        }
+    }
+    if (empty($combined)) {
+        $out = ['_http_code' => $lastHttp, '_curl_error' => $lastCurl, '_attempts' => $attempts];
+        if ($lastRaw !== '') $out['_raw_response'] = strlen($lastRaw) > 800 ? substr($lastRaw, 0, 800) . '... [truncated]' : $lastRaw;
+        return $out;
+    }
+    return $combined;
+}
+
+function detect_request_status_GPP(array $proxyStatus): string {
+    $fromName = strtolower(trim((string)($proxyStatus['status_name'] ?? $proxyStatus['request_status'] ?? $proxyStatus['service_status'] ?? '')));
+    if ($fromName === 'success' || $fromName === 'failed' || $fromName === 'pending') return $fromName;
+    if (!empty($proxyStatus['pdf_ready']) || !empty($proxyStatus['ready']) || !empty($proxyStatus['download_available'])) return 'success';
+    if (!empty($proxyStatus['is_failed']) || !empty($proxyStatus['failed_flag'])) return 'failed';
+    if (!empty($proxyStatus['is_pending']) || !empty($proxyStatus['pending'])) return 'pending';
+    if (!empty($proxyStatus['refunded'])) return 'failed';
+    $statusRaw = $proxyStatus['status'] ?? null;
+    if (is_bool($statusRaw)) {
+        if ($statusRaw === true) return (!empty($proxyStatus['pdf_ready']) || !empty($proxyStatus['download_url']) || !empty($proxyStatus['file_url']) || !empty($proxyStatus['direct_download_url'])) ? 'success' : 'pending';
+        $msg = strtolower(trim((string)($proxyStatus['message'] ?? '')));
+        if (str_contains($msg, 'refund') || str_contains($msg, 'fail')) return 'failed';
+        if (str_contains($msg, 'pending') || str_contains($msg, 'upload') || str_contains($msg, 'waiting')) return 'pending';
+        return 'failed';
+    }
+    if (is_string($statusRaw)) {
+        $low = strtolower(trim($statusRaw));
+        if ($low === 'success' || $low === 'true' || $low === '1') return 'success';
+        if ($low === 'failed' || $low === 'fail' || $low === 'error' || $low === 'false' || $low === '0') return 'failed';
+        if ($low === 'pending' || $low === 'processing' || $low === 'waiting' || $low === 'queued') return 'pending';
+    }
+    return 'pending';
+}
+
+function pick_download_url_GPP(array $proxyStatus, string $fallbackApiKey = '', string $fallbackOrderId = ''): string {
+    $candidates = ['download_url','downloadUrl','download_link','download','pdf_url','pdfUrl','pdf_link','pdf','file_url','fileUrl','file_link','file','result_url','resultUrl','result_link','output_url','pdf_download_url','pdf_download','file_download_url','download_direct','file_download_direct','pdf_download_direct','direct_download_url','simple_download_url','download_no_slug_url'];
+    foreach ($candidates as $key) {
+        if (!empty($proxyStatus[$key]) && is_string($proxyStatus[$key]) && trim($proxyStatus[$key]) !== '') {
+            $v = trim($proxyStatus[$key]);
+            if (stripos($v, 'http') === 0) return $v;
+        }
+    }
+    foreach ($candidates as $key) {
+        if (!empty($proxyStatus[$key]) && is_string($proxyStatus[$key]) && trim($proxyStatus[$key]) !== '') return trim($proxyStatus[$key]);
+    }
+    if ($fallbackApiKey !== '' && $fallbackOrderId !== '') {
+        return 'https://pariprint.in/voter-pdf-api-download.php?order_id=' . urlencode($fallbackOrderId) . '&api_key=' . urlencode($fallbackApiKey);
+    }
+    return '';
+}
+
+$ajaxAction = trim((string)($_GET['ajax'] ?? $_POST['ajax'] ?? ''));
+if ($ajaxAction !== '' && isset($udata['phone'])) {
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    $orderId = trim((string)($_REQUEST['order_id'] ?? $_REQUEST['request_id'] ?? ''));
+    $localId = (int)($_REQUEST['local_id'] ?? 0);
+    $row = null;
+    $ajaxDebug = [];
+    $sessPhoneRaw = (string)$udata['phone'];
+    $sessPhoneNorm = _gpp_norm_phone($sessPhoneRaw);
+    $ajaxDebug['session_phone_raw'] = $sessPhoneRaw;
+    $ajaxDebug['session_phone_norm'] = $sessPhoneNorm;
+
+    if ($localId > 0) {
+        $q = mysqli_query($ahk_conn, "SELECT * FROM voter_pdf_list WHERE id=$localId LIMIT 1");
+        $ajaxDebug['q_local_err'] = $q ? null : mysqli_error($ahk_conn);
+        if ($q && mysqli_num_rows($q)) {
+            $cand = mysqli_fetch_assoc($q);
+            mysqli_free_result($q);
+            $cPhoneNorm = _gpp_norm_phone((string)($cand['userid'] ?? ''));
+            if ($cPhoneNorm !== '' && $sessPhoneNorm !== '' && $cPhoneNorm === $sessPhoneNorm) {
+                $row = $cand;
+                $ajaxDebug['matched_by'] = 'local_id + phone_norm';
+            } else {
+                $ajaxDebug['local_id_reject_phone_norm'] = [$cPhoneNorm, $sessPhoneNorm];
+            }
+        }
+    }
+    if (!$row && $orderId !== '' && is_numeric($orderId)) {
+        $oSafe = mysqli_real_escape_string($ahk_conn, $orderId);
+        $q = mysqli_query($ahk_conn, "SELECT * FROM voter_pdf_list WHERE order_id='$oSafe' ORDER BY id DESC LIMIT 5");
+        $ajaxDebug['q_order_err'] = $q ? null : mysqli_error($ahk_conn);
+        if ($q) {
+            while ($cand = mysqli_fetch_assoc($q)) {
+                $cPhoneNorm = _gpp_norm_phone((string)($cand['userid'] ?? ''));
+                if ($cPhoneNorm !== '' && $sessPhoneNorm !== '' && $cPhoneNorm === $sessPhoneNorm) {
+                    $row = $cand;
+                    $ajaxDebug['matched_by'] = 'order_id + phone_norm';
+                    break;
+                }
+            }
+            mysqli_free_result($q);
+        }
+    }
+    if (!$row) {
+        echo json_encode([
+            'success' => false,
+            'statusName' => 'pending',
+            'note' => 'Record not found for your session. (local_id='.$localId.', order_id='.htmlspecialchars($orderId).')',
+            'refunded' => false,
+            'refund_amount' => 0,
+            'debug' => array_merge($ajaxDebug, ['_src' => 'ajax_lookup']),
+        ]);
+        exit;
+    }
+    $oid = '';
+    $pl = json_decode((string)($row['response'] ?? ''), true);
+    if (is_array($pl)) $oid = trim((string)($pl['request_id'] ?? $pl['requestId'] ?? $pl['id'] ?? ''));
+    if ($oid === '' && is_numeric(trim((string)($row['order_id'] ?? '')))) $oid = trim((string)$row['order_id']);
+    $statusCheck = ['_empty' => true];
+    if ($oid !== '' && preg_match('/^[0-9]+$/', $oid)) $statusCheck = fetch_pariprint_voter_status_GPP($oid);
+    $name = detect_request_status_GPP($statusCheck);
+    $note = '';
+    if (!empty($statusCheck['message']) && is_string($statusCheck['message'])) $note = trim((string)$statusCheck['message']);
+    elseif (!empty($statusCheck['msg']) && is_string($statusCheck['msg'])) $note = trim((string)$statusCheck['msg']);
+    $downloadUrl = '';
+    if ($name === 'success') $downloadUrl = pick_download_url_GPP($statusCheck, $pariprint_api_key, $oid);
+    $refunded = false;
+    $refundAmount = 0.0;
+    $refundDebug = null;
+    $refundFailedMsg = null;
+    if (_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refunded')) $refunded = (int)($row['refunded'] ?? 0) === 1;
+    if ($name === 'failed' && !$refunded) {
+        $r = _gpp_apply_refund_vpdf($ahk_conn, $sessPhoneRaw, (int)$row['id'], GPP_VPDF_FEE);
+        $refundDebug = $r['debug'] ?? null;
+        if ($r['ok']) {
+            $refunded = true;
+            $refundAmount = (float)$r['refund_amount'];
+            if (empty($note)) $note = trim((string)($r['message'] ?? 'Refunded to wallet.'));
+        } else {
+            $refundFailedMsg = 'REFUND FAILED: '.trim((string)($r['message'] ?? 'Unknown error'));
+        }
+    } elseif ($refunded) {
+        $refundAmount = _gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refund_amount') ? (float)($row['refund_amount'] ?? 0) : GPP_VPDF_FEE;
+    }
+    $finalName = $refunded ? 'failed' : $name;
+    if ($refundFailedMsg !== null) {
+        $prefix = $note !== '' ? rtrim($note, '. ') . '. ' : '';
+        $finalNote = $prefix . $refundFailedMsg;
+    } else {
+        $finalNote = $refunded ? ($note !== '' ? rtrim($note, '. ') . '. Refunded Rs ' . number_format($refundAmount, 2) . ' to wallet.' : 'Failed + Refunded Rs ' . number_format($refundAmount, 2) . ' to wallet.') : $note;
+    }
+    echo json_encode([
+        'success' => true,
+        'statusName' => $finalName,
+        'refunded' => $refunded,
+        'refund_failed' => $refundFailedMsg !== null,
+        'refund_failed_message' => $refundFailedMsg,
+        'refund_amount' => $refundAmount,
+        'note' => $finalNote,
+        'download_url' => $downloadUrl,
+        'raw_http' => $statusCheck['_http_code'] ?? 0,
+        'attempts' => $statusCheck['_attempts'] ?? null,
+        'row_id' => (int)$row['id'],
+        'debug' => array_merge(
+            ['_src' => 'ajax', 'lookup' => $ajaxDebug],
+            ['pariprint' => $statusCheck],
+            $refundDebug !== null ? ['refund_apply' => $refundDebug] : []
+        ),
+    ]);
+    exit;
+}
+
+$rows = [];
+$autoRefundedIds = [];
+$autoRefundTotal = 0.0;
+$autoRefundErrors = [];
+$phoneRaw = isset($udata['phone']) ? (string)$udata['phone'] : '';
+$phoneNorm = _gpp_norm_phone($phoneRaw);
+if ($phoneRaw !== '' || $phoneNorm !== '') {
+    $escRaw = $phoneRaw !== '' ? mysqli_real_escape_string($ahk_conn, $phoneRaw) : '';
+    $escNorm = $phoneNorm !== '' ? mysqli_real_escape_string($ahk_conn, $phoneNorm) : '';
+    $wheres = [];
+    if ($escRaw !== '') $wheres[] = "userid='$escRaw'";
+    if ($escNorm !== '' && $escNorm !== $escRaw) $wheres[] = "userid LIKE '%$escNorm'";
+    $res = false;
+    if (!empty($wheres)) {
+        $sql = "SELECT * FROM voter_pdf_list WHERE (".implode(' OR ', $wheres).") ORDER BY id DESC";
+        $res = mysqli_query($ahk_conn, $sql);
+    }
+    if ($res && mysqli_num_rows($res)) {
+        $seen = [];
+        while ($row = mysqli_fetch_assoc($res)) {
+            $rid = (int)($row['id'] ?? 0);
+            if (isset($seen[$rid])) continue;
+            $seen[$rid] = true;
+            $rPhone = _gpp_norm_phone((string)($row['userid'] ?? ''));
+            if ($rPhone === '' || $phoneNorm === '' || $rPhone !== $phoneNorm) continue;
+            $rows[] = $row;
+        }
+        mysqli_free_result($res);
+    }
+}
+
+$autoCheckMax = 5;
+$autoCheckDone = 0;
+foreach ($rows as $row) {
+    if ($autoCheckDone >= $autoCheckMax) break;
+    $refundedFlag = _gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refunded') ? (int)($row['refunded'] ?? 0) === 1 : false;
+    if ($refundedFlag) { $autoCheckDone++; continue; }
+    $pl = json_decode((string)($row['response'] ?? ''), true);
+    $oid = is_array($pl) ? trim((string)($pl['request_id'] ?? $pl['requestId'] ?? $pl['id'] ?? '')) : '';
+    if ($oid === '' && is_numeric(trim((string)($row['order_id'] ?? '')))) $oid = trim((string)$row['order_id']);
+    $gppStatus = _gpp_col_exists($ahk_conn, 'voter_pdf_list', 'gpp_status') ? strtolower(trim((string)($row['gpp_status'] ?? ''))) : '';
+    if ($gppStatus === 'success' || $gppStatus === 'failed_refunded') { $autoCheckDone++; continue; }
+    if ($oid === '' || !preg_match('/^[0-9]+$/', $oid)) { $autoCheckDone++; continue; }
+    $stat = fetch_pariprint_voter_status_GPP($oid);
+    $nm = detect_request_status_GPP($stat);
+    if (_gpp_col_exists($ahk_conn, 'voter_pdf_list', 'gpp_status') && $nm !== $gppStatus) {
+        $nmEsc = mysqli_real_escape_string($ahk_conn, $nm);
+        @mysqli_query($ahk_conn, "UPDATE voter_pdf_list SET gpp_status='$nmEsc' WHERE id=".(int)$row['id']." LIMIT 1");
+    }
+    if ($nm === 'failed' && !$refundedFlag) {
+        $rf = _gpp_apply_refund_vpdf($ahk_conn, $phoneRaw, (int)$row['id'], GPP_VPDF_FEE);
+        if ($rf['ok'] && empty($rf['already'])) {
+            $autoRefundedIds[] = (int)$row['id'];
+            $autoRefundTotal += (float)$rf['refund_amount'];
+        } elseif (!$rf['ok']) {
+            $autoRefundErrors[] = [
+                'id' => (int)$row['id'],
+                'epic' => (string)($row['epic_no'] ?? ''),
+                'msg' => (string)($rf['message'] ?? 'Unknown error'),
+                'debug' => $rf['debug'] ?? null,
+            ];
+        }
+    }
+    $autoCheckDone++;
+}
+$gppFlashRefundMsg = '';
+if (!empty($autoRefundedIds)) {
+    $gppFlashRefundMsg = "Auto-refund applied for ".count($autoRefundedIds)." failed request(s): Rs ".number_format($autoRefundTotal, 2)." credited back to wallet.";
+}
+$gppFlashRefundWarn = '';
+if (!empty($autoRefundErrors)) {
+    $parts = [];
+    foreach ($autoRefundErrors as $e) {
+        $parts[] = '#'.(int)$e['id'].($e['epic'] !== '' ? ' ['.$e['epic'].']' : '').' → '.htmlspecialchars($e['msg']);
+    }
+    $gppFlashRefundWarn = "Auto-refund FAILED for ".count($autoRefundErrors)." request(s): ".implode(' | ', $parts);
+}
+?>
+
+<!-- SweetAlert2 Library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<!--start page wrapper -->
+<div class="page-wrapper">
+    <div class="page-content">
+        <?php if ($gppFlashRefundMsg !== ''): ?>
+        <div class="alert alert-success border-0 bg-success alert-dismissible fade show py-2 mb-3 shadow-sm rounded-4">
+            <div class="d-flex align-items-center">
+                <div class="font-35 text-white"><i class="bi bi-wallet2"></i></div>
+                <div class="ms-3">
+                    <h6 class="mb-0 text-white fw-semibold">Wallet Refund</h6>
+                    <div class="text-white-50"><?php echo htmlspecialchars($gppFlashRefundMsg); ?></div>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php endif; ?>
+        <?php if ($gppFlashRefundWarn !== ''): ?>
+        <div class="alert alert-danger border-0 bg-danger alert-dismissible fade show py-2 mb-3 shadow-sm rounded-4">
+            <div class="d-flex align-items-center">
+                <div class="font-35 text-white"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                <div class="ms-3">
+                    <h6 class="mb-0 text-white fw-semibold">Refund Failed - Please Report</h6>
+                    <div class="text-white-50"><?php echo htmlspecialchars($gppFlashRefundWarn); ?></div>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php endif; ?>
+        <!-- Breadcrumb with Action Buttons -->
+        <div class="page-breadcrumb d-flex align-items-center justify-content-between mb-4 p-3 bg-white rounded shadow-sm">
+            <div class="d-flex align-items-center">
+                <div class="breadcrumb-title pe-3">History</div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 ps-2">
+                        <li class="breadcrumb-item active text-muted" aria-current="page">Voter PDF List</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="btn-group">
+                <a href="voter_pdf.php" class="btn btn-success">
+                    <i class="bi bi-list-ul me-1"></i> New Voter PDF
+                </a>
+                <a href="javascript:history.back()" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
+            </div>
+        </div>
+        <div class="card radius-10">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <h5 class="mb-0">ALL VOTER PDF LIST</h5>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table id="example2" class="table align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center">SL.</th>
+                                <th class="text-center">Voter Name</th>
+                                <th class="text-center">EPIC NO</th>
+                                <th class="text-center">Order ID</th>
+                                <th class="text-center">State</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">STATUS</th>
+                                <th class="text-center">DOWNLOAD PDF</th>
+                                <th class="text-center">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+<?php if (empty($rows)): ?>
+    <tr><td colspan="9" class="text-center">No Records Found</td></tr>
+<?php else:
+    $x = 0;
+    foreach ($rows as $data) {
+        $x++;
+        $responsePayload = json_decode((string)($data['response'] ?? ''), true);
+        $initialNote = is_array($responsePayload) ? trim((string)($responsePayload['message'] ?? $responsePayload['msg'] ?? '')) : '';
+        $oid = is_array($responsePayload) ? trim((string)($responsePayload['request_id'] ?? $responsePayload['requestId'] ?? $responsePayload['id'] ?? '')) : '';
+        if ($oid === '' && is_numeric(trim((string)($data['order_id'] ?? '')))) $oid = trim((string)$data['order_id']);
+        $statusQueryId = $oid !== '' ? $oid : trim((string)($data['order_id'] ?? ''));
+        $proxyStatus = [];
+        if ($statusQueryId !== '' && preg_match('/^[0-9]+$/', $statusQueryId)) {
+            // Avoid page-load curl flood; only auto-refund handled above.
+        }
+
+        $isRefunded = _gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refunded') ? (int)($data['refunded'] ?? 0) === 1 : false;
+        $gppStoredStatus = _gpp_col_exists($ahk_conn, 'voter_pdf_list', 'gpp_status') ? strtolower(trim((string)($data['gpp_status'] ?? ''))) : '';
+        $refundAmountVal = _gpp_col_exists($ahk_conn, 'voter_pdf_list', 'refund_amount') ? (float)($data['refund_amount'] ?? 0) : 0.0;
+
+        $statusName = '';
+        if ($isRefunded) $statusName = 'failed';
+        elseif ($gppStoredStatus === 'success' || $gppStoredStatus === 'failed' || $gppStoredStatus === 'pending') $statusName = $gppStoredStatus;
+        elseif ($gppStoredStatus === 'failed_refunded') $statusName = 'failed';
+
+        $forceLive = $statusName === '';
+        if ($forceLive && $statusQueryId !== '' && preg_match('/^[0-9]+$/', $statusQueryId)) {
+            $proxyStatus = fetch_pariprint_voter_status_GPP($statusQueryId);
+            $statusName = detect_request_status_GPP($proxyStatus);
+        }
+        if ($statusName === '') $statusName = 'pending';
+
+        $statusNote = $initialNote;
+        if ($forceLive && !empty($proxyStatus['message']) && is_string($proxyStatus['message'])) $statusNote = trim((string)$proxyStatus['message']);
+        elseif ($forceLive && !empty($proxyStatus['msg']) && is_string($proxyStatus['msg'])) $statusNote = trim((string)$proxyStatus['msg']);
+        if ($isRefunded) {
+            $amt = $refundAmountVal > 0 ? $refundAmountVal : GPP_VPDF_FEE;
+            $statusNote = $statusNote !== '' ? rtrim($statusNote, '. ') . '. Refunded Rs ' . number_format($amt, 2) . ' to wallet.' : 'Failed + Refunded Rs ' . number_format($amt, 2) . ' to wallet.';
+        } elseif ($statusNote === '') {
+            if ($statusName === 'success') $statusNote = 'PDF ready - Download now';
+            elseif ($statusName === 'failed') $statusNote = 'Failed. Amount refunded to wallet.';
+            else $statusNote = 'Waiting for admin upload';
+        }
+        $statusLabel = $statusName === 'success' ? 'Success' : ($statusName === 'failed' ? 'Failed' : 'Pending');
+        $statusBadge = $statusName === 'success' ? 'success' : ($statusName === 'failed' ? 'danger' : 'warning');
+        $downloadUrl = '';
+        if ($statusName === 'success' && $forceLive && !empty($proxyStatus)) $downloadUrl = pick_download_url_GPP($proxyStatus, $pariprint_api_key, $statusQueryId);
+        if ($statusName === 'success' && $downloadUrl === '' && $statusQueryId !== '') $downloadUrl = pick_download_url_GPP([], $pariprint_api_key, $statusQueryId);
+        $standaloneLink = $statusQueryId !== '' ? 'https://pariprint.in/voter-pdf-api-download.php?order_id=' . urlencode($statusQueryId) . '&api_key=' . urlencode($pariprint_api_key) : '';
+?>
+        <tr data-pariprint-request-id="<?php echo htmlspecialchars($statusQueryId); ?>"
+            data-local-id="<?php echo (int)$data['id']; ?>"
+            data-order-id="<?php echo htmlspecialchars((string)($data['order_id'] ?? '')); ?>"
+            data-refunded="<?php echo $isRefunded ? '1' : '0'; ?>">
+            <td class="text-center"><?= $x; ?></td>
+            <td class="text-center">
+                <div class="d-flex align-items-center">
+                    <div class="ms-2">
+                        <h6 class="mb-1 font-14"><?php echo htmlspecialchars((string)($data['voter_name'] ?? 'Unknown')); ?></h6>
+                    </div>
+                </div>
+            </td>
+            <td class="text-center"><?php echo strtoupper(htmlspecialchars((string)($data['epic_no'] ?? '-'))); ?></td>
+            <td class="text-center"><?php echo htmlspecialchars((string)($data['order_id'] ?? '-')); ?></td>
+            <td class="text-center"><?php echo htmlspecialchars((string)($data['voter_state'] ?? '-')); ?></td>
+            <td class="text-center"><?php echo htmlspecialchars((string)($data['date'] ?? '-')); ?></td>
+
+            <td class="text-center status-col">
+                <button type="button"
+                        style="margin-top:2px;margin-bottom:2px;padding-top:5px;padding-bottom:5px;"
+                        class="btn btn-info btn-sm check-status-btn"
+                        data-local-id="<?php echo (int)$data['id']; ?>"
+                        data-order-id="<?php echo htmlspecialchars((string)($data['order_id'] ?? '')); ?>"
+                        data-request-id="<?php echo htmlspecialchars($statusQueryId); ?>"
+                        data-status-message="<?php echo htmlspecialchars($statusNote); ?>">
+                   <i class="fas fa-sync-alt"></i> Check Status
+                </button>
+                <div class="small mt-1">
+                    <span class="badge bg-<?php echo $statusBadge; ?> badge-status-label"><?php echo $statusLabel; ?></span>
+                    <?php if ($isRefunded): ?>
+                        <span class="badge bg-success ms-1 mt-1"><i class="bi bi-wallet2 me-1"></i>Refunded</span>
+                    <?php endif; ?>
+                </div>
+            </td>
+
+            <td class="text-center download-col">
+                <button type="button"
+                        style="margin-top:2px;margin-bottom:2px;padding-top:5px;padding-bottom:5px;"
+                        class="btn btn-success btn-sm download-pdf-btn"
+                        data-order-id="<?php echo htmlspecialchars((string)($data['order_id'] ?? '')); ?>"
+                        data-request-id="<?php echo htmlspecialchars($statusQueryId); ?>"
+                        data-refunded="<?php echo $isRefunded ? '1' : '0'; ?>"
+                        <?php if ($statusName !== 'success'): ?>disabled<?php endif; ?>>
+                   <i class="fas fa-download"></i> Download PDF
+                </button>
+                <div class="small mt-1 pdf-status-note <?php echo $statusName === 'success' ? 'text-success fw-semibold' : ($statusName === 'failed' ? 'text-danger' : 'text-warning'); ?>"><?php echo htmlspecialchars($statusNote); ?></div>
+                <?php if ($downloadUrl !== '' && $statusName === 'success'): ?>
+                <div class="mt-2">
+                    <a href="<?php echo htmlspecialchars($downloadUrl); ?>" class="small d-block fw-semibold text-primary" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-external-link-alt me-1"></i> Direct PDF Link
+                    </a>
+                    <?php if ($standaloneLink !== '' && $downloadUrl !== $standaloneLink): ?>
+                    <a href="<?php echo htmlspecialchars($standaloneLink); ?>" class="small d-block mt-1 text-info" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-link me-1"></i> Mirror (Standalone)
+                    </a>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
+             </td>
+
+            <td class="text-center">
+               <form action="action_voter_pdf.php" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to remove this record?');">
+                    <input name="id" type="hidden" value="<?= (int)$data['id']; ?>" />
+                    <input style="margin-top:2px;margin-bottom:2px;padding-top:5px;padding-bottom:5px;"
+                           class="btn btn-danger btn-sm <?php if ($isRefunded || $statusName === 'success'): ?>opacity-50<?php endif; ?>"
+                           type="submit"
+                           value="Remove"
+                           <?php if ($isRefunded): ?>disabled title="Refunded records cannot be removed."<?php endif; ?> />
+                </form>
+             </td>
+         </tr>
+<?php }
+endif; ?>
+                        </tbody>
+                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end page wrapper -->
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const pariprintApiKey = <?php echo json_encode((string)$pariprint_api_key); ?>;
+    const AJAX_URL = window.location.pathname + window.location.search;
+
+    function statusBadgeClass(name) {
+        return name === 'success' ? 'bg-success' : (name === 'failed' ? 'bg-danger' : 'bg-warning');
+    }
+    function statusLabelText(name) {
+        return name === 'success' ? 'Success' : (name === 'failed' ? 'Failed' : 'Pending');
+    }
+    function statusNoteClass(name) {
+        return name === 'success' ? 'text-success fw-semibold' : (name === 'failed' ? 'text-danger' : 'text-warning');
+    }
+
+    function setRowInfo(tr, statusName, note, refunded, refundAmount) {
+        if (!tr) return;
+        const badge = tr.querySelector('.badge-status-label');
+        const noteEl = tr.querySelector('.pdf-status-note');
+        const dlBtn = tr.querySelector('.download-pdf-btn');
+        const removeBtn = tr.querySelector('form input[type="submit"]');
+        if (badge) {
+            badge.textContent = statusLabelText(statusName);
+            badge.classList.remove('bg-success','bg-warning','bg-danger');
+            badge.classList.add(statusBadgeClass(statusName));
+        }
+        if (noteEl) {
+            noteEl.textContent = (note || '').trim() || (statusName === 'success' ? 'PDF ready - Download now' : (statusName === 'failed' ? 'Failed. Amount refunded to wallet.' : 'Waiting for admin upload'));
+            noteEl.classList.remove('text-muted','text-success','text-danger','text-warning','fw-semibold');
+            noteEl.classList.add(statusName === 'success' ? 'text-success' : (statusName === 'failed' ? 'text-danger' : 'text-warning'));
+            if (statusName === 'success') noteEl.classList.add('fw-semibold');
+        }
+        if (dlBtn) {
+            if (statusName === 'success') dlBtn.removeAttribute('disabled');
+            else dlBtn.setAttribute('disabled', 'true');
+        }
+        if (refunded) {
+            let already = tr.getAttribute('data-refunded') === '1';
+            if (!already) {
+                const badges = tr.querySelectorAll('.badge');
+                for (let i = 0; i < badges.length; i++) {
+                    if ((badges[i].textContent || '').trim().indexOf('Refunded') !== -1) { already = true; break; }
+                }
+            }
+            if (!already) {
+                const wrap = badge ? badge.parentElement : null;
+                if (wrap) {
+                    const sp = document.createElement('span');
+                    sp.className = 'badge bg-success ms-1 mt-1';
+                    sp.innerHTML = '<i class="bi bi-wallet2 me-1"></i>Refunded';
+                    wrap.appendChild(sp);
+                }
+            }
+            tr.setAttribute('data-refunded', '1');
+            if (removeBtn) {
+                removeBtn.setAttribute('disabled', 'true');
+                if (!removeBtn.title) removeBtn.title = 'Refunded records cannot be removed.';
+                removeBtn.classList.add('opacity-50');
+            }
+        }
+    }
+
+    function buildDirectFallbackDownloadUrl(requestId) {
+        return 'https://pariprint.in/voter-pdf-api-download.php?order_id=' + encodeURIComponent(requestId) + '&api_key=' + encodeURIComponent(pariprintApiKey);
+    }
+    function buildInternalDirectDownloadUrl(requestId) {
+        const sec = encodeURIComponent('gpp-pp-vpdf-2026-x9k2');
+        return 'https://pariprint.in/voter-pdf-api-internal.php?action=download&order_id=' + encodeURIComponent(requestId) + '&api_key=' + encodeURIComponent(pariprintApiKey) + '&secret=' + sec;
+    }
+
+    function pickDownloadUrl(data, fallbackOrderId) {
+        if (!data || typeof data !== 'object') return '';
+        const keys = ['download_url','downloadUrl','download_link','download','pdf_url','pdfUrl','pdf_link','pdf','file_url','fileUrl','file_link','file','result_url','resultUrl','result_link','output_url','pdf_download_url','pdf_download','file_download_url','download_direct','file_download_direct','pdf_download_direct','direct_download_url','simple_download_url','download_no_slug_url'];
+        for (const k of keys) {
+            if (typeof data[k] === 'string' && data[k].trim() !== '') {
+                const v = data[k].trim();
+                if (/^https?:/i.test(v)) return v;
+            }
+        }
+        for (const k of keys) {
+            if (typeof data[k] === 'string' && data[k].trim() !== '') return data[k].trim();
+        }
+        if (fallbackOrderId) return buildInternalDirectDownloadUrl(fallbackOrderId);
+        return '';
+    }
+
+    function triggerDirectDownload(url, fallbackFilename) {
+        if (!url) return Promise.reject(new Error('No download URL available'));
+        return fetch(url, { method: 'GET', mode: 'cors', credentials: 'omit', cache: 'no-store' })
+            .then(response => {
+                const ct = (response.headers.get('content-type') || '').toLowerCase();
+                const disp = response.headers.get('content-disposition') || '';
+                let filename = fallbackFilename;
+                if (disp) {
+                    const m = /filename\*=UTF-8''([^;]+)/i.exec(disp) || /filename="?([^";]+)"?/i.exec(disp);
+                    if (m && m[1]) { try { filename = decodeURIComponent(m[1].replace(/["']/g, '')); } catch(_) { filename = m[1].replace(/["']/g, ''); } }
+                }
+                if (!response.ok) {
+                    if (ct.includes('application/json')) {
+                        return response.json().then(j => Promise.reject(new Error(j.message || j.error || 'Unable to download PDF (HTTP ' + response.status + ')'))).catch(() => Promise.reject(new Error('Unable to download PDF (HTTP ' + response.status + ')')));
+                    }
+                    return Promise.reject(new Error('Unable to download PDF (HTTP ' + response.status + ')'));
+                }
+                if (ct.includes('application/pdf') || ct.includes('octet-stream') || ct.includes('application/x-download') || ct.includes('application/force-download')) {
+                    return response.blob().then(blob => {
+                        const obj = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = obj;
+                        a.download = filename || ('voter-pdf-' + Date.now() + '.pdf');
+                        a.rel = 'noopener';
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => { try { URL.revokeObjectURL(obj); } catch(_) {} try { if (a.parentNode) a.parentNode.removeChild(a); } catch(_) {} }, 1200);
+                        return true;
+                    });
+                }
+                window.open(url, '_blank', 'noopener,noreferrer');
+                return true;
+            }).catch(err => {
+                window.open(url, '_blank', 'noopener,noreferrer');
+                return true;
+            });
+    }
+
+    function fetchJsonWithFallbacks(requestId, localId, orderIdFor) {
+        const url = AJAX_URL + (AJAX_URL.indexOf('?') === -1 ? '?' : '&')
+            + 'ajax=check_refund&request_id=' + encodeURIComponent(requestId || '')
+            + '&local_id=' + encodeURIComponent(localId || '0')
+            + '&order_id=' + encodeURIComponent(orderIdFor || '');
+        return fetch(url, { method: 'GET', cache: 'no-store', credentials: 'same-origin' })
+            .then(r => r.json().catch(() => ({ success: false, statusName: 'pending', note: 'Invalid JSON response from server.' })))
+            .catch(err => ({ success: false, statusName: 'pending', note: 'Network error: ' + err.message }));
+    }
+
+    function makeVerboseSwalHtml(title, info, responseData) {
+        let statusLine = '';
+        if (info && typeof info.statusName === 'string') statusLine += `<div class="mb-2"><strong>Status:</strong> <span class="badge" style="background:${info.statusName === 'success' ? '#16a34a' : info.statusName === 'failed' ? '#dc2626' : '#ca8a04'};color:#fff;">${info.statusName.toUpperCase()}</span></div>`;
+        if (info && typeof info.note === 'string' && info.note.trim() !== '') statusLine += `<div class="mb-3 p-3 rounded" style="background:#fef9c3;color:#854d0e;font-family:ui-monospace, SFMono-Regular, Menlo, monospace;">${String(info.note).replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+        if (info && info.refunded) {
+            const amt = typeof info.refund_amount === 'number' ? info.refund_amount.toFixed(2) : '0.00';
+            statusLine += `<div class="mb-3 p-3 rounded" style="background:#dcfce7;color:#14532d;"><i class="fas fa-wallet me-2"></i><strong>Wallet Refunded:</strong> Rs ${amt}</div>`;
+        }
+        if (info && info.refund_failed) {
+            const msg = typeof info.refund_failed_message === 'string' ? String(info.refund_failed_message).replace(/</g,'&lt;').replace(/>/g,'&gt;') : 'Unknown refund error.';
+            statusLine += `<div class="mb-3 p-3 rounded" style="background:#fee2e2;color:#991b1b;"><i class="fas fa-exclamation-triangle me-2"></i><strong>Refund FAILED:</strong><br><span style="font-family:ui-monospace, SFMono-Regular, Menlo, monospace;">${msg}</span><br><small>Contact admin with debug info below.</small></div>`;
+        }
+        let rawBox = '';
+        if (responseData && typeof responseData === 'object' && responseData.debug) {
+            const j = JSON.stringify(responseData.debug, null, 2);
+            rawBox = `<details class="mt-3"><summary class="fw-semibold cursor-pointer">Server Debug (HTTP: ${responseData.raw_http || 'n/a'})</summary><pre class="mt-2 p-3 rounded small text-left" style="background:#0f172a;color:#e2e8f0;max-height:320px;overflow:auto;">${j.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></details>`;
+        }
+        return `<div style="text-align:left;">${statusLine}${rawBox}</div>`;
+    }
+
+    document.querySelectorAll('.check-status-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const tr = btn.closest('tr');
+            const requestId = btn.getAttribute('data-request-id') || '';
+            const localId = parseInt(btn.getAttribute('data-local-id') || '0', 10) || 0;
+            const orderId = btn.getAttribute('data-order-id') || '';
+            const orig = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Checking…';
+            fetchJsonWithFallbacks(requestId, localId, orderId).then(function(info) {
+                try { btn.innerHTML = orig; } catch(_) {}
+                btn.disabled = false;
+                const ok = !!(info && info.success);
+                const name = ok && typeof info.statusName === 'string' ? info.statusName : 'pending';
+                const note = ok && typeof info.note === 'string' ? info.note : (info && typeof info.note === 'string' ? info.note : 'Unable to check status.');
+                const refunded = ok && !!info.refunded;
+                const refundFailed = ok && !!info.refund_failed;
+                const amt = ok && typeof info.refund_amount === 'number' ? info.refund_amount : 0;
+                setRowInfo(tr, name, note, refunded, amt);
+
+                let titleStr;
+                if (!ok) titleStr = 'Status Check Issue';
+                else if (refunded) titleStr = 'Status: ' + statusLabelText(name) + ' + Wallet Refund Rs ' + amt.toFixed(2);
+                else if (refundFailed) titleStr = 'Status: ' + statusLabelText(name) + ' + REFUND FAILED';
+                else titleStr = 'Status: ' + statusLabelText(name);
+
+                let iconStr;
+                if (refundFailed) iconStr = 'error';
+                else if (refunded) iconStr = 'success';
+                else if (!ok) iconStr = 'warning';
+                else iconStr = (name === 'success' ? 'success' : (name === 'failed' ? 'error' : 'info'));
+
+                const wpx = refunded || refundFailed ? 760 : 640;
+
+                Swal.fire({
+                    title: titleStr,
+                    html: makeVerboseSwalHtml('', ok ? info : { statusName: 'pending', note: note }, info || null),
+                    icon: iconStr,
+                    confirmButtonText: 'OK',
+                    width: wpx,
+                    confirmButtonColor: refundFailed ? '#dc2626' : '#2563eb'
+                });
+                if (refunded) {
+                    try {
+                        const wb = document.querySelector('.wallet-balance-value, .navbar .badge.bg-white, .top-right .wallet, [class*="balance"]');
+                        if (wb) {
+                            wb.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.15)', filter: 'drop-shadow(0 0 8px #16a34a)' }, { transform: 'scale(1)' }], { duration: 800 });
+                        }
+                    } catch(_) {}
+                }
+                if (refundFailed) {
+                    try {
+                        const wb = document.querySelector('.wallet-balance-value, .navbar .badge.bg-white, .top-right .wallet, [class*="balance"]');
+                        if (wb) {
+                            wb.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }, { transform: 'scale(1)' }], { duration: 600 });
+                        }
+                    } catch(_) {}
+                }
+            }).catch(function(err) {
+                try { btn.innerHTML = orig; } catch(_) {}
+                btn.disabled = false;
+                Swal.fire({ title: 'Status Check Failed', text: String(err && err.message ? err.message : err), icon: 'error' });
+            });
+        });
+    });
+
+    document.querySelectorAll('.download-pdf-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const tr = btn.closest('tr');
+            const requestId = btn.getAttribute('data-request-id') || '';
+            const localId = tr ? parseInt(tr.getAttribute('data-local-id') || '0', 10) || 0 : 0;
+            const orderId = btn.getAttribute('data-order-id') || '';
+            const orig = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Preparing…';
+
+            fetchJsonWithFallbacks(requestId, localId, orderId).then(function(info) {
+                const ok = !!(info && info.success);
+                const name = ok && typeof info.statusName === 'string' ? info.statusName : 'pending';
+                const note = ok && typeof info.note === 'string' ? info.note : 'Status unknown.';
+                const refunded = ok && !!info.refunded;
+                const refundFailed = ok && !!info.refund_failed;
+                const amt = ok && typeof info.refund_amount === 'number' ? info.refund_amount : 0;
+                setRowInfo(tr, name, note, refunded, amt);
+                let url = ok && typeof info.download_url === 'string' && info.download_url.trim() !== '' ? info.download_url.trim() : '';
+                const fbUrl = requestId ? buildDirectFallbackDownloadUrl(requestId) : '';
+                const mirrorUrl = requestId ? buildInternalDirectDownloadUrl(requestId) : '';
+
+                if (name === 'success') {
+                    if (url === '' && fbUrl !== '') url = fbUrl;
+                    btn.innerHTML = '<i class="fas fa-file-download me-1"></i>Downloading…';
+                    triggerDirectDownload(url, 'voter-pdf-' + (requestId || Date.now()) + '.pdf').catch(() => {
+                        if (mirrorUrl !== '') window.open(mirrorUrl, '_blank', 'noopener,noreferrer');
+                    });
+                    setTimeout(() => {
+                        try { btn.innerHTML = orig; btn.disabled = false; } catch(_) {}
+                        if (mirrorUrl !== '' && mirrorUrl !== url) {
+                            setTimeout(() => window.open(mirrorUrl, '_blank', 'noopener,noreferrer'), 350);
+                        }
+                    }, 1400);
+                    return;
+                }
+
+                try { btn.innerHTML = orig; btn.disabled = false; } catch(_) {}
+                let dlTitle;
+                let dlIcon;
+                let dlWidth = 640;
+                let dlColor = '#2563eb';
+                if (refunded) {
+                    dlTitle = 'Failed + Wallet Refunded Rs ' + amt.toFixed(2);
+                    dlIcon = 'success';
+                    dlWidth = 760;
+                } else if (refundFailed) {
+                    dlTitle = 'REFUND FAILED (click Check Status for details)';
+                    dlIcon = 'error';
+                    dlWidth = 760;
+                    dlColor = '#dc2626';
+                } else if (name === 'failed') {
+                    dlTitle = 'Request Failed';
+                    dlIcon = 'error';
+                } else {
+                    dlTitle = 'Not ready yet.';
+                    dlIcon = 'info';
+                }
+                Swal.fire({
+                    title: dlTitle,
+                    html: makeVerboseSwalHtml('', info || {}, info || null),
+                    icon: dlIcon,
+                    confirmButtonText: 'OK',
+                    width: dlWidth,
+                    confirmButtonColor: dlColor
+                });
+            }).catch(function(err) {
+                try { btn.innerHTML = orig; btn.disabled = false; } catch(_) {}
+                Swal.fire({ title: 'Download Issue', text: String(err && err.message ? err.message : err), icon: 'error' });
+            });
+        });
+    });
+});
+</script>
+
+<?php include('footer.php'); ?>

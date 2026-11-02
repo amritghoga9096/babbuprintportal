@@ -1,0 +1,35 @@
+[2026-10-16 18:41:29] register https://goodprintportal.in/drpay/webhook.php => HTTP 200 
+{"status":true,"message":"Webhook registered successfully","result":{"webhook_id":13,"webhook_url":"https:\/\/goodprintportal.in\/drpay\/webhook.php","created_at":"2026-10-16 18:41:29"}}
+[2026-10-16 18:41:29] event=payment.success status=SUCCESS order=WLT_8080615911_1792154516 amount=120.00 utr=463976020945
+[2026-10-16 18:41:29] payment.success WLT_8080615911_1792154516 => already phone=8080615911 amount=120
+[2026-10-16 18:41:29] event=payment.success status=SUCCESS order=WLT_9028262223_1792155247 amount=120.00 utr=287586047430
+[2026-10-16 18:41:29] payment.success WLT_9028262223_1792155247 => already phone=9028262223 amount=120
+[2026-10-16 18:41:35] register https://www.goodprintportal.in/drpay/webhook.php => HTTP 200 
+{"status":true,"message":"Webhook registered successfully","result":{"webhook_id":14,"webhook_url":"https:\/\/www.goodprintportal.in\/drpay\/webhook.php","created_at":"2026-10-16 18:41:35"}}
+[2026-10-16 18:41:35] event=payment.success status=SUCCESS order=WLT_8080615911_1792154516 amount=120.00 utr=463976020945
+[2026-10-16 18:41:35] payment.success WLT_8080615911_1792154516 => already phone=8080615911 amount=120
+[2026-10-16 18:41:35] event=payment.success status=SUCCESS order=WLT_9028262223_1792155247 amount=120.00 utr=287586047430
+[2026-10-16 18:41:35] payment.success WLT_9028262223_1792155247 => already phone=9028262223 amount=120
+[2026-10-16 18:43:35] event=payment.success status=SUCCESS order=WLT_7766_1792156397 amount=120.00 utr=325620160412
+[2026-10-16 18:43:35] payment.success WLT_7766_1792156397 => credited phone=7766 amount=120
+[2026-10-16 18:43:35] event=payment.success status=SUCCESS order=WLT_7766_1792156397 amount=120.00 utr=325620160412
+[2026-10-16 18:43:35] payment.success WLT_7766_1792156397 => already phone=7766 amount=120
+[2026-10-16 18:43:36] event=webhook.test status=TEST order=TEST1792156416 amount=1.00 utr=000000000000
+[2026-10-16 18:43:36] event=webhook.test status=TEST order=TEST1792156416 amount=1.00 utr=000000000000
+[2026-10-16 18:46:04] event=payment.success status=SUCCESS order=WLT_9146682269_1792156541 amount=120.00 utr=751491510955
+[2026-10-16 18:46:04] payment.success WLT_9146682269_1792156541 => credited phone=9146682269 amount=120
+[2026-10-16 18:46:04] event=payment.success status=SUCCESS order=WLT_9146682269_1792156541 amount=120.00 utr=751491510955
+[2026-10-16 18:46:04] payment.success WLT_9146682269_1792156541 => already phone=9146682269 amount=120
+[2026-10-16 18:48:53] event=payment.success status=SUCCESS order=WLT_9905132590_1792156705 amount=120.00 utr=977787953614
+[2026-10-16 18:48:53] payment.success WLT_9905132590_1792156705 => credited phone=9905132590 amount=120
+[2026-10-16 18:48:53] sync WLT_9905132590_1792156705 => already
+[2026-10-16 18:48:53] event=payment.success status=SUCCESS order=WLT_9905132590_1792156705 amount=120.00 utr=977787953614
+[2026-10-16 18:48:53] payment.success WLT_9905132590_1792156705 => already phone=9905132590 amount=120
+[2026-10-16 19:19:09] register https://goodprintportal.in/drpay/webhook.php => HTTP 200 
+{"status":true,"message":"Webhook registered successfully","result":{"webhook_id":14,"webhook_url":"https:\/\/goodprintportal.in\/drpay\/webhook.php","created_at":"2026-10-16 19:19:09"}}
+[2026-10-16 19:26:47] event=payment.success status=SUCCESS order=DRPAY736685337710941792158977 amount=2600.00 utr=529799392175
+[2026-10-16 19:26:47] payment.success DRPAY736685337710941792158977 => not_found phone= amount=0
+[2026-10-16 19:33:03] event=payment.success status=SUCCESS order=DRPAY905640179231351792159358 amount=100.00 utr=628993391248
+[2026-10-16 19:33:03] payment.success DRPAY905640179231351792159358 => not_found phone= amount=0
+[2026-10-16 19:42:42] event=payment.success status=SUCCESS order=DRPAY766710249951711792159944 amount=100.00 utr=947222608568
+[2026-10-16 19:42:42] payment.success DRPAY766710249951711792159944 => not_found phone= amount=0

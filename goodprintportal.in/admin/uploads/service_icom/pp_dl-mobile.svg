@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<rect x="6" y="30" width="78" height="52" rx="7" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<path d="M6 37a7 7 0 0 1 7-7h64a7 7 0 0 1 7 7v7H6z" fill="#1d4ed8"/><text x="45" y="41" font-family="Arial,sans-serif" font-size="8" font-weight="900" fill="#fff" text-anchor="middle">DRIVING LICENCE</text>
+<circle cx="24" cy="60" r="9" fill="#93c5fd"/><path d="M12 76c2-7 7-9 12-9s10 2 12 9z" fill="#93c5fd"/>
+<rect x="42" y="54" width="34" height="4" rx="2" fill="#94a3b8"/><rect x="42" y="63" width="26" height="4" rx="2" fill="#cbd5e1"/><rect x="42" y="72" width="30" height="4" rx="2" fill="#cbd5e1"/>
+<rect x="84" y="36" width="36" height="70" rx="7" fill="#0f172a"/><rect x="88" y="44" width="28" height="52" rx="2" fill="#dbeafe"/>
+<circle cx="102" cy="70" r="10" fill="#16a34a"/><path d="M97 66c1 4 4 7 8 9l2-2" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>

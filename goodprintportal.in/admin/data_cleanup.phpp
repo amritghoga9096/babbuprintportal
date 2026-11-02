@@ -1,0 +1,734 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+@ob_start();
+@set_time_limit(0);
+@ini_set('memory_limit', '1024M');
+
+include('../includes/session.php');
+include('../includes/config.php');
+
+if (checkAdmin($udata['type']) == false) {
+    ?>
+    <script> window.location='index.php'; </script>
+    <?php die();
+}
+
+$PROTECTED_TABLES = [
+    'users', 'settings', 'wallet', 'wallethistory', 'pricing', 'referral',
+];
+
+$STATIC_ICON_FOLDERS = [
+    'Services',
+    'service_icom',
+];
+
+$KEEP_FILE_NAMES = [
+    'index.php',
+    'index.html',
+    '.htaccess',
+    '.user.ini',
+    'web.config',
+];
+
+$res = @mysqli_query($ahk_conn, "SHOW TABLES");
+$ALL_TABLES = [];
+$DATE_BASED_TABLES = [];
+if ($res) {
+    while ($r = mysqli_fetch_row($res)) {
+        $tbl = $r[0];
+        $ALL_TABLES[] = $tbl;
+        if (!in_array(strtolower($tbl), array_map('strtolower', $PROTECTED_TABLES), true)) {
+            $DATE_BASED_TABLES[] = $tbl;
+        }
+    }
+}
+
+function humanFilesize($bytes, $dec = 2) {
+    $size   = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+    $factor = floor((strlen($bytes) - 1) / 3);
+    if ($factor == 0) $dec = 0;
+    return sprintf("%.{$dec}f ", $bytes / pow(1024, $factor)) . @$size[$factor];
+}
+
+function tblSizeInfo($conn, $dbname, $tbl) {
+    $q = @mysqli_query($conn, "SELECT
+        ROUND(((DATA_LENGTH + INDEX_LENGTH)), 0) AS size_bytes,
+        TABLE_ROWS
+        FROM information_schema.TABLES
+        WHERE TABLE_SCHEMA='".mysqli_real_escape_string($conn,$dbname)."'
+        AND TABLE_NAME='".mysqli_real_escape_string($conn,$tbl)."' LIMIT 1");
+    if ($q && ($rw = mysqli_fetch_assoc($q))) {
+        return ['bytes'=>(int)$rw['size_bytes'], 'rows'=>(int)$rw['TABLE_ROWS']];
+    }
+    return ['bytes'=>0, 'rows'=>0];
+}
+
+function dbTotalSize($conn, $dbname) {
+    $q = @mysqli_query($conn, "SELECT
+        ROUND(SUM(DATA_LENGTH + INDEX_LENGTH),0) AS total_bytes
+        FROM information_schema.TABLES WHERE TABLE_SCHEMA='".mysqli_real_escape_string($conn,$dbname)."'");
+    if ($q && ($r = mysqli_fetch_row($q))) return (int)$r[0];
+    return 0;
+}
+
+function dirTotalSize($dir) {
+    $size = 0;
+    if (!is_dir($dir)) return 0;
+    $items = @scandir($dir);
+    if (!$items) return 0;
+    foreach ($items as $item) {
+        if ($item === '.' || $item === '..') continue;
+        $path = $dir . DIRECTORY_SEPARATOR . $item;
+        if (is_file($path)) {
+            $size += @filesize($path);
+        } elseif (is_dir($path)) {
+            $size += dirTotalSize($path);
+        }
+    }
+    return $size;
+}
+
+function deleteUserUploads($baseDir, $staticFolders, $keepNames, &$filesDeleted, &$bytesFreed) {
+    if (!is_dir($baseDir)) return;
+    $items = @scandir($baseDir);
+    if (!$items) return;
+    foreach ($items as $item) {
+        if ($item === '.' || $item === '..') continue;
+        $path = $baseDir . DIRECTORY_SEPARATOR . $item;
+        if (is_dir($path)) {
+            if (in_array($item, $staticFolders, true)) continue;
+            deleteUserUploads($path, [], $keepNames, $filesDeleted, $bytesFreed);
+        } elseif (is_file($path)) {
+            if (in_array(basename($item), $keepNames, true)) continue;
+            $sz = @filesize($path);
+            if (@unlink($path)) {
+                $filesDeleted++;
+                $bytesFreed += $sz;
+            }
+        }
+    }
+}
+
+$dbname = $database;
+$totalBytesBefore = dbTotalSize($ahk_conn, $dbname);
+$uploadDir = __DIR__ . '/uploads';
+$uploadSizeBefore = dirTotalSize($uploadDir);
+
+$cleanLog = [];
+$fileCleanLog = [];
+$totalCleanedBytes = 0;
+$totalDeletedRows = 0;
+$totalFilesDeleted = 0;
+$totalFileBytesFreed = 0;
+$runDone = false;
+$errorMsg = '';
+
+$INSTANT_NOW = (isset($_GET['instant']) && $_GET['instant'] == '1')
+    || (isset($_POST['instant_run']) && $_POST['instant_run'] == '1');
+
+if ($INSTANT_NOW) {
+    $_POST['run_cleanup'] = '1';
+    $_POST['days_older'] = 1;
+    $_POST['do_optimize'] = '1';
+    $_POST['clean_complaints_solved'] = '1';
+    $_POST['do_full_truncate'] = '1';
+    $_POST['do_delete_uploads'] = '1';
+    $_POST['do_delete_backups'] = '1';
+}
+
+if (isset($_POST['run_cleanup']) && $_POST['run_cleanup'] == '1') {
+    $days = isset($_POST['days_older']) ? max(1, (int)$_POST['days_older']) : 90;
+    $doOptimize = isset($_POST['do_optimize']) && $_POST['do_optimize'] == '1';
+    $cleanComplaints = isset($_POST['clean_complaints_solved']) && $_POST['clean_complaints_solved'] == '1';
+    $doFullTruncate = isset($_POST['do_full_truncate']) && $_POST['do_full_truncate'] == '1';
+    $doDeleteUploads = isset($_POST['do_delete_uploads']) && $_POST['do_delete_uploads'] == '1';
+    $doDeleteBackups = isset($_POST['do_delete_backups']) && $_POST['do_delete_backups'] == '1';
+    $dateCutoff = date('Y-m-d H:i:s', time() - ($days * 86400));
+
+    @mysqli_query($ahk_conn, "SET foreign_key_checks = 0");
+
+    foreach ($ALL_TABLES as $tbl) {
+        if (in_array(strtolower($tbl), array_map('strtolower', $PROTECTED_TABLES), true)) {
+            if ($doOptimize) {
+                @mysqli_query($ahk_conn, "ALTER TABLE `".mysqli_real_escape_string($ahk_conn,$tbl)."` FORCE");
+                @mysqli_query($ahk_conn, "OPTIMIZE TABLE `".mysqli_real_escape_string($ahk_conn,$tbl)."`");
+            }
+            $cleanLog[] = ["table"=>$tbl, "action"=>"PROTECTED (Users/Wallet/Transactions/Settings - NO rows deleted)" . ($doOptimize ? " + REBUILT (FORCE+OPTIMIZE)" : ""), "rows"=>0, "bytes_saved"=>"0 B"];
+            continue;
+        }
+
+        $infoBefore = tblSizeInfo($ahk_conn, $dbname, $tbl);
+        $deletedThisTable = 0;
+
+        if ($doFullTruncate) {
+            $tr = @mysqli_query($ahk_conn, "TRUNCATE TABLE `".mysqli_real_escape_string($ahk_conn,$tbl)."`");
+            if ($tr) {
+                $deletedThisTable += (int)$infoBefore['rows'];
+            } else {
+                $td = @mysqli_query($ahk_conn, "DELETE FROM `".mysqli_real_escape_string($ahk_conn,$tbl)."`");
+                if ($td) $deletedThisTable += (int)mysqli_affected_rows($ahk_conn);
+                @mysqli_query($ahk_conn, "ALTER TABLE `".mysqli_real_escape_string($ahk_conn,$tbl)."` AUTO_INCREMENT = 1");
+            }
+        } else {
+            if ($tbl === 'contact' && $cleanComplaints) {
+                $d = @mysqli_query($ahk_conn, "DELETE FROM `".mysqli_real_escape_string($ahk_conn,$tbl)."`
+                    WHERE (reply IS NOT NULL AND reply != '' AND reply != 'Not Solve Yet')
+                    OR (status IS NOT NULL AND (LOWER(status)='solved' OR LOWER(status)='closed'))");
+                if ($d) $deletedThisTable += (int)mysqli_affected_rows($ahk_conn);
+            }
+
+            if (in_array($tbl, $DATE_BASED_TABLES, true)) {
+                $cols = @mysqli_query($ahk_conn, "SHOW COLUMNS FROM `".mysqli_real_escape_string($ahk_conn,$tbl)."`");
+                $dateCols = [];
+                if ($cols) {
+                    while ($c = mysqli_fetch_row($cols)) {
+                        $cn = $c[0];
+                        $ct = strtolower($c[1]);
+                        if (strpos($ct, 'date') !== false || strpos($ct, 'time') !== false
+                            || in_array(strtolower($cn),['created_at','updated_at','date','datetime','created','timestamp','txn_date'],true)) {
+                            $dateCols[] = $cn;
+                        }
+                    }
+                }
+                if (!empty($dateCols)) {
+                    $whereParts = [];
+                    foreach ($dateCols as $dc) {
+                        $whereParts[] = "(`{$dc}` IS NULL OR `{$dc}` = '' OR `{$dc}` = '0000-00-00' OR `{$dc}` = '0000-00-00 00:00:00' OR `{$dc}` < '".mysqli_real_escape_string($ahk_conn,$dateCutoff)."')";
+                    }
+                    $whereSql = implode(' OR ', $whereParts);
+                    $dSql = "DELETE FROM `".mysqli_real_escape_string($ahk_conn,$tbl)."` WHERE ({$whereSql})";
+                    $d2 = @mysqli_query($ahk_conn, $dSql);
+                    if ($d2) $deletedThisTable += (int)mysqli_affected_rows($ahk_conn);
+                }
+            }
+        }
+
+        if ($doOptimize) {
+            @mysqli_query($ahk_conn, "ALTER TABLE `".mysqli_real_escape_string($ahk_conn,$tbl)."` FORCE");
+            @mysqli_query($ahk_conn, "OPTIMIZE TABLE `".mysqli_real_escape_string($ahk_conn,$tbl)."`");
+        }
+
+        $infoAfter = tblSizeInfo($ahk_conn, $dbname, $tbl);
+        $savedBytes = max(0, $infoBefore['bytes'] - $infoAfter['bytes']);
+        $totalCleanedBytes += $savedBytes;
+        $totalDeletedRows += $deletedThisTable;
+
+        $cleanLog[] = [
+            "table"  => $tbl,
+            "action" => ($doFullTruncate ? "FULL TRUNCATE ✅" : "Cleaned old records (> {$days} days)")
+                . ((!$doFullTruncate && $tbl === 'contact' && $cleanComplaints) ? " + Solved complaints" : "")
+                . ($doOptimize ? " + REBUILT (FORCE+OPTIMIZE)" : ""),
+            "rows"   => $deletedThisTable,
+            "bytes_saved" => humanFilesize($savedBytes),
+        ];
+    }
+
+    @mysqli_query($ahk_conn, "SET foreign_key_checks = 1");
+
+    if ($doDeleteUploads) {
+        $filesBefore = $totalFilesDeleted;
+        $bytesBefore = $totalFileBytesFreed;
+        deleteUserUploads($uploadDir, $STATIC_ICON_FOLDERS, $KEEP_FILE_NAMES, $totalFilesDeleted, $totalFileBytesFreed);
+        $fileCleanLog[] = [
+            "area" => "admin/uploads/",
+            "desc" => "User-uploaded PDFs, JPGs, PNGs (static icon folders Services, service_icom kept safe)",
+            "files" => $totalFilesDeleted - $filesBefore,
+            "bytes" => humanFilesize($totalFileBytesFreed - $bytesBefore),
+        ];
+
+        $tempDirs = [
+            __DIR__ . '/dlprints',
+            __DIR__ . '/sample',
+            __DIR__ . '/passbook/1/img',
+            __DIR__ . '/passbook/1/airtel/img',
+            __DIR__ . '/passbook/1/post/img',
+            __DIR__ . '/voteradv/sign',
+            __DIR__ . '/voteradv/voterimage',
+            __DIR__ . '/voteradv/voterbg',
+        ];
+        foreach ($tempDirs as $tdir) {
+            if (!is_dir($tdir)) continue;
+            $fb = $totalFilesDeleted;
+            $bb = $totalFileBytesFreed;
+            deleteUserUploads($tdir, [], ['index.php', 'index.html', '.htaccess', '1.svg', 'ASSAM.png', 'aASSAM.png', '1.png', '2.png', 'dlBack.jpg', 'dlFront.jpg', 'print_hkb.php', 'print_n.php', 'Sign_new_.png', 'votersign2.png', 'votersign222.png', 'votersign.png', 'votersign 1.png', 'back-new1.jpeg', 'front-new1.jpeg', 'votersign2.jpg', 'voterhindiback12.jpg', 'voterhindiback2.jpg', 'voterhindiback4.jpg', 'voterhindifront1.jpg', 'config.php', '1.jpg', '2.jpg', '3.png', 'AadhaarSample.pdf', 'english_dec.pdf', 'self_declaration.pdf'], $totalFilesDeleted, $totalFileBytesFreed);
+            if (($totalFilesDeleted - $fb) > 0) {
+                $fileCleanLog[] = [
+                    "area" => str_replace(__DIR__, 'admin', $tdir),
+                    "desc" => "Temp/preview stored assets",
+                    "files" => $totalFilesDeleted - $fb,
+                    "bytes" => humanFilesize($totalFileBytesFreed - $bb),
+                ];
+            }
+        }
+    }
+
+    if ($doDeleteBackups) {
+        $backupCandidates = [
+            __DIR__ . '/../goodprintportal_good.sql',
+            __DIR__ . '/../goodprintportal_good.sql.gz',
+            __DIR__ . '/../goodprintportal_backup.sql',
+            __DIR__ . '/../database_backup.sql',
+            __DIR__ . '/../db_backup.sql',
+            __DIR__ . '/admin.zip',
+            __DIR__ . '/../admin.zip',
+            __DIR__ . '/error_log',
+            __DIR__ . '/../error_log',
+            __DIR__ . '/aadharpvc/error_log',
+            __DIR__ . '/passbook/error_log',
+            __DIR__ . '/voteradv/error_log',
+        ];
+        $globPatterns = [
+            __DIR__ . '/../*.sql',
+            __DIR__ . '/../*.sql.gz',
+            __DIR__ . '/../*.zip',
+            __DIR__ . '/*.zip',
+            __DIR__ . '/../backup_*.sql*',
+            __DIR__ . '/../*.bak',
+        ];
+        $candsFromGlob = [];
+        foreach ($globPatterns as $gp) {
+            $matched = @glob($gp);
+            if ($matched) $candsFromGlob = array_merge($candsFromGlob, $matched);
+        }
+        $backupCandidates = array_merge($backupCandidates, $candsFromGlob);
+        $backupCandidates = array_unique($backupCandidates);
+
+        foreach ($backupCandidates as $bk) {
+            if (!is_file($bk)) continue;
+            $sz = @filesize($bk);
+            if (@unlink($bk)) {
+                $totalFilesDeleted++;
+                $totalFileBytesFreed += $sz;
+                $fileCleanLog[] = [
+                    "area" => str_replace([__DIR__ . '/../', __DIR__ . '/'], '', $bk),
+                    "desc" => "Backup / dump / log file",
+                    "files" => 1,
+                    "bytes" => humanFilesize($sz),
+                ];
+            }
+        }
+    }
+
+    $runDone = true;
+    $totalBytesAfter = dbTotalSize($ahk_conn, $dbname);
+    $uploadSizeAfter = dirTotalSize($uploadDir);
+}
+
+include(__DIR__ . '/../template/ahkweb/header.php');
+?>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="index.php"><i class="bx bx-home-alt"></i></a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Data Cleanup &amp; Database Maintenance</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card border-top border-0 border-4 border-primary shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3"><i class="fa-solid fa-database fs-2 text-primary"></i></div>
+                            <div>
+                                <h6 class="mb-0 text-muted">Database Size</h6>
+                                <h4 class="mb-0 text-primary"><?php echo humanFilesize($totalBytesBefore); ?></h4>
+                                <small class="text-muted"><?php echo count($ALL_TABLES); ?> tables</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-top border-0 border-4 border-info shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3"><i class="fa-solid fa-file-arrow-up fs-2 text-info"></i></div>
+                            <div>
+                                <h6 class="mb-0 text-muted">Uploads Size</h6>
+                                <h4 class="mb-0 text-info"><?php echo humanFilesize($uploadSizeBefore); ?></h4>
+                                <small class="text-muted">admin/uploads/ + temp dirs</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-top border-0 border-4 border-danger shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3"><i class="fa-solid fa-shield-halved fs-2 text-danger"></i></div>
+                            <div>
+                                <h6 class="mb-0 text-muted">Protected Tables (Never Deleted)</h6>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
+                                    <?php foreach ($PROTECTED_TABLES as $pt): ?>
+                                        <span class="badge bg-danger"><?php echo htmlspecialchars($pt); ?></span>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php if ($runDone): ?>
+        <div class="container mb-0 px-0">
+            <div class="alert alert-success alert-dismissible fade show border-0 bg-success bg-opacity-10 text-success mb-4" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <b>Cleanup Complete!</b><br>
+                🗄️ Database: Deleted <b><?php echo number_format($totalDeletedRows); ?> rows</b>,
+                reclaimed <b><?php echo humanFilesize($totalCleanedBytes); ?></b>
+                <?php if (isset($totalBytesAfter)): ?>
+                    — New DB size: <b><?php echo humanFilesize($totalBytesAfter); ?></b>
+                    (reduced by <b><?php echo humanFilesize(max(0,$totalBytesBefore - $totalBytesAfter)); ?></b>)
+                <?php endif; ?>
+                <?php if ($totalFilesDeleted > 0): ?>
+                    <br>📁 Files: Deleted <b><?php echo number_format($totalFilesDeleted); ?> files</b>,
+                    freed <b><?php echo humanFilesize($totalFileBytesFreed); ?></b>
+                    (Uploads new size: <b><?php echo isset($uploadSizeAfter) ? humanFilesize($uploadSizeAfter) : '—'; ?></b>)
+                <?php endif; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!$runDone): ?>
+        <div class="row mb-4">
+            <div class="col-xl-12 mx-auto">
+                <div class="card border-top border-0 border-5 border-danger shadow-lg">
+                    <div class="card-body p-4" style="background:linear-gradient(135deg,#fff5f5 0%,#fff8e6 100%);">
+                        <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-3">
+                            <div>
+                                <h4 class="mb-1 text-danger fw-bold">
+                                    <i class="fa-solid fa-bolt me-2"></i>
+                                    ⚡ INSTANT CLEAN NOW
+                                </h4>
+                                <div class="text-muted small mb-0">
+                                    Sabse aggressive mode — ek click mein:
+                                    <b class="text-danger">
+                                        FULL TRUNCATE + Delete Uploads + Delete SQL/Zip/Logs + Rebuild Tables
+                                    </b>
+                                    <br>
+                                    (users, wallet, wallethistory, settings, pricing, referral — 100% safe)
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2 flex-shrink-0">
+                                <form method="POST" id="instantForm" class="d-inline">
+                                    <input type="hidden" name="instant_run" value="1">
+                                </form>
+                                <button type="button" id="instantBtn"
+                                        class="btn btn-danger btn-lg px-4 py-3 fw-bold shadow-sm"
+                                        style="background:linear-gradient(135deg,#dc3545 0%,#ff6b35 100%);border:none;">
+                                    <i class="fa-solid fa-bolt me-2"></i> ⚡ INSTANT CLEAN NOW
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <div class="row">
+            <div class="col-xl-12 mx-auto">
+                <div class="card border-top border-0 border-4 border-warning shadow-sm">
+                    <div class="card-body p-5">
+                        <div class="card-title d-flex align-items-center mb-3">
+                            <div><i class="fa-solid fa-broom me-2 font-22 text-warning"></i></div>
+                            <h4 class="mb-0 text-warning">Data Cleanup Wizard — Aggressive Mode</h4>
+                        </div>
+                        <div class="alert alert-danger border-0 bg-danger bg-opacity-10 mb-3">
+                            <i class="bi bi-exclamation-octagon-fill me-2"></i>
+                            <b>Niche ke options enable karne se — poora service data (Aadhar/PAN/DL/Voter/Ration/Samagra/PDF/Images) delete ho jayega.</b>
+                        </div>
+                        <div class="alert alert-warning border-0 bg-warning bg-opacity-10 mb-4">
+                            <i class="bi bi-shield-fill-check me-2"></i>
+                            <b>Safe:</b> <code>users</code>, <code>settings</code>, <code>wallet</code> (balance),
+                            <code>wallethistory</code> (transactions), <code>pricing</code>, <code>referral</code>
+                            — inme se <u>koi bhi row delete nahi hoga</u>. Sirf OPTIMIZE/FORCE rebuild hoga (space reclaim).
+                        </div>
+
+                        <form method="POST" id="cleanupForm" class="row g-4">
+                            <input type="hidden" name="run_cleanup" value="1">
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Records older than (days) — Old mode (skip if Full Truncate ON):</label>
+                                <input name="days_older" type="number" min="7" max="3650" value="90" class="form-control form-control-lg">
+                                <div class="form-text">Full Truncate OFF hone par sirf itne se zyada purane records delete hote hain.</div>
+                            </div>
+
+                            <div class="col-md-6 pt-2">
+                                <div class="form-check form-switch mt-3">
+                                    <input class="form-check-input" type="checkbox" id="do_optimize" name="do_optimize" value="1" checked>
+                                    <label class="form-check-label fw-semibold" for="do_optimize">
+                                        🔁 REBUILD ALL Tables (ALTER FORCE + OPTIMIZE)
+                                        <span class="badge bg-success ms-1">MUST — Real space reclaim</span>
+                                    </label>
+                                    <div class="form-text">Deleted rows ke baad InnoDB ko actual mein shrink karne ke liye FORCE + OPTIMIZE dono chalega.</div>
+                                </div>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" id="clean_complaints_solved" name="clean_complaints_solved" value="1" checked>
+                                    <label class="form-check-label fw-semibold" for="clean_complaints_solved">
+                                        Clean Solved / Closed Complaints
+                                    </label>
+                                </div>
+                                <hr>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" id="do_full_truncate" name="do_full_truncate" value="1" checked>
+                                    <label class="form-check-label fw-semibold text-danger" for="do_full_truncate">
+                                        🔥 FULL WIPE — Truncate ALL service tables (RECOMMENDED)
+                                        <span class="badge bg-danger ms-1">300 MB → 40 MB</span>
+                                    </label>
+                                    <div class="form-text text-danger">Protected tables (users/wallet/transactions) ko chhod kar har table ko EMPTY kar dega. DB 300MB se 40MB tak aa jayega.</div>
+                                </div>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" id="do_delete_uploads" name="do_delete_uploads" value="1" checked>
+                                    <label class="form-check-label fw-semibold text-danger" for="do_delete_uploads">
+                                        🗑️ Delete ALL uploaded files (PDF/JPG/PNG/temp)
+                                    </label>
+                                    <div class="form-text text-danger">admin/uploads ke saare user uploads delete honge. Static icon folders (Services, service_icom) safe rahenge.</div>
+                                </div>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" id="do_delete_backups" name="do_delete_backups" value="1" checked>
+                                    <label class="form-check-label fw-semibold text-danger" for="do_delete_backups">
+                                        🧹 Delete SQL/Zip/Log backup files + error_log
+                                    </label>
+                                    <div class="form-text text-danger">goodprintportal_good.sql, admin.zip, error_log — sab delete honge (zip size aur bhi kam hoga).</div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="card border border-secondary border-opacity-25">
+                                    <div class="card-body bg-light p-3">
+                                        <h6 class="mb-2 text-primary"><i class="fa-solid fa-list-check me-1"></i> Summary of tables:</h6>
+                                        <div class="row small">
+                                            <?php
+                                            $perCol = max(1, (int)ceil(count($ALL_TABLES)/3));
+                                            $chunks = array_chunk($ALL_TABLES, $perCol);
+                                            foreach ($chunks as $chunk):
+                                            ?>
+                                            <div class="col-md-4">
+                                                <ul class="mb-0 ps-3">
+                                                    <?php foreach ($chunk as $t):
+                                                        $prot = in_array(strtolower($t), array_map('strtolower', $PROTECTED_TABLES), true);
+                                                        $info = tblSizeInfo($ahk_conn, $dbname, $t);
+                                                    ?>
+                                                    <li>
+                                                        <span class="<?php echo $prot ? 'text-danger fw-semibold' : 'text-dark'; ?>">
+                                                            <?php echo htmlspecialchars($t); ?>
+                                                        </span>
+                                                        <small class="text-muted">
+                                                            (<?php echo number_format($info['rows']); ?> · <?php echo humanFilesize($info['bytes']); ?>)
+                                                        </small>
+                                                        <?php if ($prot): ?>
+                                                            <span class="badge bg-danger">🔒 PROTECTED</span>
+                                                        <?php else: ?>
+                                                            <span class="badge bg-info">🧹 cleanable</span>
+                                                        <?php endif; ?>
+                                                    </li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center mt-3">
+                                <button type="button" id="confirmBtn" class="btn btn-lg btn-danger px-5 py-2 fw-bold">
+                                    <i class="fa-solid fa-fire me-2"></i> Run Cleanup Now
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php if ($runDone && (!empty($cleanLog) || !empty($fileCleanLog))): ?>
+        <div class="row mt-4">
+            <?php if (!empty($cleanLog)): ?>
+            <div class="col-xl-12 mx-auto mb-4">
+                <div class="card border-top border-0 border-4 border-success shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="mb-3 text-success"><i class="fa-solid fa-database me-2"></i> Database Cleanup Results</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Table</th>
+                                        <th>Action</th>
+                                        <th class="text-end">Rows Deleted</th>
+                                        <th class="text-end">Space Reclaimed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($cleanLog as $log): ?>
+                                    <tr>
+                                        <td class="fw-semibold"><?php echo htmlspecialchars($log['table']); ?></td>
+                                        <td class="small"><?php echo htmlspecialchars($log['action']); ?></td>
+                                        <td class="text-end"><?php echo number_format($log['rows']); ?></td>
+                                        <td class="text-end text-success fw-semibold"><?php echo htmlspecialchars($log['bytes_saved']); ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot class="table-success fw-semibold">
+                                    <tr>
+                                        <td colspan="2" class="text-end">TOTAL DB</td>
+                                        <td class="text-end"><?php echo number_format($totalDeletedRows); ?> rows</td>
+                                        <td class="text-end"><?php echo humanFilesize($totalCleanedBytes); ?> reclaimed</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($fileCleanLog)): ?>
+            <div class="col-xl-12 mx-auto">
+                <div class="card border-top border-0 border-4 border-info shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="mb-3 text-info"><i class="fa-solid fa-folder-tree me-2"></i> Files Deleted Summary</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Area / File</th>
+                                        <th>Description</th>
+                                        <th class="text-end">Files Deleted</th>
+                                        <th class="text-end">Space Freed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($fileCleanLog as $flog): ?>
+                                    <tr>
+                                        <td class="fw-semibold"><?php echo htmlspecialchars($flog['area']); ?></td>
+                                        <td class="small"><?php echo htmlspecialchars($flog['desc']); ?></td>
+                                        <td class="text-end"><?php echo number_format($flog['files']); ?></td>
+                                        <td class="text-end text-info fw-semibold"><?php echo htmlspecialchars($flog['bytes']); ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot class="table-info fw-semibold">
+                                    <tr>
+                                        <td colspan="2" class="text-end">TOTAL FILES</td>
+                                        <td class="text-end"><?php echo number_format($totalFilesDeleted); ?> files</td>
+                                        <td class="text-end"><?php echo humanFilesize($totalFileBytesFreed); ?> freed</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
+    </div>
+</div>
+
+<script>
+document.getElementById('instantBtn').addEventListener('click', function() {
+    const btn = this;
+    Swal.fire({
+        title: '⚡ INSTANT CLEAN — Last Confirmation',
+        html: `
+            <div class="text-start">
+                <div class="alert alert-danger border-0 bg-danger bg-opacity-10 p-3 mb-2">
+                    <b>⚠️ Ye sab 1-click mein hoga:</b>
+                </div>
+                <p class="mb-1">🔥 <b>FULL WIPE:</b> users/wallet/transactions ko chhod kar har service table ko TRUNCATE (0 rows).</p>
+                <p class="mb-1">🗑️ <b>Uploads Delete:</b> admin/uploads ke saare PDF/JPG/PNG hata de (sirf static icons safe).</p>
+                <p class="mb-1">🧹 <b>Backup/Logs Delete:</b> .sql, .zip, error_log — sab delete.</p>
+                <p class="mb-1">🔁 <b>Rebuild:</b> FORCE + OPTIMIZE — poora DB shrink karega.</p>
+                <hr>
+                <p class="mb-0"><span class="text-success fw-bold">✅ Safe rahenge:</span> users, wallet, wallethistory, settings, pricing, referral.</p>
+            </div>
+        `,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Haan, CHALAO — No Confirmations',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((res) => {
+        if (res.isConfirmed) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> INSTANT Cleanup Running...';
+            document.getElementById('instantForm').submit();
+        }
+    });
+});
+
+document.getElementById('confirmBtn').addEventListener('click', function() {
+    const fullWipe = document.getElementById('do_full_truncate').checked;
+    const delUp = document.getElementById('do_delete_uploads').checked;
+    const delBk = document.getElementById('do_delete_backups').checked;
+    const opt = document.getElementById('do_optimize').checked;
+
+    let warnings = [];
+    if (fullWipe) warnings.push('<p class="mb-1"><span class="text-danger">🔥 FULL WIPE:</span> <b>Har service table</b> (Aadhar/PAN/DL/Voter/Samagra etc.) ko 0 rows tak truncate karega.</p>');
+    if (delUp) warnings.push('<p class="mb-1"><span class="text-danger">🗑️ Uploads:</span> admin/uploads ke saare user PDF/JPG delete honge (icons safe).</p>');
+    if (delBk) warnings.push('<p class="mb-1"><span class="text-danger">🧹 Backups:</span> .sql / .zip / error_log dump files delete honge.</p>');
+    if (opt) warnings.push('<p class="mb-1"><span class="text-primary">🔁 Rebuild:</span> FORCE + OPTIMIZE — InnoDB actually shrink karega.</p>');
+
+    Swal.fire({
+        title: 'Final Confirmation — Permanent Action',
+        html: `
+            <div class="text-start">
+                ${warnings.length ? warnings.join('') : '<p>Gentle mode — only old records based on days.</p>'}
+                <hr>
+                <p class="mb-1"><span class="text-success">✅ 100% Safe:</span> <b>users</b>, <b>wallet</b> (balance), <b>wallethistory</b> (transactions), <b>settings</b>, <b>pricing</b>, <b>referral</b> — inme se kuch bhi <u>nahi</u> delete hoga. Bas rebuild hoga agar optimize ON hai.</p>
+            </div>
+        `,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Haan, sab clean kar do',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((res) => {
+        if (res.isConfirmed) {
+            let btn = document.getElementById('confirmBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Running cleanup...';
+            document.getElementById('cleanupForm').submit();
+        }
+    });
+});
+</script>
+
+<?php
+include(__DIR__ . '/../template/ahkweb/footer.php');
+?>
+
+<script src="../template/ahkweb/assets/js/bootstrap.bundle.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/simplebar/js/simplebar.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+<script src="../template/ahkweb/assets/js/app.js"></script>
+
+<?php
+if (file_exists(__DIR__ . '/../template/ahkweb/userFooter.php')) {
+    include(__DIR__ . '/../template/ahkweb/userFooter.php');
+}
+?>
+</body>
+</html>

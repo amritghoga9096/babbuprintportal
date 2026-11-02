@@ -1,0 +1,3064 @@
+
+--- 2026-04-28 15:20:25 ---
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9905132591
+    [cust_Email] => sitaram10532@gmail.com
+    [hash] => d035e2e4ae474cbd:468897406a800155dcdf92e5edf21a491d6c5d99:YCtlVe/g8PMLNIur7L12hOlo9xM96uU/4Bsqx8VnMrXOQiMgI6iDxbZrxZb+qIrfbNjQwQXCSUCJ8Q3vxgfzvSk9OFtomM7y3k/VQXyWMktu6xhWTN88Xg3JBFwuCCK/FgTKuhxKpUNxhgt0gJGGWeHaES58aJugtX9rvEjVB9HSS8age+WRcxbsZVUZxV/Jy6xjqbvnvBw1+twjc3PYYP/Vd0jVZrUufIaD+k5iiZi5p1Lye+RgY2mhflw1Uxxh4Z46vFEjNS62TisyAZdtbaq/TaVBnleX4VWEUDt9ufx1Mr0we8ClFbvhjd7ZbD3ONUhz9r//xZEKkNFDaEtJ6cD0SwR/JfLlEsOhiX0/5Xzyl0LebEKF5eFkJ+UMrDzmGyjrLtp67yd1qc+OGot6sE8AOV5Ad3dbYe4LT/54f73Ggh88zv+bXMfESdpLdwgJ5gLMtLOAaATcrJfCGq51bOnYd/VkE6zYPM9t2gj72cE=
+    [checksum] => Qy/9FBLEaAYNY8ID/3OKExi9WMCCImZq8jKnkIp0atouqdyIjZhMSxrtB+FV7QdWWqnL8Y5Jyu7W/mzwd+FLWXS8mSwv3nrrSLbi4TV2ItI=
+)
+
+Current Session ID: 334853c212803b6e4d6460519c01d57a
+Session Data before update: Array
+(
+)
+
+Checksum verification failed
+
+--- 2026-04-28 15:24:44 ---
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9905132591
+    [cust_Email] => sitaram10532@gmail.com
+    [hash] => e9b7f3b19ccaef31:c825b399b50dabe7856a9c52474e25968bf6b12a:gUf01Yr890oOd0btyUHxdh0IIKJYZF0WVdGGC8svXzPgU0f5Uda/SmB0FetWfyKKszEOO74TUQNwZAKsIIWjrmdqCXKRJdDxA9P4vUlI60lrSmItZ2FUsnMTC9Ra7+o9us7u0OJSFX26DsrI6I6CrREEUktutjlmEnOrskU1d8WMSPzjhGC/NWAZhkj3APtAtrxwhTpuxcImXKvBdQyl5st0vLM+8jz/muHxq1PM7Qn+PDPLRJFJNzTTNf4vPcBwWB41DbBn+ck/qJ1rDPm5BlK+NIL+1qy965wK1/Go5XeAX0fd7Epsw3SJNrNuO4holMrxex2MwcIQuQMdcPujMIR/EM0z0gBUJ3KYz0BFvUXAi2sqshHnCoce8BxQiBBFBMgGpxuPuhUdGwluBrMOVKYB1nq/hyxoDvOjpRIm+3fG97U7D8NJiGnLD6qICcRFKT0FvO4OaASoOuEHjIuWB97mTc5ITJRXmBA8WBBo+rA=
+    [checksum] => D0NLJZUqfpejaGHAfa559Ys+5aesSW3nxMFdWeMdfvX0yf4X+7PDqXra9LLVqM9yySjqF0tgNBWtM4oosTdDgUxkCG1sphA1CEmEvujwY9E=
+)
+
+Current Session ID: dc8d4c3d242cb000fdee9323a33f35fa
+Session Data before update: Array
+(
+)
+
+Checksum verification failed
+
+--- 2026-04-28 15:39:54 ---
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9905132591
+    [cust_Email] => sitaram10532@gmail.com
+    [hash] => e1bb40d5c02ef969:78ce5ca575ba9dd4229b6faf028139ef70d56aed:qyRCtU9Zvt0T0AgxD8ZcXYvmOKveSCWXXmzKcRveEn3ZTXNEMt0R9b5fIMTkhRZn6yPi9QDavgzSz5qvN7azwsaV0Vch78mZrH/4uJ08hI/eTIc8ZmQRBc0pyhb0mf9KRl+5W6CZvbd6zH+yDkgdPrkEyiWoTbmsQFc1zSif6XID6uILA2q0w5/zTLDXCvR0prGBbq9bey+/Z8pnd9WPAK/ms8Ao6gu7WOpx+5Vd1awnRljILj/ZGoTdUDbJQJb8K5gONo3eohnoHx+vC4xzU5vb+GIw2J9kMhaWsGWEG8Sj0JTmyApOSwinE4egHTeuRbQHFRARZfmPd3UFA7HQga/s5nKdHepRTQ6Zp9PvTTjWZgvDUF5q8rirfTTEtKshAfAjQ+yCPGIptNRu2mVicWyXH/KDPvfxB9YJLzc2snV1rF+MqPwKwP8pW4soJN5DHGUyjCz7YkJvJpO9wM6IP86ZAJZGiE6k6Xet9ILAFYo=
+    [checksum] => FybQWikyjSUDuPZh3OUXz/d+ThQff4eVNgdhowWY2RSgDjmcr7idjiqfddnSpRsjZfZbclpRF0dzy82D7Mtto9yRC9ml+vj60KOWcA0/CIM=
+)
+
+Processing Result for Order:  | Status: SUCCESS
+Current Session ID: be058b5fd4fbc042833970644b8269ee
+Session Data before update: Array
+(
+)
+
+Checksum verification failed
+
+--- 2026-04-28 15:49:54 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 106.219.245.130
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9905132591
+    [cust_Email] => sitaram10532@gmail.com
+    [hash] => 003c6f1c1c908685:f8292e1047c418829f4c5026027c3b1c2fb335b4:m5zqkTxapz7Nvgv6CrRooNL8JI+Z4XfiZzKXwQpZ241dOLN+djpT5Y+0WaP/go7twNN1GNr4dVhQ/5hXPVHKzfXrdaO438bdtwww1kfudeKCN4FE4o3Uty9msUu9rVs6fCItTv+CBK9DmsNnHmp21NQzFcEET+TWLhqyx0EsHPueZNhW3LlpVHTUiuK8QLEAPuLqW1To9XD3abScoLN+xGe+hBtORGl4fxwC+qYXOQaRKoNuB1IxPfV7+hpLo0oXLR9GQXD1gviu542MlkfPE4V5XxT7Q/KBO2DmIqPksx6+8U3sYcz14XXeoWkRFKjVHS8gG+8Sj5U8uBiOOlODb8UmT3lOmHpgrMW21AwFGLA2GEleht1XG0KVPVLcKVbo3MwI4Ca9hDEIiZ0/T0aC9RXOMh2HxJPsjMup0jmDMT5yEW7IOUOZz/IdI5MkvXZE0HhA98gAIVnJRWHbClmTyf8q3evjQ20zh5HKynxy/fE=
+    [checksum] => kfHx3vgo6D0WR+KIKiI6wyrnZG1FfN4an54oP/qdtM+V/KE0uCaD7w8ZYuCWitqDnLs2mC++apqO7NOSB1YmZo1AoUKVKyHD3Jma4PXb4XQ=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT990513259138551777391359","txnAmount":"10.00","txnId":1777391392,"bankTxnId":"20260428010990000255996004713865809","paymentMode":"UPI","txnDate":"2026-04-28 09:19:52","utr":"611873304977","sender_vpa":"9905132591","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT990513259138551777391359
+    [txnAmount] => 10.00
+    [txnId] => 1777391392
+    [bankTxnId] => 20260428010990000255996004713865809
+    [paymentMode] => UPI
+    [txnDate] => 2026-04-28 09:19:52
+    [utr] => 611873304977
+    [sender_vpa] => 9905132591
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT990513259138551777391359
+Attempting to restore session: be058b5fd4fbc042833970644b8269ee
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9905132591
+    [name] => SITARAM SAW
+    [emailid] => sitaram10532@gmail.com
+    [phone] => 9905132591
+    [walletamount] => 4970
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9905132591, sitaram10532@gmail.com | Emails: sitaram10532@gmail.com
+Credited ₹10 to user via phone = 9905132591
+
+--- 2026-04-28 15:51:12 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 106.219.245.130
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9905132591
+    [cust_Email] => sitaram10532@gmail.com
+    [hash] => 003c6f1c1c908685:f8292e1047c418829f4c5026027c3b1c2fb335b4:m5zqkTxapz7Nvgv6CrRooNL8JI+Z4XfiZzKXwQpZ241dOLN+djpT5Y+0WaP/go7twNN1GNr4dVhQ/5hXPVHKzfXrdaO438bdtwww1kfudeKCN4FE4o3Uty9msUu9rVs6fCItTv+CBK9DmsNnHmp21NQzFcEET+TWLhqyx0EsHPueZNhW3LlpVHTUiuK8QLEAPuLqW1To9XD3abScoLN+xGe+hBtORGl4fxwC+qYXOQaRKoNuB1IxPfV7+hpLo0oXLR9GQXD1gviu542MlkfPE4V5XxT7Q/KBO2DmIqPksx6+8U3sYcz14XXeoWkRFKjVHS8gG+8Sj5U8uBiOOlODb8UmT3lOmHpgrMW21AwFGLA2GEleht1XG0KVPVLcKVbo3MwI4Ca9hDEIiZ0/T0aC9RXOMh2HxJPsjMup0jmDMT5yEW7IOUOZz/IdI5MkvXZE0HhA98gAIVnJRWHbClmTyf8q3evjQ20zh5HKynxy/fE=
+    [checksum] => kfHx3vgo6D0WR+KIKiI6wyrnZG1FfN4an54oP/qdtM+V/KE0uCaD7w8ZYuCWitqDnLs2mC++apqO7NOSB1YmZo1AoUKVKyHD3Jma4PXb4XQ=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT990513259138551777391359","txnAmount":"10.00","txnId":1777391392,"bankTxnId":"20260428010990000255996004713865809","paymentMode":"UPI","txnDate":"2026-04-28 09:19:52","utr":"611873304977","sender_vpa":"9905132591","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT990513259138551777391359
+    [txnAmount] => 10.00
+    [txnId] => 1777391392
+    [bankTxnId] => 20260428010990000255996004713865809
+    [paymentMode] => UPI
+    [txnDate] => 2026-04-28 09:19:52
+    [utr] => 611873304977
+    [sender_vpa] => 9905132591
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT990513259138551777391359
+Attempting to restore session: be058b5fd4fbc042833970644b8269ee
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9905132591
+    [name] => SITARAM SAW
+    [emailid] => sitaram10532@gmail.com
+    [phone] => 9905132591
+    [walletamount] => 4970
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9905132591, sitaram10532@gmail.com | Emails: sitaram10532@gmail.com
+Credited ₹10 to user via phone = 9905132591
+
+--- 2026-04-28 15:54:54 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 106.219.245.130
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9905132591
+    [cust_Email] => sitaram10532@gmail.com
+    [hash] => 3d3117ae3d9f7022:54b2d4b78415ab7cfcb600236fdd0e3bde9bc179:6bAfwrCvwOIEDEag1tQ10Jy2T/6NlWHKXOsdQvmtEMGDZNmo+szQqhPUi2AYX/M5P1gJCUUTts2S7Ll6honE0AquFCvgg5f1ymQwdPr7NK7zGNWj8oVEYSRiguT5L969HCBJkaMCF6MbEuYRb+Ra0OPxYZb795Ru2GdDoctn1AJ8E0EpI26GujzQZW40Bk9v0S0F6O93u9HN179Tnh6+BTfiq0i4G3iaSlbEEKPyrOHL9O+FC7ishd/ssCz7DmQXqqHldKp2h4wiflvQYj4b+e5j4E1bsY7MwcwGV2WoT8lPlfdUGnOH6fG6ModfO6XBLPefB3q3Q9Z5GuCBeS60Pl23JWsE2VGqS2LQZbM4k9bYASkRIjE2Mdbq/o+Vx2jalyDmSHLDWZJChKJSeh7g9iciHT3baH9TtqzU4liCGfirj7bX5clT9GJxGffqueLAC1wb1eZnDzbO6OGP6oT+UwFLKvdc9deYNnq7oxYsRns=
+    [checksum] => ireiLZgsBTwySf3w97kPzXXEbpJsFrg9DTvnNuGsVZAZPNhzDfbhBI42F2gqG1NL0bsULhPmZ8AbbSzcg7FRrpHkBJcoSq9PTFpjB4BuuGw=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT990513259176921777391669","txnAmount":"11.00","txnId":1777391691,"bankTxnId":"20260428110960000255997263940463899","paymentMode":"UPI","txnDate":"2026-04-28 09:24:51","utr":"611881101820","sender_vpa":"9905132591","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT990513259176921777391669
+    [txnAmount] => 11.00
+    [txnId] => 1777391691
+    [bankTxnId] => 20260428110960000255997263940463899
+    [paymentMode] => UPI
+    [txnDate] => 2026-04-28 09:24:51
+    [utr] => 611881101820
+    [sender_vpa] => 9905132591
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT990513259176921777391669
+Attempting to restore session: be058b5fd4fbc042833970644b8269ee
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9905132591
+    [name] => SITARAM SAW
+    [emailid] => sitaram10532@gmail.com
+    [phone] => 9905132591
+    [walletamount] => 4970
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9905132591, sitaram10532@gmail.com | Emails: sitaram10532@gmail.com
+Credited ₹11 to user via phone = 9905132591
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-05 14:46:48 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Mobile Safari/537.36
+Remote IP: 106.219.196.92
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 7668669854
+    [cust_Email] => gsagar29401@gmail.com
+    [hash] => f63d8cb2ff9324a5:8f52bacc2a58d224f188363052da029e0f391ea4:pmBmR02zl0huvir+FQemaWiwb+Wa7rFCaA5lrakXNylelroHcEnnBj2Vsk5A3ibuD0M+aiYV6SiJPiK+Vs0U8MZeLoqvF7z82XHgvJLTq6eiggJZceoiGC5ciQyLo37zBdMUc8x+XgGSk2mXnCWuHV1b7xk9bZFIAgjniKNszNikU610n7Hj9Bm+gtquuB8yw7ed/jWVIeTN2xc69TyPhhjvTZUM+W5IHzwkgCtGBa5jt0TPE3/k/KUnZjv4uWR/caaVgbKHamDn4Hxoawq06sSxAA+jh/3MhnfoZ6cP8P4jbfDnxnxTGqNt9jK1mIT6G8aZ3QhNYjSeP/xkBY6OWtf8xfAazW3sP2suyDQ6FG2tBr1IXHVQVZnzJkZm0mJM028n1ckAJAmqxaCO1vywAJ9U+qAox9FKN8HTfQQun0HJi4kyZvz/kYTJNOwiJ7Tmxafi7cjA7Po3+LQePRUVNNEWlsUTPd3D1XsvdE79PlI=
+    [checksum] => tj+v9MiX0i1hqNa+6Od0E1VI/vI53HDeWxTVfml7loSimcgLYCTcmtJ1rElI2EpxTJ4ofDxRMXRpYh+PkQD3M2+3KVMQa1xjv5t1OwMPkng=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT766866985454141777992351","txnAmount":"100.00","txnId":1777992405,"bankTxnId":"20260505111060000258516836065753514","paymentMode":"UPI","txnDate":"2026-05-05 08:16:45","utr":"627804617714","sender_vpa":"7668669854","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT766866985454141777992351
+    [txnAmount] => 100.00
+    [txnId] => 1777992405
+    [bankTxnId] => 20260505111060000258516836065753514
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-05 08:16:45
+    [utr] => 627804617714
+    [sender_vpa] => 7668669854
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT766866985454141777992351
+Attempting to restore session: 783df515b0caf0cf13cafa704438eb2d
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 7668669854
+    [name] => Gautam 
+    [emailid] => gsagar29401@gmail.com
+    [phone] => 7668669854
+    [walletamount] => 10
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 7668669854, gsagar29401@gmail.com | Emails: gsagar29401@gmail.com
+Credited ₹100 to user via phone = 7668669854
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-05 16:03:05 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Mobile Safari/537.36
+Remote IP: 152.58.115.23
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9654449898
+    [cust_Email] => amanbhatia3564@gmail.com
+    [hash] => a13329872a0fd8bf:44aa53771c11c602943b3322c91e2470ae531f7a:36Kwcl5pjhF2YhSDpWs6wXVxXQws3P2hhhN+hs+EHlxMhdxpVGaH6qP9RhZSS6vjhUS0R6Ebe2wZXSPIKIshnmeszJox/l5LIXFXLqX2iBlWvs11HJpFmBDqf8wu5A40W0yeiYxkabDRXPCQ/DwbBv/SURjLtofurq+1RZZhrjT0VruK8wFvymb9ECQThtmd20POtG6IiHNid56JIldKLel6y6a5TZMmpzl74X4YBH7uv782vKbx+VZY9OaWfln+qojyOH/zZXvIvDJZkILnwgIjc3pEfZB+3rz5nonoRyipqEpioYZa4Fn7oA0I80Rw21ftIAHXJdDzFgz8tvfyMAILQ+47kY+9GF7rayYPBAG3liZL8Qa454+I/iu6MaW0XxBxrZnJ5Z7IMQkv69KMyWUlRINzP4y3guSkF9wRf67iR0IEu7fFWsIv7f90oRBQ6VxthibDar0c1Xe8FXUNjDBAq49WK1X/rYNQEtocZho=
+    [checksum] => wT5JAd43gUJYDuoWpjmg3Tfjo9+K7fakpxTka5PnH+LEc3RSjM54QOZoqaMioJyCSTsxCATIS1mdagek1Txv5GfBi8tXpnRHjcVcATbIO5c=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT965444989817391777996878","txnAmount":"100.00","txnId":1777996982,"bankTxnId":"20260505110820000258535986749769313","paymentMode":"UPI","txnDate":"2026-05-05 09:33:02","utr":"302027453609","sender_vpa":"9654449898","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT965444989817391777996878
+    [txnAmount] => 100.00
+    [txnId] => 1777996982
+    [bankTxnId] => 20260505110820000258535986749769313
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-05 09:33:02
+    [utr] => 302027453609
+    [sender_vpa] => 9654449898
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT965444989817391777996878
+Attempting to restore session: 9003b907fa81fe973169eec961b713f3
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9654449898
+    [name] => Aman
+    [emailid] => amanbhatia3564@gmail.com
+    [phone] => 9654449898
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9654449898, amanbhatia3564@gmail.com | Emails: amanbhatia3564@gmail.com
+Credited ₹100 to user via phone = 9654449898
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-07 03:36:33 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Mobile Safari/537.36
+Remote IP: 152.58.59.37
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 6261811849
+    [cust_Email] => gokulahirwar763@gmail.com
+    [hash] => 34d3167ede0d116a:d616dcaf7be95c094e52ae10f17f2a2844fd6d6d:jRu0QwqNy1HiEaBP3QFPq9UafapKZyuKzGPbv+6idvmUKcfYaISZCgtIH6E2kuLEfD2pkHDMr+5k2ahUUtmLqyVaAGLRguU9kg/VZxdczmHD9uRSE1X6yQ3LrTyvUQJxzZkWocbiIAQpDkbVGAFLunuE0a1LZ6svhIEQByMqKg8vRTCiLt7Gu65v/mL5N9jfbfkwl/DswIpRsD4vbRwADVGZLyveadkPjFWpDGJClsuXbqvklO6zGlzi4WfB4U1fLq7K7u1o/MgmCV+LNMHY3KFK5sCkxQn3e75SzGocpN/lyWVFfMcdgzlASNZbslaT1G4qQFOdFMd3xn6qxvvuVbYUciO5MLTkun25N0sjLj8XcMuMQwlm2crreXvb31lR2dWGaOF8Kka4/6c87rRIK+alTHOIYbHtmGgxECj69B1E9YjlEnaBN6wxR04/yo35K6b6Wk6d9avFyCannjZc3BMDtzas1iQQWt73vzR8NGc=
+    [checksum] => bqjbGmTLWFj6BT0K4pFiNNnidAWMUx05CByo4pivoFpKCKjUSXJm10gOJzqAw+qXlEUnBzAORzgUwIw/2JflzUtKTVOXM2fg/J46z+snJP8=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT626181184953441778124883","txnAmount":"100.00","txnId":1778124989,"bankTxnId":"20260507111080000259072944727343481","paymentMode":"UPI","txnDate":"2026-05-07 09:06:29","utr":"612779894982","sender_vpa":"6261811849","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT626181184953441778124883
+    [txnAmount] => 100.00
+    [txnId] => 1778124989
+    [bankTxnId] => 20260507111080000259072944727343481
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-07 09:06:29
+    [utr] => 612779894982
+    [sender_vpa] => 6261811849
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT626181184953441778124883
+Attempting to restore session: 4ac511ea74868ee091176d57ab27a56d
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 6261811849
+    [name] => GOKUL prasad ahirwar 
+    [emailid] => gokulahirwar763@gmail.com
+    [phone] => 6261811849
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 6261811849, gokulahirwar763@gmail.com | Emails: gokulahirwar763@gmail.com
+Credited ₹100 to user via phone = 6261811849
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-07 07:20:54 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 157.42.222.255
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 8873242687
+    [cust_Email] => acc0786cschelp@gmail.com
+    [hash] => f36a5b00bab2022b:8b52878c7d825e89a70e2d5ca7f9bbd2d927a974:IbFc1rkzGrI0XQNRxUcp7i8Kx+KwbSiv3zSZ+gNxGHo83o40hFCFCKk6SZ1xp0nR5G1iXxAQcdE9joAkNK8Rax6pDO3yOoE5OAGu04HPAjBgNGTM2ohK9+fIw7sge5ACB8j5M48asDtzF7Yd2FGtu3BaTVdZXKEYEy34gN268l2Af43tiyY4/h5RDzhAAKZeAHNUzyxD4lNM/+lQtq+vjmpt9ns+gyycOVKHAzzYgDMErcMQiQBcKlzc0yzeMSvk7/eSbSeOdY4sexzWXgwx1h72wurTVZTr4TkDC6vNGGZfDs8tyr0lGByfEwzqDN3bPOGUrEfZvnuySdBSmmcT96GjUg7MyAu5vdObNd5Lk20PeiXKjtRlQx7MQwAl3yIPIOS0F0jPusC38UFJCsiJDu1TvldMb8E58g3HTWsxQuJMQYwy5h3elQIuhb/0xOa4qakW4NFw5wM2x9miznGxusBIsLKpVcXyNh9bLMleksk=
+    [checksum] => 0GHN0QT9qBJxEa2JQJBsJOF5eVg9oJfRQNXZlk4dQm0GZQW00yeZPUMAjNxOMn+ZKLWP+hVU4BBJcZ7YHg6YJq+nXUs1MTDKTStTyL9+500=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT887324268711821778138428","txnAmount":"100.00","txnId":1778138451,"bankTxnId":"20260507110880000259129410125365917","paymentMode":"UPI","txnDate":"2026-05-07 12:50:51","utr":"141834717744","sender_vpa":"8873242687","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT887324268711821778138428
+    [txnAmount] => 100.00
+    [txnId] => 1778138451
+    [bankTxnId] => 20260507110880000259129410125365917
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-07 12:50:51
+    [utr] => 141834717744
+    [sender_vpa] => 8873242687
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT887324268711821778138428
+Attempting to restore session: 0c7c0e569900dbce26c714d7504cadb6
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 8873242687
+    [name] => ACC
+    [emailid] => acc0786cschelp@gmail.com
+    [phone] => 8873242687
+    [walletamount] => 20
+    [usertype] => 
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 8873242687, acc0786cschelp@gmail.com | Emails: acc0786cschelp@gmail.com
+Credited ₹100 to user via phone = 8873242687
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-08 04:33:13 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 117.192.85.23
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 8143339901
+    [cust_Email] => pmgrolla@gmail.com
+    [hash] => a9b87b213615cd47:e1fce21d518907c80ac3f201e1a75041002174d9:Cn+tWoCaqa820IpKGDlg+2y2lnhVLGnSQS6boiSKFD6p2OOr6BHYnpVA6wPnedzPtJPxkDjBPcz24JfrtD0ItiE1W/mGqacs5neDcs0U0tS8bqrs6ncSvpjtVQRix8vzLDogz9GG/q5jDuoGiRwTfiPqKgXNhFdCMPwvvwTTpiUbjxyA4BI3AAIHJLGInpDjGckYDEp/CzNiIAvaNq5mVwD2yGc9k7qFeB+B+CAvDEqitRB6HsNhzG0KFF6m5whfFD3Ka6uVQIPfBAf9MImeqchcbQCyuRWHbYWk8/9AkaO1aHWPO7UCc1RHhVBv3z7BJwv6c4pad1kgOMsNn6GRDiuAMK5ej9OiLbiQzecFIsk3NUh8OjfoEtV/lCbWLkuQeNbvBBOkArKGptld77yorIeHrURgQD/7YjYxKu7Iy8uAcPU3JFIaQWg8NhA1LkvUYMPS1/afebKdZGCdlwS2abw9yW/ufX0UXoaPieLla1E=
+    [checksum] => F/pNmpUvdcQvkdVkyqn8c7DHFr420UIg5nOhE0q0E5S/9HVYP21wCY0TUoPsu7+JD5vQDtpMmc76b/4s7sHm+aAt1lrXWwUatZOpiYp4Mx8=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT814333990160411778214737","txnAmount":"200.00","txnId":1778214790,"bankTxnId":"20260508110950000259449595785480759","paymentMode":"UPI","txnDate":"2026-05-08 10:03:10","utr":"612821291412","sender_vpa":"8143339901","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT814333990160411778214737
+    [txnAmount] => 200.00
+    [txnId] => 1778214790
+    [bankTxnId] => 20260508110950000259449595785480759
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-08 10:03:10
+    [utr] => 612821291412
+    [sender_vpa] => 8143339901
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT814333990160411778214737
+Attempting to restore session: 4b30afda0255038e453c2d31fb585a03
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 8143339901
+    [name] => CHIRANJEEVI
+    [emailid] => pmgrolla@gmail.com
+    [phone] => 8143339901
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 8143339901, pmgrolla@gmail.com | Emails: pmgrolla@gmail.com
+Credited ₹200 to user via phone = 8143339901
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-08 04:51:34 ---
+User Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 26_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/146.0.7680.40 Mobile/15E148 Safari/604.1
+Remote IP: 106.205.190.210
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9335590576
+    [cust_Email] => dk6083969@gmail.com
+    [hash] => e084c1e116f32ef8:04bdef335a8f79e7da4bb466f5a6f83539832489:Qw7OwwDNO1FPopPOrsIsub9O7O5azwizK7tZ8svqsUaCD63G38TjpqsMNSRNZInIiyQF/pNXF2iq8N3CIzg/+se5vzYs/yj1B5FN981EoQBMWaXFIrAwJqVVlWqSyAxlTpPluSEEKrGUvbPRFQUdAV1H0RqDe7v/LJlRTNUHDbSSOufExZu+rrvTCZLW81J7rBcDdGDKwedSbvA3/Nivgx6/isOQ3/HxnbUBE9sSBC4gY9oG79qoxbvwm2BdH36Km+erA/YGm6DU7E5rENA2ULLGepAjWEJYXKuLo/WOZt4xv500JxenBBhARzQkVeWwzi7PWdaEj1f8bFTcRh6tHIII7PaVq72Z/X/fVnI//QZTHQz9OzQK1kBxLM3q5qLJXU+rgPYZ/e54GMv0k1kNk7V6BJVaqEVjAoOyhY8KEpjNSmeQwn0RpiyfGpqyjXMKlUk1dysGaQ65iCgL0rysU5DfjwLncnUeCLVwVz+UwAg=
+    [checksum] => kVwa2OcsfuDokNcscfEoUnR8/mVL1hlqjZ1vIC/h1EyuOcsl4EyQAtk8f4cQf0ZOpPpt0A8Q86sXorfj3j/gOl1PzmdpAkb73itFrIqDBbQ=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT933559057649461778215834","txnAmount":"100.00","txnId":1778215892,"bankTxnId":"20260508110990000259454162710814691","paymentMode":"UPI","txnDate":"2026-05-08 10:21:32","utr":"612814546944","sender_vpa":"9335590576","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT933559057649461778215834
+    [txnAmount] => 100.00
+    [txnId] => 1778215892
+    [bankTxnId] => 20260508110990000259454162710814691
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-08 10:21:32
+    [utr] => 612814546944
+    [sender_vpa] => 9335590576
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT933559057649461778215834
+Attempting to restore session: 2e99d3fdd4f7c1a3f938bf96e7bef8c3
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9335590576
+    [name] => Dharmendra kumar 
+    [emailid] => dk6083969@gmail.com
+    [phone] => 9335590576
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9335590576, dk6083969@gmail.com | Emails: dk6083969@gmail.com
+Credited ₹100 to user via phone = 9335590576
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-08 16:22:22 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 223.187.248.244
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 7319547287
+    [name] => BISWANATH MONDAL
+    [emailid] => biswanath7214@gmail.com
+    [phone] => 7319547287
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+EXCEPTION: payment_not_success_status_
+
+--- 2026-05-09 05:54:40 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0
+Remote IP: 103.197.106.20
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 8502828069
+    [name] => SAHIL
+    [emailid] => isahilabbasi@gmail.com
+    [phone] => 8502828069
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+EXCEPTION: payment_not_success_status_
+
+--- 2026-05-09 14:02:01 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 27.97.165.55
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9503216744
+    [name] => VEANDT
+    [emailid] => HSGKGGHK@GMAIL.COM
+    [phone] => 9503216744
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+EXCEPTION: payment_not_success_status_
+
+--- 2026-05-09 14:04:25 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 27.97.165.55
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9503216744
+    [cust_Email] => HSGKGGHK@GMAIL.COM
+    [hash] => 8c58e7a77cd060c6:b3be72187caec9abc60cadef6617bc07a6e36f2d:jGnbVETP+J2S7gzil81qESxIPWyKlwjwT+TJX/u6oR7iVKw0sfY/NhlfLKZ8DHPSDtWE+6H3MWTqB1IeShzHbsaey1NQ8GZ/xrtLzDSo34+be/FYfOlVbs7rZ+1t5l487R8LYwGnKJHyGmxnXjK7b4KiEigqb1MNSnrMXzRLjOqQaxyHRyMeHnwUlbWGNXXx2fx3GVTWi+tO/Evw+JQql71Q2lpZZdvwm/VUt9kXcfdepWo7GSxXoS2sq6qEkaFFbC9manb9SvZKQsWthOk1BW3OEmVdehu9y0Ig2Ruv6rwvC6mSaJe9LbwR9mIbrlzBDlgx9FXFha+BAYpVL3gtX2e2xwn8gh33rZN98b5/0Ph24PcJEPjN4ROfUxW0ZRMhYf6VYbhii2/9ezkjj2834582pWbh7nYDx8o9kkedFGe6sSItkUqahc2C4cRFHaQf94JmksNczepB6o48j/cJdUeVJ/IQgZ3rbiCOT8G7sJw=
+    [checksum] => ULk59vqIcYOBZQ9cRSRMUCSsUqYo7tEuQiKI2hKcfsE7ZkULw1PFKlncWJudWXSmrsM2SOMPoJMjRXQktsuuGOtGZBKRh3C3jZyssKVv7AY=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT950321674464241778335420","txnAmount":"100.00","txnId":1778335463,"bankTxnId":"20260509110960000259955736688716486","paymentMode":"UPI","txnDate":"2026-05-09 07:34:23","utr":"612932949722","sender_vpa":"9503216744","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT950321674464241778335420
+    [txnAmount] => 100.00
+    [txnId] => 1778335463
+    [bankTxnId] => 20260509110960000259955736688716486
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-09 07:34:23
+    [utr] => 612932949722
+    [sender_vpa] => 9503216744
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT950321674464241778335420
+Attempting to restore session: ca755e523853d8e92686b3e0d3775d8b
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9503216744
+    [name] => VEANDT
+    [emailid] => HSGKGGHK@GMAIL.COM
+    [phone] => 9503216744
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9503216744, HSGKGGHK@GMAIL.COM | Emails: HSGKGGHK@GMAIL.COM
+Credited ₹100 to user via phone = 9503216744
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-11 14:42:16 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 45.123.109.191
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 6002237189
+    [cust_Email] => salmanbadboygaming@gmail.com
+    [hash] => 78789af79f177809:2e9d1dc0eb04a68d27985e5f9c801c8fa3321299:aUdrf0DtEwDbCzh/kQwusxJ9xzuBr6Fc3igCqbeKwhUENgQsgM7Z2ai/Pujmqf66KEeBsn9A9S1Nie/LJVCWJICL25U7Su3Y3QvQxAxQLJ6fMTMIs75qZv2ZnlDy4UM2wwFulJNXlCpUCHTsBVqleRBoSPALZdXGHhjNY7ReSpD33hw/+2/gywmgv7h7xiqqS/gzU9owKqWGYtm8Py9T/0JZh+Fly8deepzXUnYWcjEJiROqWijEBRFhS+OHAyAC83qUumCg6aDct0NbWwublznpSB4KBV1WrzFvHE6Vf71C4GoPwB/XhFhFUYNu+zc5BsW+8xrcmpb2r9gqutCIr9ATQ4VBdtkyB8l/VlMttY+v3DAmP/RphUFs2o432j+8tSXE3vZPIWPqVs6vy2xRCfXgbZe8ED1u9Aj6vENmjGEgY90nZs1ecCepM2vZFES/t25hAK/mnZoerUM602NSN9XSruSPGlYFfDk2jJtoDkc=
+    [checksum] => a4IfLEM84ASMO6ozuB8nMkydViTA0ItpanLdpZoNT4nPDz4GSIoI+UQFuBwKb2Ss/AEqKyujY7kBMtUJ6OxwS9xqb5y74In3VfbXRr64las=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT600223718924991778510491","txnAmount":"100.00","txnId":1778510533,"bankTxnId":"20260511010930000260690046303533992","paymentMode":"UPI","txnDate":"2026-05-11 08:12:13","utr":"613144745930","sender_vpa":"6002237189","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT600223718924991778510491
+    [txnAmount] => 100.00
+    [txnId] => 1778510533
+    [bankTxnId] => 20260511010930000260690046303533992
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-11 08:12:13
+    [utr] => 613144745930
+    [sender_vpa] => 6002237189
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT600223718924991778510491
+Attempting to restore session: 6e08ecfe228598c43fcf3e4864992e6f
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 6002237189
+    [name] => Salman Ali
+    [emailid] => salmanbadboygaming@gmail.com
+    [phone] => 6002237189
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 6002237189, salmanbadboygaming@gmail.com | Emails: salmanbadboygaming@gmail.com
+Credited ₹100 to user via phone = 6002237189
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-11 14:42:22 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 49.44.80.135
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_not_success_status_
+
+--- 2026-05-12 07:10:27 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Mobile Safari/537.36
+Remote IP: 223.188.0.200
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9760239589
+    [name] => Samrejalam 
+    [emailid] => samrejalam456@gmail.com
+    [phone] => 9760239589
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+EXCEPTION: payment_not_success_status_
+
+--- 2026-05-13 08:15:04 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 152.59.89.78
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 7668669854
+    [cust_Email] => gsagar29401@gmail.com
+    [hash] => a5b3cb2d771f8925:eabf382a3dd943c68e3d0689add9fcb4801493ab:aBtNkCeewuWb89RJNEHejdePWo++9I1wBGRUUJ0EOJlOHq7jX7v6W/Q6H6r5EEKa9bNCNe03IlVRc2Rcv5s+Buvvw3QpGPRoJd8cVZb7waOS6kOXNJKvpeL3pWF46I6syM353ERRnnqt/QTT/cadyAmqGO4XILPd28duBZSHOWyr+D5P0NDeuAfy8e0NFVun/zreYD+53NmOv66ohHwRiyReQARy6/EKN9iqcDq43spB9tboiR8NTdzAoUE/nhFTf04VP7OcKQvfkFql06uJIdwOkkkSK6MCM417OZ3Yj63Cd5D/Xjudz4Yq1IQxftU/CU8X/gVpty7X/T1WYFJ3CIrodFqCB/9V2t0lAzKT5L+2ZTxchD8XYDyQQxGR78GbdQKcFk+VMnsxQOEbzDUBYSBN2vXqns4exL97UhFzHlZ61bPMrMnegZ7CPBBU3+FcAi5M5DYuOESvnRsUQNtF5gA7zIq83WfV+AvS1xdf+DQ=
+    [checksum] => pudQvvvprhTICmvE8aI4uunxDRAaaVZlGH5+xRaWV2WFdk2f08O7gw+8YNUVREJpvYQSpm7dhfXznrKjJ2NVjW2pdnyGQ7HO8ppniquhlyM=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT766866985417331778660052","txnAmount":"100.00","txnId":1778660101,"bankTxnId":"20260513110920000261317369188764534","paymentMode":"UPI","txnDate":"2026-05-13 01:45:01","utr":"943977735731","sender_vpa":"7668669854","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT766866985417331778660052
+    [txnAmount] => 100.00
+    [txnId] => 1778660101
+    [bankTxnId] => 20260513110920000261317369188764534
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-13 01:45:01
+    [utr] => 943977735731
+    [sender_vpa] => 7668669854
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT766866985417331778660052
+Attempting to restore session: 894d03be82a693633733050dc290a5fb
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 7668669854
+    [name] => Gautam 
+    [emailid] => gsagar29401@gmail.com
+    [phone] => 7668669854
+    [walletamount] => 50
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 7668669854, gsagar29401@gmail.com | Emails: gsagar29401@gmail.com
+Credited ₹100 to user via phone = 7668669854
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-13 08:22:43 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 150.242.149.71
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_not_success_status_
+
+--- 2026-05-13 15:16:08 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 117.192.92.58
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9533095223
+    [cust_Email] => pmgrolla@gmail.com
+    [hash] => c34508c4d3862e32:d664cd82b831915f710d68a9c119141267ae4f71:ZaDM/PSfTDH3QpUZD4518D9EzYNxLXIR2XU8N4KH38q5NA/zfi7ahkRPvsQ9r27bIXFQ8qHydT5CDLHGOylBRgoNXSswzNipxnKol9EIisg6As9LgUQleHvace2I/uwpLfxYc/9zrC2HZrTvKZBaOrfNoDUn47zyEQWqgxecdzgz1NeDYdPScAj3A2EtT9OmIybKufTHVaCl3oKOQKg4rk7bRcvHCOc/apqPtv0VkZqn2GHSanGUiKmZZ8/jfNou60h6zOaAnF976a2HqCISsb5cWIuxI4V9Kz7BvRkXcqeMt6LQzsWEHfuTavzjlqelV5zFwtYDDv08j/4p0SsL4rJ6fd0crCJcKg+t54EA7JOyp44oEFuhLg8xaPhYHDNrwsf6OTvP1G9hmLlGc9HQiID6kcaGVdIIm+r8Gwfojd0CKzcKoFDr2EhR+Ky2IW/Fy1Sov4GVnGxLse4rFT3VsR2CzIdV9HDXNiNNA7SYvSA=
+    [checksum] => KqTAqHPCkyfzoh7bWswxlwrTGen5xhhGbZiXJedgiR68xKVU/Mr7y+Fc/p1Oz2M/wR0YiMqb7h6g8mgI6CR/14qXBn/pAiCmk/wUWFSU4Y8=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT953309522311411778685343","txnAmount":"100.00","txnId":1778685366,"bankTxnId":"20260513111060000261423333355085755","paymentMode":"UPI","txnDate":"2026-05-13 08:46:06","utr":"649906056246","sender_vpa":"9533095223","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT953309522311411778685343
+    [txnAmount] => 100.00
+    [txnId] => 1778685366
+    [bankTxnId] => 20260513111060000261423333355085755
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-13 08:46:06
+    [utr] => 649906056246
+    [sender_vpa] => 9533095223
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT953309522311411778685343
+Attempting to restore session: 729a4c0bd7da1449dadfe756b56413ea
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9533095223
+    [name] => CHIRANJEEVI
+    [emailid] => pmgrolla@gmail.com
+    [phone] => 9533095223
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9533095223, pmgrolla@gmail.com | Emails: pmgrolla@gmail.com
+Credited ₹100 to user via phone = 9533095223
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-14 07:40:42 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 150.242.149.138
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 8906373851
+    [cust_Email] => sumitgon@gmail.com
+    [hash] => 443db469a32f4859:4354bfecbb974f178f57724cac56f8dc0bf0fca4:Gc61QovqaV5iSrw3Pp/oqVpdSL4SwzyB67IXNkTS6BYAJW73sNlXQDhDu/0pGjk0r0PQAksKNEP+HiHbTO3Ekukvk5KFG44p3i/TNshW7AsKAnNsCwevFDSyBZmyIi67rE9z93pBDjydz4g4kyQOEBohitkEoSj7jwXHmpOHai5PlztmfNeHt9tVryAdzIEj0G0CsdoEKVlJECcaHUA+296riauLxSv69fy/1QApIBWcrvLBQdsbyK7S75jq6Qpd5gf4TtZ9dr5qN8YSUz6c2/2l/wC8+ba8uyxo/I8EcckeGbGdGFPFf8ZKbQHpD66nT7RR5ExJptZWrG9f4B1nmmMleoWqRq5fIAahq+BX/9klp861qLbfbAkvTiIQpkMR+TkXaidzlLhtK13B81+618U7oQPL+h8MdEn95TKxqOKUYr6u6WuHSUF3sM8861+5Dmi85Kj6qUBizHkq2fX/tF+Sek74aPv7d4vXznLLz5M=
+    [checksum] => K2wMeL8QTZpt+7BXKGf1w8kjTdtC/rVAvDZ4mQyWxbRemQ/6vY94WZmGPB6vhS0zXI4oIhAKWFysFf37crdjMombvCAZFKCL6m+LJuDtGYg=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT890637385185651778743991","txnAmount":"100.00","txnId":1778744439,"bankTxnId":"20260514110960000261671098237159677","paymentMode":"UPI","txnDate":"2026-05-14 01:10:39","utr":"613495754760","sender_vpa":"8906373851","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT890637385185651778743991
+    [txnAmount] => 100.00
+    [txnId] => 1778744439
+    [bankTxnId] => 20260514110960000261671098237159677
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-14 01:10:39
+    [utr] => 613495754760
+    [sender_vpa] => 8906373851
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT890637385185651778743991
+Attempting to restore session: 19095255d8bbdc8e1661b8e0280891f7
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 8906373851
+    [name] => s gon
+    [emailid] => sumitgon@gmail.com
+    [phone] => 8906373851
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 8906373851, sumitgon@gmail.com | Emails: sumitgon@gmail.com
+Credited ₹100 to user via phone = 8906373851
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-14 20:00:36 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Mobile Safari/537.36
+Remote IP: 49.14.154.136
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9990888266
+    [cust_Email] => gufrana5188@gmail.com
+    [hash] => edefd57a66651b53:eec657de9425ca609c30465323cc968826e1db76:HkO5UeDfusPaLopY4yUzqovxCCDxTiL3PevMfRUHBaXGRaD8gsZlOokR+Px9MuoS2vzEeTh7shuylzJoWxJox0cUoZS46Vg6yu+2Ln8x+FOTqoEMjSq+OcYE+pqtTPGa1AtSD0Ccvyf66pMzgk3h5q0E+7dwYjOGP1ApJLYjP/RbOFqcl1BDGPEysdZisVYc0XL8Mmt/3r20ZUL9W7ky9RNYJdhwslBTnD23840+gXdqOqrlQvh4TtxP76s0bX9VubsMiSEyScjkqL9B3SG0yc5Paxb6XUL5Ee5JUWNb8dFEeHhvZLdKfNuLpIP2x5Ov7lp7C94Chtc3veRqmv0FoQe9T1bxms1ZWQSSVW22aFoS4LY6tLSIEP08FSLUwc54fMHWq9j2Mwo9pMuyv3lu6i/i3K14AvI5464ZhF1oJEQach5iZlPsMCkgeKUQFcThQnEVEIymYwB4oF6tEbzCvWAjac4YXZ459C5uRw6eDvg=
+    [checksum] => QpX9TuECmjWKl6uiiYkWSwoIFY0TBCocYcp+eKRsLEihCngHqugzf4f0d5HGL+gDmRfLizBUTky5eTNBC/T6dt0u4nTwqvwQ7P4KIufcjdw=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT999088826656031778788789","txnAmount":"100.00","txnId":1778788833,"bankTxnId":"20260515110940000261857312277727706","paymentMode":"UPI","txnDate":"2026-05-15 01:30:33","utr":"843947076629","sender_vpa":"9990888266","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT999088826656031778788789
+    [txnAmount] => 100.00
+    [txnId] => 1778788833
+    [bankTxnId] => 20260515110940000261857312277727706
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-15 01:30:33
+    [utr] => 843947076629
+    [sender_vpa] => 9990888266
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT999088826656031778788789
+Attempting to restore session: f6f43df358799e1e134a92f075daf50a
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9990888266
+    [name] => Aman
+    [emailid] => gufrana5188@gmail.com
+    [phone] => 9990888266
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9990888266, gufrana5188@gmail.com | Emails: gufrana5188@gmail.com
+Credited ₹100 to user via phone = 9990888266
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-15 03:53:41 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36
+Remote IP: 223.228.39.71
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9890455311
+    [cust_Email] => hasratkhan09102000@gmail.com
+    [hash] => ef6a99aee9c788f1:9a79b22619a3a677b7276ee29a76fb4912c26b44:m92NUWxyXi2XbOQphJ9hNIZbj8vzXx0tO17H2dBCAfdDnD5RgCmq5ncQ9x+TmrlvJHBFyXk9BIlh88J4u7w81uOy/nUIEi73XXlvC3j0yMpZ+d4TSxMPKSbH9+3vjaZCVDVNJv1JUxl1W3KsT7swHD1Zz+g7ICz0qubl6jA6uhY+M2g1Ohg8NfE03vd7pdtWysz9ilZS+6L8g5NpsgWnCmNnW9AducHxPvWI+mb9Z/oz7eBIZefoDUSN1qI5xdx0asZsuuim4KSzJ0+W5f1xHULgfMnjnCV1WzxhdHPpe6PirUmgKDFSQ/gRZBmJJwH5syyjxTFInhd3vBU6Yd/mqNmKNItFCKNkyLrA0FGLk01tDCXY9PikFp9M6p7AS6gBjRN2cq3RwpeHcvsLi+B+efrEmJ/o6d7S64KY28Id8HnITCMzq3xNnaIUUzQ+u2bQwqwqjklWKdc8NEx2D6tWdl71U86R9R0ePnQZuqpcx6M=
+    [checksum] => H6HMI4Qn9u5DHvM1c0WakSPbXC5VwyJTAhQEuam/MSeicANX0sfapowZM1l6AzJ1LbOEFHsexE7mR3M5Uf9QvxAFpk1550s8wE88/gP1KMY=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT989045531168171778817099","txnAmount":"100.00","txnId":1778817218,"bankTxnId":"20260515011040000261976192706526542","paymentMode":"UPI","txnDate":"2026-05-15 09:23:38","utr":"923020714688","sender_vpa":"9890455311","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT989045531168171778817099
+    [txnAmount] => 100.00
+    [txnId] => 1778817218
+    [bankTxnId] => 20260515011040000261976192706526542
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-15 09:23:38
+    [utr] => 923020714688
+    [sender_vpa] => 9890455311
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT989045531168171778817099
+Attempting to restore session: ff83e1cb61632dc04ff701bf4872e83d
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9890455311
+    [name] => Khan
+    [emailid] => hasratkhan09102000@gmail.com
+    [phone] => 9890455311
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9890455311, hasratkhan09102000@gmail.com | Emails: hasratkhan09102000@gmail.com
+Credited ₹100 to user via phone = 9890455311
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-15 05:15:35 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Mobile Safari/537.36
+Remote IP: 49.14.158.10
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9990888266
+    [cust_Email] => gufrana5188@gmail.com
+    [hash] => 47e7a2b4c20a1ec6:244a33a78590f389b94b9eb901d4f8916ca3770f:rDJ87PrMGYNCaOeB05evS/SqqZQ8FS1VCk1wr1J6zubacaupZptxTGFaNPZA0vD8EU1DRmGrhpi7TLtuElGy4iFYD9FJmtrah2dAGkZNIJ2IjpdGZLc3BRrnXLYmKd8u3BoKvBrXgJXOSgp6/PHOm5Pi4J4KJBEzQwBR00LLPLawIXSE7hoCdgbpVlKFZcMlQMcoxBt2VGpmPX0GTQkXbcsfGAhs6cslmI3a7Lp+j/4S/E8m4QD99Sb+rBDTTRpga9c90W9T1y4zHV1WBZpeZaJCNKfgNwSkFaKcZTfXV8xNhOkH0wv2md8D5wmJzrRur2FNV7m8sw4L+D+LWMuFvHyHJkxeqarfQuerf8+ihT075NDb2516ZNFMG1P4jmcCQkrdXSF64Dvy7W+HdX77rpmnA1q/vkECz31rJUpu9ORtHqWPApMfJmajJgTbprYZTgcxt3J4Zi12xsSgX+ZGbcKu2nMtdbIQhqim/db1iJw=
+    [checksum] => WdBLNcxil+6w3ZAHMbHRobqn6n32JPhgolLrOZZEZxifRQrttGPZ1UO8XiGRblTdpqwDIAhu4IrBki0UG+1MEvbiYcXnrJxvMsIsDH2BTqA=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT999088826648251778822099","txnAmount":"100.00","txnId":1778822133,"bankTxnId":"20260515110850000261996990112238114","paymentMode":"UPI","txnDate":"2026-05-15 10:45:33","utr":"416687755263","sender_vpa":"9990888266","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT999088826648251778822099
+    [txnAmount] => 100.00
+    [txnId] => 1778822133
+    [bankTxnId] => 20260515110850000261996990112238114
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-15 10:45:33
+    [utr] => 416687755263
+    [sender_vpa] => 9990888266
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT999088826648251778822099
+Attempting to restore session: c3c7afb546f5b82d6e22784c966e5707
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9990888266
+    [name] => Aman
+    [emailid] => gufrana5188@gmail.com
+    [phone] => 9990888266
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9990888266, gufrana5188@gmail.com | Emails: gufrana5188@gmail.com
+Credited ₹100 to user via phone = 9990888266
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-15 13:45:04 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 152.58.96.156
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_not_success_status_
+
+--- 2026-05-15 13:47:14 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 152.58.96.156
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9758084413
+    [name] => INAYAT ALI
+    [emailid] => srup9758@gmail.com
+    [phone] => 9758084413
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+EXCEPTION: payment_not_success_status_
+
+--- 2026-05-16 12:41:29 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 163.223.133.129
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 6294246969
+    [cust_Email] => mondalbapan424@gmail.com
+    [hash] => b607b5afb26edb8f:801de9de0a2e423da34a2bc089ed034717772502:Oaj6zQX4P+/okiJdCVQYoU9qVQrGWi1ddW1N/7P1WljSiL81AMDjKIPT5HJ6YHzuBWsLdtQsLKGdTHPDApqZclAuHvqCE1q/oTC6EgeEQ/Hlx8d6VEli9obF+Tu7+Rx7t47JMyEOJrvTasxZtTtPAAm95JH237osrYdDFFsETSesJUp7q24aZ6N0CxhYiayDAcFIkc/IUCKjRzXz+29RF38LGTS+36Ob8cVxJw/I7wLQrjVEfwhbRerUObakmktrT6y33RQOISs0Ebda9GMIj3lPjx9AMBJXsF3cZo2Zpz6p8r8HoQhbmXkCngTVSg7hMn7PUKRjryrofyNfuHYtyT9T34Fius67HrmwBkUxJCAK0pA0oSG78t8MODCPUMKuoih+Fwk5dx4mbma2Ok9LaiGmzdfbvHxPmPB3esLbG8lNOmjP66VqvPluQigSmmPsZJC2ITQXQYrV6PKYlFwqpZtVtAlVtm2tFeAlL9J50kc=
+    [checksum] => KavN+YX+leXm95Hr1bsqKfqFoQ9z9+Zk2mOfMbwXiPYP5PflOnuDuTeC705R+qEDM8xcAd9ckOv/EvwqRfiecSbfjI/YKcBuG3A8ZpPhlmc=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT629424696927051778935242","txnAmount":"100.00","txnId":1778935286,"bankTxnId":"20260516110830000262471574830507708","paymentMode":"UPI","txnDate":"2026-05-16 06:11:26","utr":"306261901751","sender_vpa":"6294246969","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT629424696927051778935242
+    [txnAmount] => 100.00
+    [txnId] => 1778935286
+    [bankTxnId] => 20260516110830000262471574830507708
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-16 06:11:26
+    [utr] => 306261901751
+    [sender_vpa] => 6294246969
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT629424696927051778935242
+Attempting to restore session: 3378ec6f793218908dcaed34cb29981d
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 6294246969
+    [name] => Bapan mondal
+    [emailid] => mondalbapan424@gmail.com
+    [phone] => 6294246969
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 6294246969, mondalbapan424@gmail.com | Emails: mondalbapan424@gmail.com
+Credited ₹100 to user via phone = 6294246969
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-16 12:48:59 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 163.223.133.129
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 6294246969
+    [cust_Email] => mondalbapan424@gmail.com
+    [hash] => eda814e567161da2:4286d9638aa80bc58a262285911970d9d256852b:SWNuqQ4gfEKtPBuXU6AhLpdJExUx2bQIJfDFPYXj668WQoAduoxIrh9lsgthppSVxrSZfFrGdgfA9cGKILphh/8/fUFPIhKg9kSCLB1zSfgn24brc4RrKlBRqgVnDsHU39UoojkINPFuvl8CiAbue/JrepIl78SQp2ROqDALv/sSUPtAzmQ1ZvO2Gbzja2mUxKwUc3UeCgJaYE/FVuuiA1WpNMyzf7SmACal6uhFYkYewzEw/C/1+s5Md7T1T2HBXmT0vIZgE4eDep3WpsRdKbr5nGd8PgR6drRWr5Z4fkRyvXMicMZKfUtq6mc6VkfHmI6svVFGMO951NCkG5DUJRMrdRHD3iU4qfYISgu2p6gdA84TNorvpLacy28NWZzAgNeQ78hlRUPUiOt+hq/RMsy8DKKr/6S568qtFVg851hDmrv9fVZso1xrUPYOc9/I1w3acE7AJRqK6PB3oo6B3JKqcckbXv0kVUA+awbp5SQ=
+    [checksum] => uNGZFeOG1PNbcbKDB/HWA7jU2CMPbAXGKatDJ7KOCdJJj6gtiAN5n2cv2CSdQw9zEBcnow96GC8YDibf5h1MrnR4RC99ES3Vm5wQ54dMsY0=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT629424696955991778935705","txnAmount":"100.00","txnId":1778935736,"bankTxnId":"20260516110980000262473467841178368","paymentMode":"UPI","txnDate":"2026-05-16 06:18:56","utr":"306262492674","sender_vpa":"6294246969","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT629424696955991778935705
+    [txnAmount] => 100.00
+    [txnId] => 1778935736
+    [bankTxnId] => 20260516110980000262473467841178368
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-16 06:18:56
+    [utr] => 306262492674
+    [sender_vpa] => 6294246969
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT629424696955991778935705
+Attempting to restore session: 3378ec6f793218908dcaed34cb29981d
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 6294246969
+    [name] => Bapan mondal
+    [emailid] => mondalbapan424@gmail.com
+    [phone] => 6294246969
+    [walletamount] => 100
+    [usertype] => OPERATER
+    [username] => 6294246969
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 6294246969, mondalbapan424@gmail.com | Emails: mondalbapan424@gmail.com
+Credited ₹100 to user via phone = 6294246969
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-16 13:10:20 ---
+User Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 163.223.133.129
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 6294246969
+    [cust_Email] => mondalbapan424@gmail.com
+    [hash] => e1865c3cd7a44e5f:a95b7f5771409e74a2a25f01b95e36283701d333:fdfcgnDA6KEQ6zIMJRADtEujjhZ073IsxjuIM8IKYZ7pEk1c+eZWn5kj+uZuW+qsUqfpHBzgpahCmXh/8lu/GVjEmCm05Jy9n5kASGP3gfw560/UG7rwqU6Ch8qS4ziIXaTjA26oGDxu+yRleDP57uiTsrnoCBIPcm/hdR0L3KeMgH7tFKoYEp+2FZ3QK3dxcBOq9GZf0deoDxpBEmG1PoPax/KL8nkomoNv5iW5LOYm4q4UCSZBc/zhs2DslnYwxLnKEtuylbr4T6OvEyLxmLd53KUQJbpX6BIQDFQJViSYs5ZbpUDMpR5v+kWCWDoyYexg26L4BmFVMdbgWWwax5CkzqdUK1Jys5J2yAvb6jOwzLQ/RAnbnNsUNKs9G0jrk/oCKm3VcqKgbaKj3E9CVrbpWfBHjaPCclCfy8OEsh6bgavhcnzdIEaAWQcaNY0hvy39mvpX8B1Azx+9tSfHWqjJlOhEMhtwLkN4B3YqHOo=
+    [checksum] => UhiNHFCSPRa6fKt/g36qgzluAd5Ct7AsPMaYDms+dtep4lG+xrWBK2/8SKYeuTioYxT/rPdG6zmFq6hy/ErY5P3o6LHvkWJPyOZU41+njTU=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT629424696920491778936973","txnAmount":"100.00","txnId":1778937016,"bankTxnId":"20260516111020000262478823870738721","paymentMode":"UPI","txnDate":"2026-05-16 06:40:16","utr":"306264278510","sender_vpa":"6294246969","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT629424696920491778936973
+    [txnAmount] => 100.00
+    [txnId] => 1778937016
+    [bankTxnId] => 20260516111020000262478823870738721
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-16 06:40:16
+    [utr] => 306264278510
+    [sender_vpa] => 6294246969
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT629424696920491778936973
+Attempting to restore session: 3378ec6f793218908dcaed34cb29981d
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 6294246969
+    [name] => Bapan mondal
+    [emailid] => mondalbapan424@gmail.com
+    [phone] => 6294246969
+    [walletamount] => 100
+    [usertype] => OPERATER
+    [username] => 6294246969
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 6294246969, mondalbapan424@gmail.com | Emails: mondalbapan424@gmail.com
+Credited ₹100 to user via phone = 6294246969
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-16 16:03:12 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 152.56.166.215
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9732432431
+    [name] => Uj jaman 
+    [emailid] => pk260398@gmail.com
+    [phone] => 9732432431
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+EXCEPTION: payment_not_success_status_
+
+--- 2026-05-16 16:07:47 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 152.56.166.215
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9732432431
+    [cust_Email] => pk260398@gmail.com
+    [hash] => 89c2904565967660:2a995e7ac9aa3ff23367b0c6a57e6ae39ae81327:wSsZXAYRH/GED+/bMnF+XMz0GxVLxcllzDjvF0l/0GXpzH1UDU/wk9Ax9eUgmGB34P3A1w5R2JdNzZU3W37jSrUlVGwqFFcL1cPHOwQpO7Eim1aKH4qNIby+jtVYmaA7g74IoGvKFzfpoy8tU5vSJNaEDmrMtwvSO0zFD4eFZgGe+7iD7vqjJeDC6hPrJdVVizv0eYrpkcO7hrD8qFa7bdBa86PkLSpuAcS8R+Akdn+hfeTrCgRhuBBEzCfxk2MLaaiuyosxDi0XkG6yfrhgy1o5/AzhPqu347Irc++H6MwqkW2VbP2oI9tIw/lE4GuxbgDrXdW0hqJWOiBV/59hX6NBPAwmEXSOH92sVAt6SXEz/enikV/4VIYPoNYJkap/mZQVPM/nnCicxZ98nS2DXNVo2e+EdjE+tUOIduz7on6qeOobwrMU4Dyf6WkdpHCBvqlyP/eUDJHklDczpmOs4/JrJHVb1oK5kx3z2DDplCg=
+    [checksum] => lXTpNtDvqpuQqhR4vEDlD0xgcl5D+GPG5qiWD+zC91P8w+5RyDfvXJWsf2aSyNJNlmdfYMrggdC52KFcwYSpk/zAnhJh1UA3XXFB8VadbVw=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT973243243137491778947603","txnAmount":"100.00","txnId":1778947664,"bankTxnId":"20260516111040000262523465694264519","paymentMode":"UPI","txnDate":"2026-05-16 09:37:44","utr":"131618312532","sender_vpa":"9732432431","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT973243243137491778947603
+    [txnAmount] => 100.00
+    [txnId] => 1778947664
+    [bankTxnId] => 20260516111040000262523465694264519
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-16 09:37:44
+    [utr] => 131618312532
+    [sender_vpa] => 9732432431
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT973243243137491778947603
+Attempting to restore session: 17d12832135c39b1387921a5209c2feb
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9732432431
+    [name] => Uj jaman 
+    [emailid] => pk260398@gmail.com
+    [phone] => 9732432431
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9732432431, pk260398@gmail.com | Emails: pk260398@gmail.com
+Credited ₹100 to user via phone = 9732432431
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-17 09:28:26 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Mobile Safari/537.36
+Remote IP: 49.14.155.200
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9990888266
+    [cust_Email] => gufrana5188@gmail.com
+    [hash] => 0bd17fa53811d2bf:5b484910e5ad094f1c59bb71acad4622e4e1e7b9:nD6EeddUrlwaxQmxz/c29j87/Ppx1RBzy9wkllmWh3qEW8SHu+3tr68gqMALBFgnhy2mZ20VMYZyVWLRSw2B1ugXd9kFCwj0WwYpUAvI1KNGQDH7o/k6TxcQqG3d0oEkLKjlM5OjrTpMtFVBGeOVfn0ywyXKwLdsi00/a+tYkSqYLPyVEFvyRw/n8Q23JqfaCyw9ABQyj346ackCjlsNPlHSH7Dz3tvmxvlZy/7lIW3tkV9v7+r1CVwKsvBSY9b0ty6ox2raPWLlU927nmsii84Z2jHrBeyvwNCWtHvWRXCop3pB0mptXJpj0uVZdRIaCHqKsrjFv+obDuWAY2/4ZoGOUZCVilS0Fi0/jeUAkHm7Ll0P+z0nrR+kwPk7OGKWATZ/KhEYcO49VEm7kbQPgi7eoCoIcu5qF/nIGivqcGD6PCU0N8hdxKiRGQGJFoQAIxiEm4DDlwCjRtYlhMOh+dFZKQHahMK1ezBHFhB+PSc=
+    [checksum] => h2XcXvR/bIi61Tzteo1xL3xfrH6PcVOI4Jg9JbDKLUmUnfFu9/BWLhIKfyX5naCt2D/f27tDwscvB/NH33H8V3Cskmb+AH+t81drsYpWJRU=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT999088826640451779010070","txnAmount":"200.00","txnId":1779010104,"bankTxnId":"20260517110960000262785387177365563","paymentMode":"UPI","txnDate":"2026-05-17 02:58:24","utr":"267965191756","sender_vpa":"9990888266","sender_note":"Wallet Recharge","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT999088826640451779010070
+    [txnAmount] => 200.00
+    [txnId] => 1779010104
+    [bankTxnId] => 20260517110960000262785387177365563
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-17 02:58:24
+    [utr] => 267965191756
+    [sender_vpa] => 9990888266
+    [sender_note] => Wallet Recharge
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WLT999088826640451779010070
+Attempting to restore session: 62cfda40c44391f728911447952f71a3
+Session successfully restored.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 9990888266
+    [name] => Aman
+    [emailid] => gufrana5188@gmail.com
+    [phone] => 9990888266
+    [walletamount] => 20
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9990888266, gufrana5188@gmail.com | Emails: gufrana5188@gmail.com
+Credited ₹200 to user via phone = 9990888266
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-17 12:58:32 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_not_success_status_FAILED
+
+--- 2026-05-17 12:59:18 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 
+    [name] => jmantuj
+    [emailid] => 9262332590@gmail.com
+    [phone] => 9262332590
+    [walletamount] => 0
+    [usertype] => OPERATER
+    [csrf_token] => 565a67f27c9f8940ae2939ab1500d2f5e3c8f32070d62e9c12edc8010d0d06d7
+)
+
+EXCEPTION: payment_not_success_status_FAILED
+
+--- 2026-05-17 12:59:32 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [loggedin] => 1
+    [userid] => 
+    [name] => jmantuj
+    [emailid] => 9262332590@gmail.com
+    [phone] => 9262332590
+    [walletamount] => 0
+    [usertype] => OPERATER
+    [csrf_token] => 565a67f27c9f8940ae2939ab1500d2f5e3c8f32070d62e9c12edc8010d0d06d7
+)
+
+EXCEPTION: payment_not_success_status_FAILED
+
+--- 2026-05-17 13:05:51 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_not_success_status_FAILED
+
+--- 2026-05-17 13:18:09 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_failed_Checksum Mismatch
+
+--- 2026-05-17 13:19:26 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [csrf_token] => e84bab7d387e1270f8a1e0c7b94218c64b575ae57650f044ecab39cea2d85913
+    [loggedin] => 1
+    [userid] => 
+    [name] => jmantuj
+    [emailid] => 9262332590@gmail.com
+    [phone] => 9262332590
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+EXCEPTION: payment_failed_Checksum Mismatch
+
+--- 2026-05-17 13:20:26 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_failed_Checksum Mismatch
+
+--- 2026-05-17 13:29:04 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36
+Remote IP: 47.31.90.42
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_failed_Checksum Mismatch
+
+--- 2026-05-17 13:42:31 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_failed_Checksum Mismatch
+
+--- 2026-05-17 13:43:21 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => FAILED
+    [message] => Checksum Mismatch
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => false
+    [checksum] => false
+)
+
+Initial Order ID:  | Status: FAILED
+Raw Decrypted Hash: FAILED
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [csrf_token] => 614d3e6ac37f498aecd9248f9c811230b5e640250b9d76f6f2317458d64220bf
+    [loggedin] => 1
+    [userid] => 
+    [name] => jmantuj
+    [emailid] => 9262332590@gmail.com
+    [phone] => 9262332590
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+EXCEPTION: payment_failed_Checksum Mismatch
+
+--- 2026-05-17 13:59:12 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => f8a9b12a3cfc641b:b0450fc9f2bc64c536e5527f668cd5188f551e17:XKOGuUEAqpyrhCZ/TtAvdSvfMSJz+FMjPDnsU0YqEovwJa+uNeAtKLsibV3ko4aHOd5apdWYSABGZJqvP6n511nXi2Uaz2vWPc6wz4ZA07UbhmZUw0hR2AtezCCr4KZpYSGwAIeRwATTWMlEd8yTpXgVV+v2H1+MPe3gWpA4+1xNF8hNtBMhgXyPm7Ct+p+1cQfdd+C0kvcnOU8BcX9YTRsY3wH2INk2n5yG8buRn+b0qcGeFOCNP2D0CiQHr8U8QxK8zVCTrBAa8zAPMj9dRNCae1UZ9dnnqKwFsjFYXCm9VGQ2/rR8HXxwfDuejNLNO2YsP0sUEzQhNyV6E2V340bBb9p85KBHAwcU15H3zwvkCEH1GnmaxiT7U2hLj1wleaH9UThvg7BfqSo/GSOaYgFWJfEk5sVOegaZ746D4D3EjiKzG/csETvm6HYgPqTKN2uTBo6PAnYA9U+oXbWavQ==
+    [checksum] => 9I+iZ72nVuM+3GHrfoOux/QS35jtIF8STJs2QWSO9polu8wqmIz5ZD0M1+iAF14nkKiYioJA/q8iHTkfgBCmJ+sGmF9dc0up2zWDm/xwTow=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WALLET202605171358002890","txnAmount":"6.00","txnId":1779026349,"bankTxnId":"20260517010830000262853513344957535","paymentMode":"UPI","txnDate":"2026-05-17 07:29:09","utr":"613748498944","sender_vpa":"9262332590","sender_note":"WalletTopup","payee_vpa":"paytmqr1hdg6t69eo@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WALLET202605171358002890
+    [txnAmount] => 6.00
+    [txnId] => 1779026349
+    [bankTxnId] => 20260517010830000262853513344957535
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-17 07:29:09
+    [utr] => 613748498944
+    [sender_vpa] => 9262332590
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr1hdg6t69eo@paytm
+)
+
+Effective Order ID: WALLET202605171358002890
+Attempting to restore session: f72ae3cee9f1bc039c9aa7eaa464add4
+Session successfully restored.
+Session Data: Array
+(
+    [csrf_token] => 614d3e6ac37f498aecd9248f9c811230b5e640250b9d76f6f2317458d64220bf
+    [loggedin] => 1
+    [userid] => 
+    [name] => jmantuj
+    [emailid] => 9262332590@gmail.com
+    [phone] => 9262332590
+    [walletamount] => 0
+    [usertype] => OPERATER
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9262332590, 9262332590@gmail.com | Emails: 9262332590@gmail.com
+Credited ₹6 to user via phone = 9262332590
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-17 14:26:39 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.225.106.57
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9262332590
+    [cust_Email] => 9262332590@gmail.com
+    [hash] => e5703fa22f809559:e7b5fcda1752d9f284b5db5d0a0591696a2c28ea:OvGaI2dnT8Ch9VUOPQU14WqpxLg+OgrCxFpJHW/coJtcu3yyyHHhP31kUD0fdteL3ut/FCKiqpHW7tdYQJcD7q7vJHBPNLZ5SE96AX4L9H99oTxjUaQfCjNl3DRc+LWCj0XPp4PacTUGBqW17YxevfZK14AwsFqaqp8UcWj53S/e1YGzvOFw+LFcTJGupNW8TV05d+23OXAmP6AW0DRr5CuyWi+xq20Tv5swggJoG1stObMgGpjZTuGyS1y/miOKo8N663szWtgHI6Q4n7NuSD/NJbyGI+aLPaJvmvdjV1cGmk5Oj3OnyZG+3ZlUo2E3TXuKdvEzZRrvHFsl0zmJauZLjmUcUVazQ9S2STyib+Ln6DuHem2sRdqVP3wN8XmjJxDk7XdvBfPB+GwoxfcOaz1osfB30tITrL2+0PPtPks2tYZ+Qj0E7fvk8M70LaPyaZAM9mJV8s5AHNSmY5QbcQ==
+    [checksum] => s5mDhgZtyT71iiKSa0Dqc4xpH9yOgOV3CYxY3uNaJpT9ARmTBh3T/8vsHtp8dp4Xpa1bE9Y7M6AcI8suyYN8myAApUdx4+lg3TrFQEXo83Y=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WALLET202605171425075691","txnAmount":"100.00","txnId":1779027994,"bankTxnId":"20260517010830000262860405609961973","paymentMode":"UPI","txnDate":"2026-05-17 07:56:34","utr":"650319313519","sender_vpa":"9262332590","sender_note":"WalletTopup","payee_vpa":"paytmqr1uif541xwb@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WALLET202605171425075691
+    [txnAmount] => 100.00
+    [txnId] => 1779027994
+    [bankTxnId] => 20260517010830000262860405609961973
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-17 07:56:34
+    [utr] => 650319313519
+    [sender_vpa] => 9262332590
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr1uif541xwb@paytm
+)
+
+Effective Order ID: WALLET202605171425075691
+Attempting to restore session: f72ae3cee9f1bc039c9aa7eaa464add4
+Session successfully restored.
+Session Data: Array
+(
+    [ahk_geo_city_cache] => Array
+        (
+            [ip] => 223.225.106.57
+            [city] => Patna
+            [ts] => 1779027684
+        )
+
+    [loggedin] => 1
+    [userid] => 
+    [name] => jmantuj
+    [emailid] => 9262332590@gmail.com
+    [phone] => 9262332590
+    [walletamount] => 6
+    [usertype] => OPERATER
+    [csrf_token] => 027cdd667b23cfc71414cf6a3b97a596dcbddd92b156783a63c1a12863e4f780
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Search criteria - Phones: 9262332590, 9262332590@gmail.com | Emails: 9262332590@gmail.com
+Credited ₹100 to user via phone = 9262332590
+User session fully refreshed.
+Transaction complete. Redirecting...
+
+--- 2026-05-24 12:58:15 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 47.31.70.150
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => aaoram@gmail.com
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-24 12:59:35 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 47.31.70.150
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9905132590
+    [cust_Email] => sitaram10532@gmail.com
+    [hash] => d3d99308f5ab0d9c:bf8cb6546696a8ea2368af47e014e2e2cadcaede:lZ2fTrYC3sNx6nSDXWFnlaygSRw+pWRSY8gty2eu7FxBblJeYqTcAvsZ4FoV+CcqYgNWYRcH0mjy01OEl4CNEQs0C9g2N3QJUTLezUiHbqpFHIK3uphz9W79toSYzqtypWh0fQA9BELf7+au9h1acO5IkYe+Z2hZv7Qy/xc/JsIvWZqYmzEjsGwqXtEPEnMmaW4S6FP2AaK4/4hA2dEJEYxNOXWKsYFwaxhOWyoQiDjLUoYpzK6YdRvMI17ZhUyJZ3H7ftFYcMh7Qxbf46zJ49tHC1b2oc0Jc6rSF+oEdA7KM4eoQAeH6g7nRngjvZXUxOILdIq9WIPraoVlW6RA0EClbP/TegOSoG1H75djdHsK8GBkBHqbgg3SgoYg5xmBI6MP12wOlAXjwJNgdDFBKrCTDbTvnLzylJTMLk4PpOkepda7Vu8G1bMTNKK1BEgUoMJFgPreMl6cVQYl70cUrA==
+    [checksum] => MZFe/9I/PibNQGsrw/fIREkTOqnXv4+yCBFh6px+FH8Sd4NGAKlxTodHSp2WE2eWF3Xkn6ASxxdBgTP9w8cb49up0KKhnTZCNxPUQdwqamc=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"WLT_9905132590_1779627531","txnAmount":"120.00","txnId":1779627572,"bankTxnId":"20260524110930000265375229078054836","paymentMode":"UPI","txnDate":"2026-05-24 06:29:32","utr":"606736299880","sender_vpa":"9905132590","sender_note":"Wallet_Recharge","payee_vpa":"paytmqr1uif541xwb@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => WLT_9905132590_1779627531
+    [txnAmount] => 120.00
+    [txnId] => 1779627572
+    [bankTxnId] => 20260524110930000265375229078054836
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-24 06:29:32
+    [utr] => 606736299880
+    [sender_vpa] => 9905132590
+    [sender_note] => Wallet_Recharge
+    [payee_vpa] => paytmqr1uif541xwb@paytm
+)
+
+Effective Order ID: WLT_9905132590_1779627531
+Attempting to restore session: ba1e0489a95f254543695f6b3909ef1e
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 9905132590
+    [name] => SITARAM SAW
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-27 06:07:20 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 47.31.109.152
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9905132591
+    [cust_Email] => 9905132591@gmail.com
+    [hash] => fd97f0664f7a14ca:330ce4530df25ad9f42207dae4714bb6e941926e:VrNnnrj2lT2XSBIG2V883o6MBNJpXz9zsmbGsL+Oo4j6zOk5R6UlkQL6nm+CGf8jLINkHvV2vGBFSCx2b2YsIvzP0tsJG+f0ZKYcJCEencNItrQyOAzC4gzHlzUHhvobfGQmoHxSYMIg5j16eOQNqXzoUENLTP/U+vNEyh0JC/vKcdO55QqVlChGu4K+8S3nWu8J1cbSpv8uUOlmbC3Ou7/OfZGsDiVBPDPZR8yihSMMsPtrDlqg64sMzUryUSrheEOy5V8PkWFEkConPcCGeO5omEYoVCIu8/10NeEcfu3aN/sCwFWGPFPPOc6lBkseQKddvm+GPD/onQkaGYGjsum13ceR5RzqAg/SSqQ3p8uEkSQVMrJow/7/KdwJygFUFCAkPQq9MlpJLX8Sryq3+UpMQkANzgAcoUIhYgVutGqogcH6kFvq1ItKaJL3i4/rKwnjEO+ZOXfkqMB/UrIiMw==
+    [checksum] => s7QpwDQ2U05nY5NLHvq1vkXSCQgNv2pdj87bTZvtsVGq07ws4v+pvscwDrZgNKUp+2IH+neDWGv+7xW+7liV+lxnNLW9koUp/fHW5PYUGSA=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026052711364683506","txnAmount":"100.00","txnId":1779862038,"bankTxnId":"20260527110840000266358640316254864","paymentMode":"UPI","txnDate":"2026-05-27 11:37:18","utr":"651334194341","sender_vpa":"9905132591","sender_note":"WalletTopup","payee_vpa":"paytmqr1uif541xwb@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026052711364683506
+    [txnAmount] => 100.00
+    [txnId] => 1779862038
+    [bankTxnId] => 20260527110840000266358640316254864
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-27 11:37:18
+    [utr] => 651334194341
+    [sender_vpa] => 9905132591
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr1uif541xwb@paytm
+)
+
+Effective Order ID: ORD2026052711364683506
+Attempting to restore session: 8889f9fdc1e922c2785032eeddda98de
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 9905132591
+    [name] => SITARAM SAW
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-27 08:25:13 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.181.24.33
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 8873242687
+    [cust_Email] => raiderboy163@gmail.com
+    [hash] => 45a17969f8bd852f:2ddcb237f8d6510064efd46baa23ad48f99baef6:GGFyHFt06k92UGSvA9Nb9cfUBzso9GJKh0jr7c+2mG2yw5oLPOuLLnMbYCzTa6msFayqNyo8D06pat6VHYY1q74uk+Ug1hmWt6Fkpb4Z0jwgAqFoAmElizRlVJxbFYSfdcQS/B+OD5evZiPA/22VGUxeGcddrtKBx5OlSiweBvS6qIUxm8RK3FqR3bZJXXGznROD0cVZ+dKaJ1zWHMXTn8613CZOsyy2ctC/agF1myrDoC+wSJL0x1qaGbbOOBEzf/sKNHeYyLhLqlNdCOiGuTP0VTPhlER03pRhY+hBUNdexNfCON2s4JtLgUoWW43MXn4j67aMLuYbGmCfy07nTtZ23R+fBI84a6ycZYbq+y7R8X32W0dFCGHXI6Mvb+aagCNPomUd+gie1kpfnxTQPvNr7UqidLaKvKrJfRYwLY339gIs8l2XqyhltaSg9+QcJefMkkxsFkaaXrRAouYSpw==
+    [checksum] => qg6DvaIb8GkBFC008rumGEgY15+x9RjhGVfcX9UC02pz0n8ILri9H+KxMEEl0+PtjVNVU7drDMrexEBiX4+8JfIB+NEsXDXvEixfzETVB9s=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026052713545784309","txnAmount":"100.00","txnId":1779870310,"bankTxnId":"20260527010840000266393375679344359","paymentMode":"UPI","txnDate":"2026-05-27 01:55:10","utr":"710554707703","sender_vpa":"8873242687","sender_note":"WalletTopup","payee_vpa":"paytmqr1uif541xwb@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026052713545784309
+    [txnAmount] => 100.00
+    [txnId] => 1779870310
+    [bankTxnId] => 20260527010840000266393375679344359
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-27 01:55:10
+    [utr] => 710554707703
+    [sender_vpa] => 8873242687
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr1uif541xwb@paytm
+)
+
+Effective Order ID: ORD2026052713545784309
+Attempting to restore session: f8b6304eb1264ba15d6315fc6cc1d3b2
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 8873242687
+    [name] => acc
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-27 08:25:18 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 103.225.124.101
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-29 07:45:59 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 171.79.37.110
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 7766
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-29 07:46:29 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 171.79.37.110
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 7766
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-29 12:16:19 ---
+User Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 152.56.240.47
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 6260024678
+    [cust_Email] => kushwaahaanil39@gmail.com
+    [hash] => ec5e81160ef80630:f30b2cde60fc5c59d050504bc496b012e6bcea1b:5+5LUpkdW1TS9WO9OwFxu9NRCyaKGs1SeTtTjpFT/0O25IVfjydbO3jHQLufoXA3fTaahaXKrBYgeaCaebWKLtSmofB2K3iXSGMdWEjl1MGcIT/IjgGO0HhTCJoulL8XuzOS4H5g7umMxFH2O/HCeD3Z7Hr9jFf/AtYWhJ7cP2/itW3dxIC5GYpXxx39yhSLtlpX5mdXuE5nK0eGDeD2GQ6e9GkO9b9kJZJWnp38FHjmEawBRZn75sytk0lRDu5I8WhAKcH5dJD01zFhWZRT2auVBFa6RwMFOewT38Nww+ylgPgiOiiV2kq2WcpIULVQmi1ln/PceBpKlxHFv0gxO0dNM4fX4awA5O8w7t5lKN0yfGzwPrKkzGrnXsOtN6TS3LE57knrS91BQtAPKLLAK5bt0bnnoRaYMbcp92uT9F412TpWNiZpsLxPNmwhA4e48WjCEESwvfeIhY3HYh5BxQ==
+    [checksum] => rD7PSpFEdp3KwZbw1OMFX8UlucaWgz0tZXbFag17FkNswA7gYV5LDTBzij0yAnxyY6aXo9nUSeCZmEHHful+/A1E7aGazov6Brq0uiF9BSs=
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026052917445388697","txnAmount":"100.00","txnId":1780056976,"bankTxnId":"20260529110870000267176216235049201","paymentMode":"UPI","txnDate":"2026-05-29 05:46:16","utr":"217507334292","sender_vpa":"6260024678","sender_note":"WalletTopup","payee_vpa":"paytmqr1uif541xwb@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026052917445388697
+    [txnAmount] => 100.00
+    [txnId] => 1780056976
+    [bankTxnId] => 20260529110870000267176216235049201
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-29 05:46:16
+    [utr] => 217507334292
+    [sender_vpa] => 6260024678
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr1uif541xwb@paytm
+)
+
+Effective Order ID: ORD2026052917445388697
+Attempting to restore session: 63e7d423bb2dd550257b914c7508dae8
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 6260024678
+    [name] => Anil kumar kachhi 
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-29 14:39:40 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 47.31.66.66
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 9905132590
+    [name] => SITARAM SAW
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-29 14:42:42 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 27.60.10.29
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 7766
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-29 14:43:24 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 27.60.10.29
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 7766
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-29 15:21:06 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 152.59.24.234
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 6260853018
+    [name] => Harshit Patel
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-29 15:21:07 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 152.59.24.234
+POST Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 6260853018
+    [name] => Harshit Patel
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-29 16:25:06 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 47.31.66.66
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9905132590
+    [cust_Email] => mmjeetmm@gmail.com
+    [hash] => 3178e8a8e5ed2072:956303bffcd1c41bcb194564cadbd7dce836bc21:0J6GMxajWOOlXnWOPFaVaZHLA2FlFmaC9xxYpQhRTn2W93lcIqwQyGg7p5ZXsB5p3+WolUPxOXl33ZmDkZkqBmRXJT+sKdsH4fB2g9upEJwpDH7Ng3xo7xJnk2rFZpJh1S455IWyqrO69qm3M0tgGScOmXcrm1A6eIV6651mMN8W/Mf1rD+0KJblRkUiWRRd5YGy73eZL5t+1m9o8tcdLWIvZrbRci62AhWol8tWPmFn2sHLx9rpnJjMs4VHG7arP5Yms4U5MxnPnZtGH4GWtppKOsgrEhbC2HYEB34LKbS3m0gT65jyUcLO3UWsxfu+PPv9YB+sBRZ5aZhJLJ1QBdofitUgOpC02m6jQ9fkUA7bmr1Kd+NuH84enDUBX7/bP/PxaBM4vPL2+UGpbfI5s4ManPSIg/y60b0gpsFYp2lIA8AY5nmWTQWK59h3KulmRZYH3EZIaQyK+5MYE6mDYg==
+    [checksum] => kdLj9SlYXbj/HH+AvJqltmSIBDJrAtayrtW2F4kZnizqCtl35KSLnckA5a/7h/vqSDkT8/NN5MUb0Cv9vN65XkT4fwcjwKn7qej5ZX8dWkA=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026052921542153515","txnAmount":"5.00","txnId":1780071903,"bankTxnId":"20260529111110000267238880341171121","paymentMode":"UPI","txnDate":"2026-05-29 09:55:03","utr":"651561278661","sender_vpa":"9905132590","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026052921542153515
+    [txnAmount] => 5.00
+    [txnId] => 1780071903
+    [bankTxnId] => 20260529111110000267238880341171121
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-29 09:55:03
+    [utr] => 651561278661
+    [sender_vpa] => 9905132590
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026052921542153515
+Attempting to restore session: abd79e44663d1d9d0f30cbc81d6de577
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 9905132590
+    [name] => SITARAM SAW
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-30 01:19:25 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 110.227.57.238
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9399374729
+    [cust_Email] => bahoribanditi@gmail.com
+    [hash] => 8eb9973019c4e495:0909783dead8fa769a3a8445071ea9b882f1c150:KJNqfSNCIWj3FOU4Sq9PopU6OpH+/5o4ItJWmtiq/QItO8CjNhPQict9ybOJW/Xl6u8JkdspKhDO1PTdv9eqzdXjDPNyAgFDsv8gXVCLLDjq9BZPf8OsYccZIi0u+m+EgaM6VU9qHZ78tq/Yimrhs9JD7itXGsb+ylqdfhg3LL98gTKy4Fr2DwSWBb93/AyheBTE7/eDTr5Y57bysIWAaDXD/Sy5g0Ql54+zwlY0++7R9jsE5KOrgWgSRkLT9A8FuDYyJdPUbjB56K/tCefouKkYw1owvO24kwEbk3hBpFiH7ion9BiGMZXR5aylATHUQOocubgKWepsFJLrIj1Se9G+IlVDPQSSS8g7xdZ0G+rZRwAZuDtdKV9rEtO/oEFaDBOiPstBdDyx5CluwrMt2Llh3Yof5WQIE49Vcoi0RD0uU4DvqhhdrJVZwAdhF3s/ig9QSGOMe13rqwmiai4Abw==
+    [checksum] => Ks7tSZkde+9MiHuje+k+8eCC5gCg0TPwhg/i3TQ3Dgh8uwmjP0TtKlT9SwuQI8biewGzVJwxKn68FdbX8/C7KYY4bzsWj8sgCW8NTXHpdeg=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026053006484975606","txnAmount":"100.00","txnId":1780103962,"bankTxnId":"20260530111040000267373375782285154","paymentMode":"UPI","txnDate":"2026-05-30 06:49:22","utr":"831483399968","sender_vpa":"9399374729","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026053006484975606
+    [txnAmount] => 100.00
+    [txnId] => 1780103962
+    [bankTxnId] => 20260530111040000267373375782285154
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-30 06:49:22
+    [utr] => 831483399968
+    [sender_vpa] => 9399374729
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026053006484975606
+Attempting to restore session: b0c133ed4fe89a32b4a7bdbda76655ef
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 9399374729
+    [name] => mansingh 
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-30 09:07:10 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0
+Remote IP: 152.58.57.84
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 8435462024
+    [cust_Email] => trivendraverma64@gmail.com
+    [hash] => b5e0b82518a2ba7e:1cad94561462f297283ebcfebba3f17e62d7fe48:5s3eqVCdmg2itCq4q6KPASpOxfs7LXbRegsLxK2xq1/iZdwsx4BeodSCLX2mrje8mrewTigYITx07GLcAe0kiieCOxxgXh47IbyCAL0Eq69z3K1NHhBNYygFpiKs588PAGo0n8nHIv9yGRY9wZT6P9CWHqM96kgIgEWeFaD7bKJY/pOPMueFTnp1erZEkAJTy4Oy6mG6jvuEzxS32XG0dF9CY7uXxaP25eaAGziIDYSVX8+1u+1n6nDX/dsj/3jFlpd/GS8N5IxwfCAxsOpDD8qh/kqDWlr5RfHTf5IV5cpJvPmMLvsL1mydiAlxJCx6RuD7sYiOOUNAAOcLMa1xcJGc8sOQ25UlCuLKaanBwLJDih0BPL5//ylVYqiJuP3sUnypdW92LGo6lip2+IJ7c4Swl6Fuoyzqgk9kA5cc2AAtLJikyYZFmpI5UI9ySXmoQ2FBMXsQNVRiT+NgwPlCoA==
+    [checksum] => nToWCn/YDnyLeLytjpIdzuHfwhMq617DIpeR3z1lyZq9aSYjHzdHGrZNg/x+ecJFMs3NT7wtVTSf69AyZJm3CwkYwx//hrceEpn7XKzsNgQ=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026053014362516946","txnAmount":"100.00","txnId":1780132028,"bankTxnId":"20260530111000000267491072045799477","paymentMode":"UPI","txnDate":"2026-05-30 02:37:08","utr":"312720272991","sender_vpa":"8435462024","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026053014362516946
+    [txnAmount] => 100.00
+    [txnId] => 1780132028
+    [bankTxnId] => 20260530111000000267491072045799477
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-30 02:37:08
+    [utr] => 312720272991
+    [sender_vpa] => 8435462024
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026053014362516946
+Attempting to restore session: bb3664d6bc1a3800238d71e3d2d3d4d8
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 8435462024
+    [name] => Trivendra Verma
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-30 09:27:59 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 106.202.63.26
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9993061556
+    [cust_Email] => sahupiyush768@gmail.com
+    [hash] => e9f25c318e477f50:10f057a510ee5a5f36c235f74824c7f5b8b92210:J1Bj5mXH8y5EhLmmfBcIJ1G1fRajIwMvthcGwN5C0U80ATIZlLWOov9wS52iAe+cs1JxdUEGXjWn53gtiF0+svFdnZNmLH2p8LXl0J/ntICZ+FhuFd4HJ3+wobT1fDRpwUm6SPuYbiBZBEiAE/dsqChtbJpt11Bjw3nm1BncoOp3gIBXe2rQXRW7MCNpUepg+/V4kFFAAoGnjZWUo9MXtTrgKxTUpwj5unouoH0gwlsuimMN6il17wLwtyS6ZfRbDfM1URoUiVfVoid6svhhvwBNeXIybfFp3/HsVgKZzSVAGk8vQUqKf49yNXdiMqY58vJwQBYsz19TTSGabOq5tdBKe7OAzmISTRE0XszQJjTjnTR5wtJt8PoV7RlvMyPvD7WI6Ay5U4/PKEurMR+kgLyXdYuqOV0WIzQJ/KLijPYRijfM9ndo9nbcXW3xhTysHhiWrHCCJhX9CRFLlBgozw==
+    [checksum] => MdO76vae7F/vbCWDNE4vno8C+CwAYJh/kkaY38G4gl0MvOZr/FglLR4+ivKuW3xwmgKt4gaVhjkxrGOs5ASZ/X7rPv8FhXw2GDp/SwGIDLA=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026053014572292174","txnAmount":"100.00","txnId":1780133276,"bankTxnId":"20260530010920000267496302037093745","paymentMode":"UPI","txnDate":"2026-05-30 02:57:56","utr":"893809677801","sender_vpa":"9993061556","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026053014572292174
+    [txnAmount] => 100.00
+    [txnId] => 1780133276
+    [bankTxnId] => 20260530010920000267496302037093745
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-30 02:57:56
+    [utr] => 893809677801
+    [sender_vpa] => 9993061556
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026053014572292174
+Attempting to restore session: d71485216ea4bdfe78b86c3df77fd664
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 9993061556
+    [name] => piyush sahu
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-30 09:28:08 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 113.193.183.229
+POST Data: Array
+(
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-31 01:35:45 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 106.202.75.59
+POST Data: Array
+(
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 7766
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-05-31 05:57:27 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 152.58.57.86
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 8871663865
+    [cust_Email] => narendraptl1210@gmail.com
+    [hash] => 76066392050a6f9e:b8bde805fff0a4792c96ff9688d5b5d29aecb204:aAy21iepnx1y1gwCPzQj8u2hFpzPIAdKAYKWbV1Moa1ur9JXlMP/G1vVeJY/TVem4kVCsAk6ivbPowdxGs6uMeyJH8jPwLWZeg+YzH77YY2sRIbBghcwkLCfnPStT5rnF4MRwy8aLhZh+t4iU5CbZaYu4Xtg56apIWuWSGcW5Buo8t1DXOTodg8ynqzRrBDuDg0AkUtvgqPDpUIX9LtCNGz8MFD146gTuto4S9CjVJzE4HZVjY4+a9sPeOkEhugF+94CvSaoSXqcYvGsfj30qPw1XHRbhnLPVHOzBgJkMFIzMgpRQjv4BnhfuigVy7IVNYIcHk0bY46iga5OuloAnepasabs31swmn1znPKvezUte00RCcSoh5pfG2+zQN85+ZhZPHf0cpMpqyI3Rdk96hX/lD48TlMqum78t1o4XcLmjz4zRnahBqHWAQgWogH5u6ShEcsSJuWYAfA6jQSWXg==
+    [checksum] => 7kePEeVd2EL4cABfcxFuPnpxMh6fVAtplkZk3qfIpMvKu0PJbfrts03oyfQB7uRtLSzHLY0EAkuFEAeb3IiTxEsT24+sZsYisRd43teV+7Q=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026053111245097171","txnAmount":"100.00","txnId":1780207042,"bankTxnId":"20260531110930000267805702098621772","paymentMode":"UPI","txnDate":"2026-05-31 11:27:22","utr":"910076553937","sender_vpa":"8871663865","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026053111245097171
+    [txnAmount] => 100.00
+    [txnId] => 1780207042
+    [bankTxnId] => 20260531110930000267805702098621772
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-31 11:27:22
+    [utr] => 910076553937
+    [sender_vpa] => 8871663865
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026053111245097171
+Attempting to restore session: 39d7dd1f860ca5d51710a1161c6d7283
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 8871663865
+    [name] => Narendra Patel
+    [voter_link] => Array
+        (
+        )
+
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-31 07:24:16 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Mobile Safari/537.36
+Remote IP: 152.58.24.115
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 8889547276
+    [cust_Email] => vinaynagvanshi456@gmail.com
+    [hash] => cc55d8527798dc3b:d482495067e7b46d6db0fae7bdfec03da908771d:KC+di2zccLnH8Q7+wFIbXMZl+zOhfb5ftuAoR+06iJMM2xsdZ5SDFfZMvUlUrP+wy1D4KFdMQ+t/l1pBM901RdgIjV8Ocy9+6N0+8RVKQMNNgryzMrVc3WRRvU/tXuPrxMRK5G9+nFwFJQpX4Wm7RIEQJ73dOdWNOEtkH8iq3vdbke9Dcl0e8vY0G3IFxiHzPfu6c4F6f7+h0Kb2gqZ/Q7y2WMuadTNpXwm/j/qwikBEeVrD6Z/S+UxN/snAOBc15NgxIkHbYvyB37Citx4xLQ5ma6dOSy9lbpS2m7NVl1FBFa0hid04s71W37dkeOPPxqZM/5tMKr1L3tae9HuqpOM+ssG8HiDxyDnjnaWUdhTK0l3sGZL12ja+Er3E/dVaUFd+C2Uxmi3+eXU30y0x+megfZLIc2HzYOHjxBg3gPu8QuCnM4tLrxZoYmgaSvV+f1qxRqqqyAkkjB4Tvq+77g==
+    [checksum] => 686MeyNGaqeWSdvwoFpD+rPI5m6oGGmz8yQY+gLUWZjEB8/adFCXfr/3K/25hR5E1NdZIca99BJ85mHQoO5oZnHE3D5wr9wQKcIpjAF+9ec=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026053112525945164","txnAmount":"100.00","txnId":1780212253,"bankTxnId":"20260531110820000267827568095487966","paymentMode":"UPI","txnDate":"2026-05-31 12:54:13","utr":"961608582549","sender_vpa":"8889547276","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026053112525945164
+    [txnAmount] => 100.00
+    [txnId] => 1780212253
+    [bankTxnId] => 20260531110820000267827568095487966
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-31 12:54:13
+    [utr] => 961608582549
+    [sender_vpa] => 8889547276
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026053112525945164
+Attempting to restore session: b93c76ec27777de9e60cdf1ae22e80f3
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 8889547276
+    [name] => VINAY NAGVANSHI
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-05-31 12:00:23 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 152.59.30.236
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9407431189
+    [cust_Email] => sahebaali123@gmail.com
+    [hash] => 7c9354bdb9dc6e46:3dd6351844dfec694c539ff0731114d862befd29:Mas5EgfKKo/0lBBi+g7Htz2wOay3uSLHzlxRieQIOh0zOpK84clDx+ZoJNlFNoRVtMUAH2GvPDTofyt+Q3RBWxTDzM/tP69yOnfxntE7HLKF50eF2E/qoPQHbBPH8rzRlsNJIlsAkFB1eMaUV7grtpL+dj/XopUdFd1HSHA6auntUhJpEtcllAyYa2lEwje7NHv8Q+bxs/ALu2yolvsbLuX3lcvuaFdRN/+aGbmrjFtqNXBtA1vMk8aKFqHZlXv5CI/hLXyhytw+b11S/JcwxzlP7CJK6WQhg2D73kBeUEmtx3VOPPeaBmBGX/zvgg6PqXlpIM9sgQnCK0/ATpL9oCeiH/338hlf0E/vHF0bBmEa6wAhjB3U8L8qH78+khJcJQOoAmE+z4QcXasIXnVJOcf7Yt844qlIszfB+WeaP8Veiisih2TLgMBnMU4AIcEfVsAd5iFMqQWpe+votRe7Gw==
+    [checksum] => NDJf/Hwp28JXS4+DZqBDPATrJ+kFeOwACvV881z6qINSKuGDIzcjKzQ3I7cJJ0vBk87xR2PPFhbp1TxanIrUMTjFVYwgz5Fl2xwVq8g39b4=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026053117294732855","txnAmount":"100.00","txnId":1780228820,"bankTxnId":"20260531111100000267897043003654503","paymentMode":"UPI","txnDate":"2026-05-31 05:30:20","utr":"123986188474","sender_vpa":"9407431189","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026053117294732855
+    [txnAmount] => 100.00
+    [txnId] => 1780228820
+    [bankTxnId] => 20260531111100000267897043003654503
+    [paymentMode] => UPI
+    [txnDate] => 2026-05-31 05:30:20
+    [utr] => 123986188474
+    [sender_vpa] => 9407431189
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026053117294732855
+Attempting to restore session: 54792ab7162847abf4216b3f35d5574d
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 9407431189
+    [name] => saheba
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-02 05:14:35 ---
+User Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 171.79.37.58
+POST Data: Array
+(
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 7766
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-06-02 05:14:48 ---
+User Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 171.79.37.58
+POST Data: Array
+(
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 7766
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-06-02 05:14:53 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 171.79.37.58
+POST Data: Array
+(
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 7766
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-06-02 05:15:01 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 171.79.37.58
+POST Data: Array
+(
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+    [phone] => 7766
+    [name] => admin
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-06-02 05:15:20 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 152.56.251.243
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 7583862554
+    [cust_Email] => ashishpatel2642@gmail.com
+    [hash] => 1f5e9e7ed38dd7e0:25a82c02db50e4d07999e79e48c658c4d36f5c27:KXXqyRDjX3dY2njj7ObTeYAoaHOxcWAXbz+EKy2a6iDjpTSpRd1ZTNnEH5e38SZe0PwLFfrCRKvXBmooC+60s4eT2++Io1/F+lBHQkv6/UAnalEdSdVW7xpNKRZmFkZtyoX26NSvwbM6cPlnJBLHJJVq9lphpFzVys44SKXcIZXrTBwB0K8yxbmhPGXUiKGkco9+hVsb3SXxpty1WqntFsXyZIMAQNZJIHtA7PRfXG5VYsE3OR6TzM/OIjMKY1HGZEjBTbOJ1QIi4AItqzR7G0SqhkqCbnam/sakVQz/+nj7t5tAN6k/S8qnrAXkaebKu26gPp9BoNuCyQVjzSf3Upl+oT5uMqBkYT8ZJ9xXSxLxBl17HTlXUVmCeTHrntS+1fh3HBjbasYBPq1f7jr1GW2yzKpSQYdOFzyVwzL+6GNY70K2vHcaY3KsOoL4BGoIZVPVsNredoXGm8aSxXIuLw==
+    [checksum] => zXZTN+/9QSU8E50BZ8cC5npTZl/RJzct+31e2Ft/QcAS3UX+KyLLB2Ef292gVVBB4G8vpr8PBm20MlkjGhgo7a25oMeEDfaCc9nm/8iTavM=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026060210445525248","txnAmount":"100.00","txnId":1780377318,"bankTxnId":"20260602010930000268519911588927119","paymentMode":"UPI","txnDate":"2026-06-02 10:45:18","utr":"615369657964","sender_vpa":"7583862554","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026060210445525248
+    [txnAmount] => 100.00
+    [txnId] => 1780377318
+    [bankTxnId] => 20260602010930000268519911588927119
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-02 10:45:18
+    [utr] => 615369657964
+    [sender_vpa] => 7583862554
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026060210445525248
+Attempting to restore session: 47560d3df3f656dd51681053ac0c489a
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 7583862554
+    [name] => Ashish Lodhi
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-02 05:15:26 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+Remote IP: 49.44.81.198
+POST Data: Array
+(
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: 
+Effective Order ID: 
+No Order ID available for session restoration.
+Session Data: Array
+(
+)
+
+EXCEPTION: payment_failed_status_UNKNOWN
+
+--- 2026-06-03 09:28:18 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0
+Remote IP: 152.59.31.55
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 7984863998
+    [cust_Email] => beeranlodhi43@GMAIL.com
+    [hash] => 38a2adbc7e33ae3c:9bb0d91d135127c03003d14096caf8ebeac5f639:U/TSwcWzi+vY5qho741FjYlodc6QSpmsxdVo7zemZ/Eq3ebeUckE0ACQjLr9Y2WyTwR+JHCr9ri0BSYyngitprhOeDWpk+tPunNaoZIz/JMuBwNkwbFHUa86rhQETG62eDPuxEajzQ9QwFUYgHiV1ur2sc62bntsI+MhMVTkQCX2yIY1BuBLOTKru5eE+Cu860ra6fjc6/TEiy57578V5TSzSL6udCnKwRCKhf3FNHYDjLIM64CNvdyNP08H05At78UxLVlA5OTAwpQW/dNgXyHtGfrqFvVG5ySWJxvmHW8xsL1xpsJ3DS0oSsJebaZ6d8AE83GvxEQsXhVDQILjVVA3Tn2reL236bQPZKiAX2vFocA3QNeqoUJHRHIc3GgzbhIbpKEIUr6oqbE4nS8p8rbVeSyc+TIlTOLFEdd9vvEXCmWN2wpmPF7Q4pzP45XAx7sLCOT/h05gpG4qfusFYQ==
+    [checksum] => pPWta5CNdFLWMmwulqvf6HVrPEa+on3C3Hc3Huxy7ptxYGJho4YZCwkT6ut8BC1gb4+zuDEYgBQKZ5KQvDOVSOfpPJatW43cyjM0u18I2UE=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026060314573783615","txnAmount":"100.00","txnId":1780478894,"bankTxnId":"20260603010960000268945929722877410","paymentMode":"UPI","txnDate":"2026-06-03 02:58:14","utr":"023051758406","sender_vpa":"7984863998","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026060314573783615
+    [txnAmount] => 100.00
+    [txnId] => 1780478894
+    [bankTxnId] => 20260603010960000268945929722877410
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-03 02:58:14
+    [utr] => 023051758406
+    [sender_vpa] => 7984863998
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026060314573783615
+Attempting to restore session: 20c96ba3df17d37ac030ef16b0989c19
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 7984863998
+    [name] => beeran
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-03 09:51:51 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 157.34.35.108
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9106043492
+    [cust_Email] => sarveshlodhi671@gmail.com
+    [hash] => f8e7944a4684f258:a6f359ef3242db3c62b432060c347efc4cb884b6:1XJgFq0k1jDAeFzmM9p+vokXTWThVlq9luwousU5HVxId8b0Q6tn46TXO4HE4l0FuUN/SA90gsDUNV0gQv2KnJeYOytg+sRjJXoPa8+4DguhrzWXZsOLATdhE0lC05pDkUoW2TH+ShZA/kj/cVshPhj+kT7UytEfFSU2ji76v2B9bvcb80njrj1dtOSHdVpturspHUd3nKIXggl60q/OYIb+7Ct24wRQpkmGvRDVry0Dl8Npf9896VkNWJpqFAGd4nm4vpprpH0ZHeVjNhooiITv6/W5NrlgxKbJlz0tK0a+OCqDzJJsrzS+PectzAobLvUSChI+JWx7T6aUlfgw5p/xobUnXea4GPTebvFNSbB6FbwuqBbc9aRuI4B9eisnoHiXnZzSuVAdDNXFSY0wn4yjFgmzE/1UF2BP0is+3Cpl8dbLVWJUwQOegW7y4w6Q6Ls8F+wdFXQF9ZueTlpO0g==
+    [checksum] => 5BBuIPMh9ndRSqXg0z39FF5PbEStbn8VzjjVx4CU09wzwxaykcOJ+4zbZPH/sexoxSuXLGe3/ZcQPZWGnS9TB047oZ2L7CXkruuLu4oVlXg=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026060315202586544","txnAmount":"100.00","txnId":1780480308,"bankTxnId":"20260603110950000268951876427419256","paymentMode":"UPI","txnDate":"2026-06-03 03:21:48","utr":"615424961901","sender_vpa":"9106043492","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026060315202586544
+    [txnAmount] => 100.00
+    [txnId] => 1780480308
+    [bankTxnId] => 20260603110950000268951876427419256
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-03 03:21:48
+    [utr] => 615424961901
+    [sender_vpa] => 9106043492
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026060315202586544
+Attempting to restore session: 2b95d0868f95be709862d9d43883b056
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 9106043492
+    [name] => Sarvesh Kumar Lodhi
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-04 11:34:48 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 106.207.230.89
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 8516981762
+    [cust_Email] => satyamsahu2811@gmail.com
+    [hash] => da341885a6ac2a0f:7f1c84521a3c5984f2c261e0bf020a6394ad0ef9:5/sXfQmre9NNtW7Q7K8KXoz+W4P4vcZLEtx5M8pz2z9PQU+myihRY29LYkvi6/tLu5jSlOuDWoQkVVOBJZer2rIqhzuc4bq9WaDL6NbwHLEW1uUz7AA2rBPDtQ17xs97NUZcsLAZIX4dKhDekY1uC5unHQDeFcShVIGHwP6rkNGjnUUz6e989T8i6/P9+n/FBxJzsV5kEWb8XzVZ7PM6ihvdczaPzR5of0O9UmvESax69RV/Kx9nol/psACCWZ66UI+0ZZm1SNPMtV8XaC7OArPwsYSClo10CEFFSvxfsoHwvfHwjILtovvNsveXJ7y03ZCo7/PZl7JPPo6GyywJBy3gQz2Squ3oEpINYcJLW8pIlCV5Ma1bTEbnGhpk3DwMkSBYDEpQIKOJxWQlU3jDpCffQjlVdHyoIt2+Did9wHAD8Ejcoj6bmUrv+8/0k8oelxhlo46dCSPrtBaAa4cgJg==
+    [checksum] => rJLeu428igYgE7XreutGvVk/NExmhA+PX72gi2gmgFSorsKxRF/1LKkNnnZ1A+mDqc658SPnMX1oE8MO5ahyiRnPXliFTgFQfKwMonMDAlA=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026060417034071088","txnAmount":"100.00","txnId":1780572885,"bankTxnId":"20260604010950000269340146298588253","paymentMode":"UPI","txnDate":"2026-06-04 05:04:45","utr":"615504429966","sender_vpa":"8516981762","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026060417034071088
+    [txnAmount] => 100.00
+    [txnId] => 1780572885
+    [bankTxnId] => 20260604010950000269340146298588253
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-04 05:04:45
+    [utr] => 615504429966
+    [sender_vpa] => 8516981762
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026060417034071088
+Attempting to restore session: 08b6672ba0bd83200012a11d80c3edbe
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 8516981762
+    [name] => Satyam Sahu
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-04 13:15:24 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 152.56.250.130
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 8435130529
+    [cust_Email] => dineshuidai01@gmail.com
+    [hash] => a0c299388e0819ec:c071665fc7a4da4e1229ff98e01790c65286aa92:6QLLfJAcjCT9G7iHERU9l+cuKMHOJNESGJH9Ulrv24NFqW66bOf63aQnKtB+wfxnGVcc3RNEZGr71n+ck932uIgPVAAnxvq/HazSBF6ToDiwdqEf9kHPVl1gyQjrFLbkaADgsl/qyNd+SY6neN+LazrAROD2TgXF98RqGPedgxnYO8xgZeR0fB9o9MMrAEXQxflNPSu9KdkfRV32p0tyqYpinT6/x3yhVHwXwdg3bEk+rD5iFof1uvoVwPGEXOUdQynTmyUh88YwoaJbIDTNJZKaHaWzyIdJGWrWXoCbkYFDfhj0ONfkkBOonDPxqzn0FSAkqa5UyQCyqiwTmEcAaSVv8fHT+BqwP9AV+voS+jIXCyNFNjTkf2vMAFkOJ4Pzbt41BfhWrSz6CfNqxG77neuz+3+5MSLT9SaSR1ks6krAuzPP8Olk1esbk8m+7QCIWaAGUoaG3jv6NgaWU2cCuA==
+    [checksum] => hnI8iGjLpOi7yQ/ehaRrLAEOtDkyAW0WAdM58JvvZVAD0GYOn0FuH5m8xmmwwTCE5IuCMACxiXIA4R/Nqnoh32oFqukDDkcJfAruCwh5Ifw=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD202606041841563913","txnAmount":"100.00","txnId":1780578920,"bankTxnId":"20260604110800000269365501949033745","paymentMode":"UPI","txnDate":"2026-06-04 06:45:20","utr":"876964788923","sender_vpa":"8435130529","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD202606041841563913
+    [txnAmount] => 100.00
+    [txnId] => 1780578920
+    [bankTxnId] => 20260604110800000269365501949033745
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-04 06:45:20
+    [utr] => 876964788923
+    [sender_vpa] => 8435130529
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD202606041841563913
+Attempting to restore session: fec148691f6b4cbca7abab6ab9e2ad89
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 8435130529
+    [name] => Dinesh Kumar
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-05 05:18:07 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Remote IP: 223.181.78.43
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9407272840
+    [cust_Email] => gccbanda1@gmail.com
+    [hash] => 6929549b7a66304f:55d9169603348223c74f891fa09d88d245390ae9:FtZt84eEyly8hhYuTQCRcpi4SkS2WAxfofA7pe4PFwL3Q0dXQxrVOZHueyJ6OyPi+eRCq636mH6mlotcz7738O2dz6Ks55AGYOgp6wrozUIVac5RFjRjr0XebDBBwIB2D4XW4w+V4eA6yNTBaf2p1FireHGoDO2BUzsCiooToZH3wgBKgKq7BUznq0pn+hwK1jWJcZNjIe4JzfmRZgzx7sncie5BPfCv8pU6vBILDyPmolp4tovEt5t0jvljCfaySVsAygsCyNdlIDd6GRnLYZRt3CFLrY1zfpMmROmYfyEkC0mF3TPnrPFAIEzeocKOvEfjPp2npis8fezzqU2AG0+JgRfprlhlAH/XLUyYtrxfLNcTwnb4VUh7+LvrnR4JAth4sqFf+YAlUx3i74ld/V5fSDvGobAPiqwmQZ3bww9Av9jAy763q5Ng+MyA+sYkM2BJgKJSKFXiJrN42JJ9Zw==
+    [checksum] => AF3lKy1TKhLuCORVSqkJ8aGMTlKWLm9ftrzwo9aDqwjfZsaDeBE1MvxMJ2baZslDtL+zMMIlJyDQPO5ATQBbLKBvRyHxfjfOkxkKtLv00Cw=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026060510473177190","txnAmount":"100.00","txnId":1780636684,"bankTxnId":"20260605110800000269607781296663845","paymentMode":"UPI","txnDate":"2026-06-05 10:48:04","utr":"880020500586","sender_vpa":"9407272840","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026060510473177190
+    [txnAmount] => 100.00
+    [txnId] => 1780636684
+    [bankTxnId] => 20260605110800000269607781296663845
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-05 10:48:04
+    [utr] => 880020500586
+    [sender_vpa] => 9407272840
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026060510473177190
+Attempting to restore session: d42406c39cfdd6b94c13c739c930d2b8
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 9407272840
+    [name] => Gajendra Lodhi
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-07 04:15:14 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0
+Remote IP: 106.202.75.98
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 7489859425
+    [cust_Email] => ns02370230@gmail.com
+    [hash] => aac6e970fb05fb39:ca4754a2317968433acc61d8cb6ae76e209709a6:aLhhc1g4f6LOlEz3PPmqqSovdJmsWu9cNMBb7JlOck3I0Hg0HyYmcn7kfrG8qttA5LvRiRw6w7tB+5Mw7kMan87wTuPdYqQGxSvUbXPX6cVIvRhDeW4Mii/8HlN9RzySwPmRKattq51vG48MkWOiMSjMLskBjtMXMsFYOwDjZTiI8nokVdUAfvpqxVd8PW2eg/EbUsCCm6VUpJ1rmNZXw/kziWeDEsYBdMYMACnDAtL3SG8co4nGAofEahjJxOuvOC+OxwwFl3+pb7efJtDjk7S+NS3EtA+uUqAckArEE8E9/r69/+On2kEhIYKkm6CziMzvznprxqjkmc7L5gx50MYHIkPII0s8Vm/yy2IIRlwq4VVLcZej9ytp/eAVeZD+6quLHRPrRFTORuL/Tq7neD0DisYslwocYBsZsydCqAjDDp6+aMLFU5rfVkGWm8ztDlXcHG2+faFlPBtXiONIYQ==
+    [checksum] => /b+89AlRbXw+FbITl6+9WI7Eaveht6gcofaOo05zDeZkCP94jfrO+yf7WGDvGynAR52ek1TIkWb9sddP35JiBy9HsuPhKa3YVuCjDTBH/Xs=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026060709444814749","txnAmount":"100.00","txnId":1780805711,"bankTxnId":"20260607110980000270316692833024679","paymentMode":"UPI","txnDate":"2026-06-07 09:45:11","utr":"124334852153","sender_vpa":"7489859425","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026060709444814749
+    [txnAmount] => 100.00
+    [txnId] => 1780805711
+    [bankTxnId] => 20260607110980000270316692833024679
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-07 09:45:11
+    [utr] => 124334852153
+    [sender_vpa] => 7489859425
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026060709444814749
+Attempting to restore session: 18df2abb5152b3a2c0ed4bb3199e631b
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 7489859425
+    [name] => Narendra 
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-07 09:12:03 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36
+Remote IP: 152.56.7.233
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 7796850189
+    [cust_Email] => moryaa0001@gmail.com
+    [hash] => 4e579d38078a9d04:36e9831618d4f6091ae32147f229322684af83e7:rnS3XJxUowIxn4ZJpbFuO207OVPXnsZC2HCTVQlnHtTy+qObikRFvvVgOWe/05VdP586V+JlaqrL3IJ+pnN82bLDcSaohlFGCQbWrX/Dage+JGbZkQnJuhttTkGf6X1lxK952lCvxzNzuthzUxNu+2X9s6YyrEFMmX9/jH14y208I9UwWwF3c6DJW1XPbulfzxHF515KoERkUuM56FcIHOrHGcKtovxNS879UVgAyIY8N3seZg4uXaW2hPjojcMz2I/YVe0cKL3dxbV4XET/FV7Wghk+6txttKbb0LP5OXRumej6pcyRjd+zTqLw4yWPLMAIa3H9g1mombFjK1RUkEId768pBnzBd2p/YGo6xO/qLnAkss3rlPTmWsNK8DJbuRAcMeXP4CFn6i6FZCOyWMo9qX44i1Z2rVdEnXscxUox1Uxh97ZaZvZ5WTaunWs8XB5Rxe881fwBGRvhd3frVQ==
+    [checksum] => +Z9/IxX5xbqulPR0bVCrm7DACIaLegRxF+OKm0RfESpIiaaQd192q9C37Eok3UCeKBxbmgxpXLDcRi6osKzeLAZf8pGmyxORTBjOPRzlyBs=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026060714410667904","txnAmount":"100.00","txnId":1780823519,"bankTxnId":"20260607110850000270391422956916999","paymentMode":"UPI","txnDate":"2026-06-07 02:41:59","utr":"118083450571","sender_vpa":"7796850189","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026060714410667904
+    [txnAmount] => 100.00
+    [txnId] => 1780823519
+    [bankTxnId] => 20260607110850000270391422956916999
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-07 02:41:59
+    [utr] => 118083450571
+    [sender_vpa] => 7796850189
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026060714410667904
+Attempting to restore session: 72e452c29a37f42eb79048bd05a347cd
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 7796850189
+    [name] => Mahesh Satpute
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-09 11:00:57 ---
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36
+Remote IP: 106.207.236.25
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 7898762410
+    [cust_Email] => ajaylodhi250689@gmail.com
+    [hash] => 3e597494e0271d30:7129170f167a717dd9aa3292d649621adbc984b1:QqwB43FX/lt+X7CUZcWe7eahF1JwQK5Lbge4EuE6b/ZxvxAoA23Wmm7lEOfUUT0hCgpI453lrwgDBQ8eKcDXWdTHoFMtahGcsY6WXNeISzpQVd6kZGQkui3FDDJinqV5il6zMAWU1S3pmhwJKmu43YjgjiFVNtyAzjv1d+E5MfF32uyZuh2oCVcKmzcqCXJ4PsBaxDTh+mxzguZukl80LOMIN3Np0jcfldKOaiy8jASIqoaYjrPzItP7rvIRBUKozln7KKRoZZwoXvyn/oMkJokEhm2roFQSumNWKWFbaZS5BoFGnED6FC4OwGIzkKOIe6ca09tLCyBz4vv9kgaKLEybbtH+KQrCDSbEIfWG+ibe/J5b1eDIPjBo/g+j8TWR01x03/65Kf0DxVnjb9S5K+HGUIhCZMfT7hwbrXHEtMPmsW+G/aw6w5oARbDitd6iFNzet8pEueWpkepxeWBPNA==
+    [checksum] => kdZgjR3W877zk1dUuzZiTLWKllVIHXFp/yww8r1x1Xs3InNj5kJAIDveBa6jsf/T5lztudx2tf0aj/EK/JDeFAPMdTdZHXKseQRkzMH6VGA=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026060916300092434","txnAmount":"100.00","txnId":1781002854,"bankTxnId":"20260609110900000271143588982405216","paymentMode":"UPI","txnDate":"2026-06-09 04:30:54","utr":"445300163139","sender_vpa":"7898762410","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026060916300092434
+    [txnAmount] => 100.00
+    [txnId] => 1781002854
+    [bankTxnId] => 20260609110900000271143588982405216
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-09 04:30:54
+    [utr] => 445300163139
+    [sender_vpa] => 7898762410
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026060916300092434
+Attempting to restore session: c9a15ac964f8438fc2db8c67352aca37
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 7898762410
+    [name] => AJAY PATEL
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...
+
+--- 2026-06-09 12:27:12 ---
+User Agent: Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Mobile Safari/537.36
+Remote IP: 152.56.251.112
+POST Data: Array
+(
+    [status] => SUCCESS
+    [message] => Transactions Successfully
+    [cust_Mobile] => 9407272840
+    [cust_Email] => gccbanda1@gmail.com
+    [hash] => 055c7342259e2eda:df2f1f83809b64f43a7e505fd6b45b1999a34aa1:1fgLKIdMuHgJBx5smRXcDwCO1/b2Xzjx6BitinIbmQ3US5XMK03DFeYDBBUaRY9/6ndajJ9HCJik6kQhwsHcnRWhlGF1lAeOn45JsK8wtn6DwuI28N31K5n0Lr+8mYBDQoH1acvEu4XfelEGSqqgzuzyEJNgdUBZL2c5I/YRMvf9dja8WQ8wxU37D7ZX0TosgW0hvhTvnJqNxhGzDSrm0YwqG+q1knJ7V6GMPm56ve2FVJCzsHhWO9Nwt6e9wB3CqsHhGlW9Ru1nQ2lOSNubZJmPuAKo2L8zc4CS2rOICV6i9eds7QYNLZUK1jVCD9dJaISQg1ZGcjshxDKy3alP662RuP/NDKcA6Jrrrt+MzqT5P9y75efrnq8+WXJrtGzlqgxPoBUYjL3Vp9DIX7rDcDe99loVmDLAgnREHjQj7EVVG8V/72shbAHTPvdawr98Dk1Rhfg+3lacFTVPl8ejlA==
+    [checksum] => XlkN5BFdP6eaG/uUquPYzRxBvW6HelLLgYib99AS+9e0ifxdarjQu4cjDM/WGOwDLKUK1vFLyBvdOS4jHFagyeom9Yr0RIFpyatK8ulluCY=
+)
+
+GET Data: Array
+(
+)
+
+Initial Order ID:  | Status: SUCCESS
+Raw Decrypted Hash: {"txnStatus":"TXN_SUCCESS","resultInfo":"Txn Success","orderId":"ORD2026060917561294786","txnAmount":"100.00","txnId":1781008026,"bankTxnId":"20260609111020000271165293242789057","paymentMode":"UPI","txnDate":"2026-06-09 05:57:06","utr":"642553029071","sender_vpa":"9407272840","sender_note":"WalletTopup","payee_vpa":"paytmqr15iw00mz9g@paytm"}
+Decrypted Hash Payload: Array
+(
+    [txnStatus] => TXN_SUCCESS
+    [resultInfo] => Txn Success
+    [orderId] => ORD2026060917561294786
+    [txnAmount] => 100.00
+    [txnId] => 1781008026
+    [bankTxnId] => 20260609111020000271165293242789057
+    [paymentMode] => UPI
+    [txnDate] => 2026-06-09 05:57:06
+    [utr] => 642553029071
+    [sender_vpa] => 9407272840
+    [sender_note] => WalletTopup
+    [payee_vpa] => paytmqr15iw00mz9g@paytm
+)
+
+Effective Order ID: ORD2026060917561294786
+Attempting to restore session: 1c43e91cb143493e5f17e2b15348e7d0
+Session successfully restored.
+Session Data: Array
+(
+    [phone] => 9407272840
+    [name] => Gajendra Lodhi
+)
+
+POST Checksum failed, trying decrypted payload...
+CRITICAL: Checksum verification failed even after retry.
+Transaction complete. Redirecting...

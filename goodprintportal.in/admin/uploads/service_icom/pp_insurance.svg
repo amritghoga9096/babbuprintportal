@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<path d="M64 8l44 16v30c0 30-20 52-44 64C40 106 20 84 20 54V24z" fill="#0891b2"/>
+<path d="M64 18l34 12v24c0 24-15 42-34 52-19-10-34-28-34-52V30z" fill="#cffafe"/>
+<path d="M64 84S42 70 42 56c0-7 5-12 11-12 5 0 9 3 11 7 2-4 6-7 11-7 6 0 11 5 11 12 0 14-22 28-22 28z" fill="#e11d48"/>
+<rect x="74" y="94" width="48" height="26" rx="6" fill="#0c4a6e"/><text x="98" y="111" font-family="Arial,sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">PAN</text>
+</svg>

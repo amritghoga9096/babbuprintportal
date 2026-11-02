@@ -1,0 +1,32 @@
+RewriteEngine On
+RewriteBase /
+
+# 1. Sabse pehle PHP Handler ko CloudLinux Selector par set karein
+# Isse "mysqli_connect" wala error nahi aayega
+<IfModule nt_selector_module>
+  lsapi_php_version alt-php74
+</IfModule>
+
+# 2. Step 1: Try rewriting to .php if no extension and not a real file/dir
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9/_-]+)$ $1.php [NC,L]
+
+# 3. Step 2: If under /members/ and file not found → go to /admin/404.php
+RewriteCond %{REQUEST_URI} ^/members/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ /admin/404.php [L]
+
+# 4. Step 3: All other missing files (including services) → redirect to index.php
+# Ye line aapki services ke links ko thik karegi
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ index.php [L]
+
+# Security for specific file types
+<FilesMatch ".*\.(zip|json)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

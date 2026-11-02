@@ -1,0 +1,348 @@
+<?php
+include('header.php');
+
+$pdf_preview = '';
+$show_preview = false;
+
+// ============================
+// AJAX: LOAD CAPTCHA (API 1)
+// ============================
+if (isset($_POST['action']) && $_POST['action'] === 'load_captcha') {
+    header('Content-Type: application/json');
+    $ch = curl_init("https://apiadda.in/RC_DATA/RCPDF/captcha_api.php");
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_SSL_VERIFYPEER=>false, CURLOPT_TIMEOUT=>15]);
+    $res = curl_exec($ch);
+    curl_close($ch);
+    echo $res;
+    exit;
+}
+
+// ============================
+// AJAX: FETCH RC DATA (API to get vehicle details)
+// ============================
+if (isset($_POST['action']) && $_POST['action'] === 'fetch_rc') {
+    header('Content-Type: application/json');
+    
+    $rc_no = mysqli_real_escape_string($ahk_conn, strtoupper(trim($_POST['rc_no'])));
+    $captcha = mysqli_real_escape_string($ahk_conn, trim($_POST['captcha']));
+    $session_id = mysqli_real_escape_string($ahk_conn, trim($_POST['session_id']));
+    $user_sid = mysqli_real_escape_string($ahk_conn, trim($_POST['user_sid']));
+    
+    if (empty($rc_no) || empty($captcha) || empty($session_id) || empty($user_sid)) {
+        echo json_encode(["Status"=>"Error", "Message"=>"Missing required fields"]);
+        exit;
+    }
+    
+    // Call API to fetch RC details (you need to add the correct endpoint)
+    $apiUrl = "https://apiadda.in/RC_DATA/RCPDF/rc_details_api.php?" . http_build_query([
+        'rc_no' => $rc_no,
+        'captcha' => $captcha,
+        'session_id' => $session_id,
+        'user_sid' => $user_sid,
+        'api_key' => 'e5742e-4c57fc-d1c4ac-0390b5-8cbd0e',
+        'secret_key' => 'e06450a0867d62c'
+    ]);
+    
+    $ch = curl_init($apiUrl);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_FOLLOWLOCATION => true
+    ]);
+    $res = curl_exec($ch);
+    $err = curl_error($ch);
+    curl_close($ch);
+    
+    if ($err) {
+        echo json_encode(["Status"=>"Error", "Message"=>"API Error: ".$err]);
+        exit;
+    }
+    
+    $result = json_decode($res, true);
+    
+    // If API returns success, pass the data
+    if ($result && isset($result['Status']) && $result['Status'] === 'Success') {
+        echo json_encode([
+            "Status" => "Success",
+            "data" => $result['data'] ?? $result
+        ]);
+    } else {
+        echo json_encode([
+            "Status" => "Error",
+            "Message" => $result['Message'] ?? "RC not found or invalid captcha"
+        ]);
+    }
+    exit;
+}
+
+// ============================
+// AJAX: GENERATE PDF (API 2)
+// ============================
+if (isset($_POST['action']) && $_POST['action'] === 'generate_pdf') {
+    header('Content-Type: application/json');
+
+    $priceRow = mysqli_fetch_assoc(mysqli_query($ahk_conn, "SELECT price FROM pricing WHERE service_name='rc_vehical_fee'"));
+    $fee = $priceRow['price'] ?? 0;
+    $username = $udata['phone'];
+    $wallet = $udata['balance'];
+
+    if ($wallet < $fee) {
+        echo json_encode(["status"=>"error", "message"=>"Low Balance", "required"=>$fee, "available"=>$wallet]);
+        exit;
+    }
+
+    $rc_no = mysqli_real_escape_string($ahk_conn, strtoupper(trim($_POST['rc_no'])));
+    $captcha = mysqli_real_escape_string($ahk_conn, trim($_POST['captcha']));
+    $session_id = mysqli_real_escape_string($ahk_conn, trim($_POST['session_id']));
+    $user_sid = mysqli_real_escape_string($ahk_conn, trim($_POST['user_sid']));
+    $card_type = mysqli_real_escape_string($ahk_conn, trim($_POST['card_type']));
+
+    if (empty($rc_no) || empty($captcha) || empty($session_id) || empty($user_sid)) {
+        echo json_encode(["status"=>"error", "message"=>"Missing captcha fields"]);
+        exit;
+    }
+
+    // Call API 2 - PDF Generation
+    $apiUrl = "https://apiadda.in/RC_DATA/RCPDF/rc_pdf_api.php?" . http_build_query([
+        'rc_no' => $rc_no,
+        'captcha' => $captcha,
+        'session_id' => $session_id,
+        'user_sid' => $user_sid,
+        'card_type' => $card_type,
+        'api_key' => 'e5742e-4c57fc-d1c4ac-0390b5-8cbd0e',
+        'secret_key' => 'e06450a0867d62c'
+    ]);
+
+    $ch = curl_init($apiUrl);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_TIMEOUT => 60,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS => 5
+    ]);
+    $res = curl_exec($ch);
+    $err = curl_error($ch);
+    curl_close($ch);
+
+    if ($err) {
+        echo json_encode(["status"=>"error", "message"=>"API Error: ".$err]);
+        exit;
+    }
+
+    $result = json_decode($res, true);
+
+    if (isset($result['status']) && $result['status'] === 'success' && !empty($result['pdf_base64'])) {
+
+        $rawPdf = $result['pdf_base64'];
+        $cleanBase64 = preg_replace('#^data:application/pdf;base64,#i', '', $rawPdf);
+        $fileForDb = "data:application/pdf;base64," . $cleanBase64;
+
+        $newBal = $wallet - $fee;
+        mysqli_query($ahk_conn, "UPDATE users SET balance = $newBal WHERE phone = '$username'");
+
+        date_default_timezone_set("Asia/Kolkata");
+        $time_hkb = date('d/m/Y g:i:s');
+
+        mysqli_query($ahk_conn, "INSERT INTO `rc_vehical` (`username`, `rc_vehical_no`, `status`, `pdf`, `date`) VALUES ('$username', '$rc_no', 'Success', '$fileForDb', '$time_hkb')");
+        mysqli_query($ahk_conn, "INSERT INTO `wallethistory` (`userid`, `amount`, `balance`, `purpose`, `status`, `type`) VALUES ('$username', '$fee', '$newBal', 'RC Vehical PDF - $rc_no', '1', 'Debit')");
+
+        echo json_encode([
+            "status" => "success",
+            "message" => "RC PDF Generated",
+            "rc" => $rc_no,
+            "charged" => $fee,
+            "remaining" => $newBal,
+            "pdf" => $fileForDb,
+            "rc_data" => $result['rc_data'] ?? []
+        ]);
+    } else {
+        $errMsg = $result['message'] ?? 'RC not found or invalid captcha';
+        echo json_encode(["status"=>"error", "message"=>$errMsg]);
+    }
+    exit;
+}
+?>
+
+<!-- Rest of your HTML remains the same until the script section -->
+
+<script>
+$(document).ready(function(){
+
+    // ===== CAPTCHA (API 1) =====
+    function loadCaptcha(){
+        var btn=$('#refreshBtn');
+        btn.addClass('spin');
+        $('#captchaBox').html('<svg width="90" height="30"><text x="8" y="20" fill="#aaa" font-size="11">Loading...</text></svg>');
+        $('#sessionId').val('');
+        $('#userSid').val('');
+
+        $.post('', {action:'load_captcha'}, function(res){
+            btn.removeClass('spin');
+            if(res.status==='success'){
+                $('#captchaBox').html(res.svg);
+                $('#sessionId').val(res.session_id||'');
+                $('#userSid').val(res.user_sid||'');
+            } else {
+                $('#captchaBox').html('<span style="font-size:10px;color:#ef4444">Failed</span>');
+                Swal.fire({title:'Captcha Error', text:res.message||'Failed to load', icon:'error', confirmButtonColor:'#ef4444'});
+            }
+        }).fail(function(){
+            btn.removeClass('spin');
+            $('#captchaBox').html('<span style="font-size:10px;color:#ef4444">Error</span>');
+        });
+    }
+    
+    loadCaptcha();
+    $('#refreshBtn').on('click', loadCaptcha);
+
+    // ===== FETCH RC DATA =====
+    var fetchedData = {};
+    
+    $('#fetchBtn').on('click', function(){
+        var rc = $('#rc_dl').val().trim().toUpperCase();
+        var cap = $('#captchaInput').val().trim();
+        var sid = $('#sessionId').val();
+        var usid = $('#userSid').val();
+        
+        if(!rc){
+            Swal.fire('Missing', 'Enter RC Number', 'warning');
+            return;
+        }
+        if(!cap){
+            Swal.fire('Missing', 'Enter Captcha', 'warning');
+            return;
+        }
+        if(!sid || !usid){
+            Swal.fire('Missing', 'Load captcha first', 'warning');
+            return;
+        }
+
+        var btn = $('#fetchBtn');
+        btn.prop('disabled', true).html('<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="animation:spin 1s linear infinite"><path d="M12 2v4m0 12v4m-7.07-15.07l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg><span>Fetching from VAHAN...</span>');
+
+        $.post('', {
+            action: 'fetch_rc',
+            rc_no: rc,
+            captcha: cap,
+            session_id: sid,
+            user_sid: usid
+        }, function(res){
+            btn.prop('disabled', false).html('<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg><span>Fetch RC Details</span>');
+            loadCaptcha();
+            $('#captchaInput').val('');
+
+            if(res.Status === 'Success' && res.data){
+                fetchedData = res.data;
+                
+                // Populate modal fields
+                $('#m_rc').val(res.data.rc_number || rc);
+                $('#m_owner').val(res.data.owner_name || '');
+                $('#m_father').val(res.data.father_name || '');
+                $('#m_chassis').val(res.data.chassis_no || '');
+                $('#m_engine').val(res.data.engine_no || '');
+                $('#m_regdate').val(res.data.registration_date || '');
+                $('#m_fuel').val(res.data.fuel_type || '');
+                $('#m_norms').val(res.data.norms_type || '');
+                $('#m_class').val(res.data.vehicle_class || '');
+                $('#m_maker').val(res.data.maker || '');
+                $('#m_model').val(res.data.model || '');
+                $('#m_color').val(res.data.color || '');
+                $('#m_body').val(res.data.body_type || '');
+                $('#m_seats').val(res.data.seat_capacity || '');
+                $('#m_unladen').val(res.data.unladen_weight || '');
+                $('#m_cc').val(res.data.cubic_capacity || '');
+                $('#m_cylinders').val(res.data.no_cylinders || '');
+                $('#m_wheelbase').val(res.data.wheelbase || '');
+                $('#m_mfg').val(res.data.mfg_date || '');
+                $('#m_fitness').val(res.data.fitness_upto || '');
+                $('#m_ownership').val(res.data.ownership || '');
+                $('#m_rto').val(res.data.rto_authority || '');
+                $('#m_address').val(res.data.address || '');
+                
+                $('#rcModal').addClass('show');
+            } else {
+                Swal.fire({
+                    title: 'Fetch Failed',
+                    text: res.Message || 'RC not found or invalid captcha',
+                    icon: 'error',
+                    confirmButtonColor: '#ef4444'
+                });
+            }
+        }).fail(function(xhr, status, error){
+            btn.prop('disabled', false).html('<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg><span>Fetch RC Details</span>');
+            Swal.fire('Error', 'Server request failed: ' + error, 'error');
+        });
+    });
+
+    // ===== MODAL CONTROLS =====
+    $('#modalClose, #modalCancel').on('click', function(){
+        $('#rcModal').removeClass('show');
+    });
+    
+    $('#rcModal').on('click', function(e){
+        if(e.target === this) $(this).removeClass('show');
+    });
+
+    // ===== GENERATE PDF (API 2) =====
+    $('#generateBtn').on('click', function(){
+        var rc = $('#rc_dl').val().trim().toUpperCase();
+        var cap = $('#captchaInput').val().trim();
+        var sid = $('#sessionId').val();
+        var usid = $('#userSid').val();
+        
+        if(!rc || !cap || !sid || !usid){
+            Swal.fire('Missing Info', 'Please fetch RC details first', 'warning');
+            return;
+        }
+        
+        var btn = $('#generateBtn');
+        btn.prop('disabled', true).text('⏳ Generating PDF...');
+
+        $.post('', {
+            action: 'generate_pdf',
+            rc_no: rc,
+            captcha: cap,
+            session_id: sid,
+            user_sid: usid,
+            card_type: $('#cardType').val()
+        }, function(res){
+            btn.prop('disabled', false).text('⬇ Generate PDF');
+            $('#rcModal').removeClass('show');
+
+            if(res.status === 'success' && res.pdf){
+                Swal.fire({
+                    title: 'Success!',
+                    html: 'Charged: <b>₹' + res.charged + '</b><br>Remaining: <b>₹' + res.remaining + '</b>',
+                    icon: 'success',
+                    confirmButtonColor: '#10b981'
+                });
+                setTimeout(function(){
+                    window.location.reload();
+                }, 1500);
+            } else {
+                Swal.fire({
+                    title: 'PDF Failed',
+                    text: res.message || 'Unknown error',
+                    icon: 'error',
+                    confirmButtonColor: '#ef4444'
+                });
+            }
+        }).fail(function(){
+            btn.prop('disabled', false).text('⬇ Generate PDF');
+            Swal.fire('Error', 'Server request failed', 'error');
+        });
+    });
+
+    // Enter key handlers
+    $('#rc_dl, #captchaInput').on('keypress', function(e){
+        if(e.which === 13){
+            e.preventDefault();
+            $('#fetchBtn').click();
+        }
+    });
+});
+</script>
+
+<?php include("footer.php"); ?>

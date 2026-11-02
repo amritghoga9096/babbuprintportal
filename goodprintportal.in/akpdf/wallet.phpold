@@ -1,0 +1,2211 @@
+<?php
+@ini_set('display_errors', 1);
+@ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+if (function_exists('ob_start') && !ob_get_level()) {
+    @ob_start();
+}
+include_once('../includes/session.php');
+$phoneOkUdata = isset($udata) ? $udata : array();
+$phoneVal = isset($phoneOkUdata['phone']) ? $phoneOkUdata['phone'] : '';
+include_once('../includes/config.php');
+$mobileno = $phoneVal ? $phoneVal : 'UNKNOWN';
+
+
+if (!function_exists('curl_get')) {
+function curl_get($url, $timeout = 15) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $resp = curl_exec($ch);
+    $err  = curl_error($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return array('http_code' => $code, 'response' => $resp, 'error' => $err);
+}
+}
+if (!function_exists('curl_post')) {
+function curl_post($url, $data, $timeout = 15) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    $resp = curl_exec($ch);
+    $err  = curl_error($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return array('http_code' => $code, 'response' => $resp, 'error' => $err);
+}
+}
+
+if (!function_exists('wallet_txn_exists')) {
+function wallet_txn_exists($conn, $banktxnid, $phone) {
+    $sql = "SELECT COUNT(*) as cnt FROM wallet WHERE BANKTXNID = ? AND phone = ?";
+    if ($stmt = mysqli_prepare($conn, $sql)) {
+        mysqli_stmt_bind_param($stmt, 'ss', $banktxnid, $phone);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $cnt);
+        mysqli_stmt_fetch($stmt);
+        mysqli_stmt_close($stmt);
+        return ($cnt > 0);
+    }
+    return false;
+}
+}
+
+function akqr_extract_amount($status, $fallback = '') {
+    if (!is_array($status)) return (string)$fallback;
+    $candidates = array('amount','order_amount','total_amount');
+    foreach ($candidates as $k) {
+        if (isset($status[$k]) && $status[$k] !== '' && $status[$k] !== null) return (string)$status[$k];
+    }
+    if (isset($status['payment']) && is_array($status['payment']) && isset($status['payment']['amount'])) {
+        return (string)$status['payment']['amount'];
+    }
+    return (string)$fallback;
+}
+
+function akqr_extract_utr($status, $fallback = '') {
+    if (!is_array($status)) return $fallback;
+    $candidates = array(
+        'utr', 'provider_ref', 'provider_txn_id', 'provider_reference',
+        'bank_ref', 'bank_txn_id', 'bank_reference', 'transaction_id',
+        'txn_id', 'payment_id', 'payment_ref', 'gateway_txn_id',
+        'rrn', 'external_ref', 'imps_ref', 'upi_transaction_id'
+    );
+    foreach ($candidates as $key) {
+        if (!empty($status[$key]) && is_string($status[$key])) return $status[$key];
+    }
+    if (isset($status['provider']) && is_array($status['provider'])) {
+        foreach ($candidates as $key) {
+            if (!empty($status['provider'][$key]) && is_string($status['provider'][$key])) return $status['provider'][$key];
+        }
+    }
+    if (isset($status['payment']) && is_array($status['payment'])) {
+        foreach ($candidates as $key) {
+            if (!empty($status['payment'][$key]) && is_string($status['payment'][$key])) return $status['payment'][$key];
+        }
+    }
+    return $fallback;
+}
+
+function akqr_extract_datetime($status, $fallback = '') {
+    if (!is_array($status)) $status = array();
+    $candidates = array('paid_at', 'confirmed_at', 'completed_at', 'success_at', 'updated_at', 'created_at', 'txn_date', 'payment_date', 'date');
+    foreach ($candidates as $key) {
+        if (!empty($status[$key]) && is_string($status[$key])) {
+            $ts = strtotime($status[$key]);
+            if ($ts > 0) return date('Y-m-d H:i:s', $ts);
+        }
+    }
+    if (isset($status['payment']) && is_array($status['payment'])) {
+        foreach ($candidates as $key) {
+            if (!empty($status['payment'][$key]) && is_string($status['payment'][$key])) {
+                $ts = strtotime($status['payment'][$key]);
+                if ($ts > 0) return date('Y-m-d H:i:s', $ts);
+            }
+        }
+    }
+    return $fallback ? $fallback : date('Y-m-d H:i:s');
+}
+
+$hdrPath = '../template/ahkweb/header.php';
+if (!file_exists($hdrPath)) {
+    die("<b>[AKQR FATAL]</b> header.php not found at <code>".htmlspecialchars($hdrPath)."</code> cwd=".getcwd());
+}
+include($hdrPath);
+
+require_once __DIR__ . '/src/AkpdfClient.php';
+
+// AutoUPI (akpdf.site) live credentials
+$AKPDF_API_KEY = 'lk_live_c2f050351965998ee2726ad285e4b17b832e20013d7392bb';
+$akpdfClient = null;
+try {
+    // 10s timeout (down from default 20s) so a slow gateway can't stall the page.
+    $akpdfClient = new AKPDF\AkpdfClient($AKPDF_API_KEY, 'https://www.akpdf.site', 10);
+} catch (Exception $e) {
+    $akpdfClient = null;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['amount'])) {
+    $amount = isset($_POST['amount']) ? $_POST['amount'] : '';
+
+    if (!$amount || !is_numeric($amount) || $amount <= 119) {
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please enter a valid amount greater than Minimum add - 120 Rs',
+                confirmButtonColor: '#4e54c8'
+            });
+        </script>";
+    } else {
+        $merchant_order_id = 'WLT_' . $mobileno . '_' . time();
+        $scheme = (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) === 'on' || $_SERVER['HTTPS'] === '1')) ? 'https' : 'http';
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') $scheme = 'https';
+        if (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443) $scheme = 'https';
+        $return_url = $scheme . '://' . $_SERVER['HTTP_HOST'] . '/admin/wallet.php';
+        $webhook_url = $scheme . '://' . $_SERVER['HTTP_HOST'] . '/akpdf/webhook.php';
+        $amountStr = number_format((float)$amount, 2, '.', '');
+
+        if ($akpdfClient === null) {
+            echo "<script>
+                Swal.fire({ icon: 'error', title: 'Gateway Error', text: 'Payment gateway initialization failed. Please contact support.', confirmButtonColor: '#4e54c8' });
+            </script>";
+        } else {
+            try {
+                $optsArr = array(
+                    'success_url'   => $return_url,
+                    'failure_url'   => $return_url,
+                    'webhook_url'   => $webhook_url,
+                    'customer_email' => '',
+                );
+                $order = $akpdfClient->createOrder($merchant_order_id, $amountStr, $optsArr);
+
+                $paymentUrl = isset($order['payment_url']) ? (string)$order['payment_url'] : '';
+                $gwOrderId  = isset($order['order_id']) ? (string)$order['order_id'] : '';
+                if ($paymentUrl === '' || $gwOrderId === '') {
+                    throw new Exception('Payment URL or order ID missing from gateway response.');
+                }
+
+                $_SESSION['order_id']         = $merchant_order_id; // our id (matches wallet txn_id)
+                $_SESSION['gw_order_id']      = $gwOrderId;          // gateway order_id (PANME-...)
+                $_SESSION['order_amount']     = $amount;
+                $_SESSION['order_generated_time'] = time();
+                $_SESSION['order_verify_mode'] = 'akpdf_pending';
+
+                $paymentModeInitial = 'AutoUPI';
+                $statusPending = 'pending';
+                $checkPending = @mysqli_prepare($ahk_conn, "SELECT id FROM wallet WHERE txn_id = ? LIMIT 1");
+                $alreadyPending = false;
+                if ($checkPending) {
+                    @mysqli_stmt_bind_param($checkPending, 's', $merchant_order_id);
+                    @mysqli_stmt_execute($checkPending);
+                    @mysqli_stmt_store_result($checkPending);
+                    if (@mysqli_stmt_num_rows($checkPending) > 0) $alreadyPending = true;
+                    @mysqli_stmt_close($checkPending);
+                }
+                if (!$alreadyPending) {
+                    $insPend = @mysqli_prepare($ahk_conn, "INSERT INTO wallet (txn_id, phone, BANKTXNID, amount, PAYMENTMODE, RESPMSG, status, txn_date, date) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?)");
+                    if ($insPend) {
+                        $todayStr = date('Y-m-d');
+                        $remark = 'Wallet Recharge Pending';
+                        $amountStrDb = (string)$amount;
+                        @mysqli_stmt_bind_param($insPend, 'ssssssss', $merchant_order_id, $mobileno, $gwOrderId, $amountStrDb, $paymentModeInitial, $remark, $statusPending, $todayStr);
+                        @mysqli_stmt_execute($insPend);
+                        @mysqli_stmt_close($insPend);
+                    }
+                }
+
+                header('Location: ' . $paymentUrl);
+                exit();
+            } catch (Exception $e) {
+                $rawErr = $e->getMessage();
+                if (!$rawErr) $rawErr = 'Invalid response from payment gateway';
+                $error_msg = $rawErr . ' | return_url=' . $return_url . ' | scheme=' . $scheme . ' | host=' . $_SERVER['HTTP_HOST'];
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '" . addslashes($error_msg) . "',
+                        confirmButtonColor: '#4e54c8'
+                    });
+                </script>";
+            }
+        }
+    }
+}
+
+if (isset($_SESSION['order_verify_mode']) && $_SESSION['order_verify_mode'] === 'akpdf_pending' && isset($_SESSION['order_id']) && $_SERVER['REQUEST_METHOD'] === 'GET' && empty($_POST) && !isset($_GET['gettoAdmin'])) {
+    $order_id = $_SESSION['order_id'];
+    $gw_order_id = isset($_SESSION['gw_order_id']) ? $_SESSION['gw_order_id'] : $order_id;
+    $generatedTime = isset($_SESSION['order_generated_time']) ? (int)$_SESSION['order_generated_time'] : 0;
+    $thirtyMinAgo = time() - 1800;
+    if ($generatedTime > 0 && $generatedTime < $thirtyMinAgo) {
+        unset($_SESSION['order_id']);
+        unset($_SESSION['order_amount']);
+        unset($_SESSION['order_generated_time']);
+        if (isset($_SESSION['order_verify_mode'])) unset($_SESSION['order_verify_mode']);
+        header('Location: wallet.php');
+        exit();
+    }
+
+    if ($akpdfClient === null) {
+        unset($_SESSION['order_id']);
+        unset($_SESSION['gw_order_id']);
+        unset($_SESSION['order_amount']);
+        unset($_SESSION['order_generated_time']);
+        if (isset($_SESSION['order_verify_mode'])) unset($_SESSION['order_verify_mode']);
+        echo "<script>
+            Swal.fire({ icon: 'error', title: 'Gateway Error', text: 'Payment gateway initialization failed.', confirmButtonColor: '#4e54c8' }).then(() => { window.location.href = 'wallet.php'; });
+        </script>";
+        exit();
+    }
+
+    try {
+        $status = $akpdfClient->status($gw_order_id);
+        $isPaid = AKPDF\AkpdfClient::isPaid($status);
+
+        if ($isPaid) {
+            $sessOrderAmt = isset($_SESSION['order_amount']) ? $_SESSION['order_amount'] : '';
+            $txnAmount = akqr_extract_amount($status, (string)$sessOrderAmt);
+            $utr = akqr_extract_utr($status, $gw_order_id);
+            $datetime = akqr_extract_datetime($status);
+            $paymentModeFinal = 'AutoUPI';
+            $statusSuccess = 'success';
+
+            $didWalletTxn = false;
+            $checkRow = @mysqli_prepare($ahk_conn, "SELECT id, status FROM wallet WHERE txn_id = ? LIMIT 1");
+            $existingRowId = 0;
+            $existingStatus = '';
+            if ($checkRow) {
+                @mysqli_stmt_bind_param($checkRow, 's', $order_id);
+                @mysqli_stmt_execute($checkRow);
+                @mysqli_stmt_bind_result($checkRow, $existingRowId, $existingStatus);
+                @mysqli_stmt_fetch($checkRow);
+                @mysqli_stmt_close($checkRow);
+            }
+            if ($existingRowId > 0) {
+                // Only flip pending -> success. If already success (credited by webhook), skip.
+                $updStmt = @mysqli_prepare($ahk_conn, "UPDATE wallet SET BANKTXNID = ?, amount = ?, RESPMSG = ?, PAYMENTMODE = ?, status = ?, txn_date = ? WHERE id = ? AND status = 'pending' LIMIT 1");
+                if ($updStmt) {
+                    $txnAmtStr = (string)$txnAmount;
+                    $rowIdInt = (int)$existingRowId;
+                    @mysqli_stmt_bind_param($updStmt, 'ssssssi', $utr, $txnAmtStr, $paymentModeFinal, $paymentModeFinal, $statusSuccess, $datetime, $rowIdInt);
+                    @mysqli_stmt_execute($updStmt);
+                    if ((int)@mysqli_stmt_affected_rows($updStmt) > 0) $didWalletTxn = true;
+                    @mysqli_stmt_close($updStmt);
+                }
+            }
+            if (!$didWalletTxn && !wallet_txn_exists($ahk_conn, $utr, $mobileno)) {
+                $stmt = @mysqli_prepare($ahk_conn, "INSERT INTO wallet (txn_id, phone, BANKTXNID, amount, RESPMSG, PAYMENTMODE, status, txn_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                if ($stmt) {
+                    $txnAmtStr = (string)$txnAmount;
+                    @mysqli_stmt_bind_param($stmt, 'ssssssss', $order_id, $mobileno, $utr, $txnAmtStr, $paymentModeFinal, $paymentModeFinal, $statusSuccess, $datetime);
+                    if (@mysqli_stmt_execute($stmt)) $didWalletTxn = true;
+                    @mysqli_stmt_close($stmt);
+                }
+            }
+
+            if ($didWalletTxn) {
+                $stmt = @mysqli_prepare($ahk_conn, "UPDATE users SET balance = balance + ? WHERE phone=?");
+                if ($stmt) {
+                    @mysqli_stmt_bind_param($stmt, 'ds', $txnAmount, $mobileno);
+                    @mysqli_stmt_execute($stmt);
+                    @mysqli_stmt_close($stmt);
+                }
+            }
+
+            if (function_exists('gpGiveReferralBonusIfEligible')) {
+                gpGiveReferralBonusIfEligible($mobileno, $ahk_conn);
+            }
+
+            unset($_SESSION['order_id']);
+            unset($_SESSION['gw_order_id']);
+            unset($_SESSION['order_amount']);
+            unset($_SESSION['order_generated_time']);
+            if (isset($_SESSION['order_verify_mode'])) unset($_SESSION['order_verify_mode']);
+
+            echo "<script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful',
+                    html: '<b>Amount:</b> $txnAmount<br><b>UTR:</b> $utr<br><b>Date:</b> $datetime',
+                    confirmButtonColor: '#4e54c8'
+                }).then(() => { window.location.href = 'wallet.php'; });
+            </script>";
+            exit();
+        } else {
+            $rawStatus = isset($status['status']) ? strtolower(trim((string)$status['status'])) : 'unknown';
+            $isHardFail = ($rawStatus === 'failed' || $rawStatus === 'expired' || $rawStatus === 'cancelled');
+
+            unset($_SESSION['order_id']);
+            unset($_SESSION['gw_order_id']);
+            unset($_SESSION['order_amount']);
+            unset($_SESSION['order_generated_time']);
+            if (isset($_SESSION['order_verify_mode'])) unset($_SESSION['order_verify_mode']);
+
+            if ($isHardFail && !empty($order_id)) {
+                $stFail = @mysqli_prepare($ahk_conn, "UPDATE wallet SET status = 'rejected', RESPMSG = ? WHERE txn_id = ? AND status = 'pending' LIMIT 1");
+                if ($stFail) {
+                    $reason = 'Payment Failed / Cancelled';
+                    @mysqli_stmt_bind_param($stFail, 'ss', $reason, $order_id);
+                    @mysqli_stmt_execute($stFail);
+                    @mysqli_stmt_close($stFail);
+                }
+                $errorMsg = 'Payment ' . ucfirst($rawStatus);
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Failed',
+                        text: '" . addslashes($errorMsg) . "',
+                        confirmButtonColor: '#4e54c8'
+                    }).then(() => { window.location.href = 'wallet.php'; });
+                </script>";
+                exit();
+            }
+
+            // PENDING or unknown: don't reject, don't show error.
+            // Webhook or the pending-scan fallback below will credit when confirmed.
+            header('Location: wallet.php');
+            exit();
+        }
+    } catch (Exception $e) {
+        unset($_SESSION['order_id']);
+        unset($_SESSION['gw_order_id']);
+        unset($_SESSION['order_amount']);
+        unset($_SESSION['order_generated_time']);
+        if (isset($_SESSION['order_verify_mode'])) unset($_SESSION['order_verify_mode']);
+        if (!empty($order_id)) {
+            $stFail = @mysqli_prepare($ahk_conn, "UPDATE wallet SET status = 'rejected', RESPMSG = ? WHERE txn_id = ? AND status = 'pending' LIMIT 1");
+            if ($stFail) {
+                $reason = 'Gateway Error: ' . $e->getMessage();
+                @mysqli_stmt_bind_param($stFail, 'ss', $reason, $order_id);
+                @mysqli_stmt_execute($stFail);
+                @mysqli_stmt_close($stFail);
+            }
+        }
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Payment Verification Failed',
+                text: '" . addslashes($e->getMessage() ?: 'Unable to verify payment.') . "',
+                confirmButtonColor: '#4e54c8'
+            }).then(() => { window.location.href = 'wallet.php'; });
+        </script>";
+        exit();
+    }
+}
+
+
+// Fallback: if user returned to wallet page with a pending AutoUPI transaction
+// (e.g. closed checkout tab, pressed back, or webhook was delayed), verify it
+// now and credit the wallet. Only runs on normal page load (GET, no POST data,
+// no active session-verify flow).
+// OPTIMIZATION: Only check pending txns created in the last 30 minutes, and
+// apply a per-session cooldown (15s) so the same txn isn't re-checked on every
+// page load. Old/stale pending txns are skipped here (webhook handles them).
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($_POST) && !isset($_GET['gettoAdmin'])
+    && empty($_SESSION['order_verify_mode']) && $akpdfClient !== null && $mobileno !== 'UNKNOWN') {
+
+    $nowTs = time();
+    $cooldownKey = '__akpdf_fb_last_check_' . $mobileno;
+    $lastCheck = isset($_SESSION[$cooldownKey]) ? (int)$_SESSION[$cooldownKey] : 0;
+    $canCheck = ($lastCheck === 0) || (($nowTs - $lastCheck) >= 15);
+
+    if ($canCheck) {
+        $cutoff = date('Y-m-d H:i:s', $nowTs - 1800); // 30 minutes ago
+        $rs = @mysqli_query($ahk_conn, "SELECT id, txn_id, BANKTXNID, amount FROM wallet WHERE phone='" . mysqli_real_escape_string($ahk_conn, $mobileno) . "' AND PAYMENTMODE='AutoUPI' AND status='pending' AND txn_date >= '" . $cutoff . "' ORDER BY id DESC LIMIT 1");
+        if ($rs && ($rw = mysqli_fetch_assoc($rs))) {
+            $pendingId = (int)$rw['id'];
+            $pendingOrder = (string)$rw['txn_id'];
+            $pendingGwOrder = !empty($rw['BANKTXNID']) ? (string)$rw['BANKTXNID'] : $pendingOrder;
+            $pendingAmt = isset($rw['amount']) ? (string)$rw['amount'] : '';
+            if ($pendingGwOrder !== '') {
+                // Record check time BEFORE the API call so a slow/stalled call
+                // still enforces the cooldown on the next load.
+                $_SESSION[$cooldownKey] = $nowTs;
+                try {
+                    $st = $akpdfClient->status($pendingGwOrder);
+                    if (AKPDF\AkpdfClient::isPaid($st)) {
+                        $fbAmount = akqr_extract_amount($st, $pendingAmt);
+                        $fbUtr = akqr_extract_utr($st, $pendingGwOrder);
+                        $fbDate = akqr_extract_datetime($st);
+                        $upd = @mysqli_prepare($ahk_conn, "UPDATE wallet SET BANKTXNID=?, amount=?, RESPMSG='AutoUPI', PAYMENTMODE='AutoUPI', status='success', txn_date=? WHERE id=? AND status='pending' LIMIT 1");
+                        if ($upd) {
+                            $fbAmtStr = (string)$fbAmount;
+                            @mysqli_stmt_bind_param($upd, 'sssi', $fbUtr, $fbAmtStr, $fbDate, $pendingId);
+                            $did = @mysqli_stmt_execute($upd);
+                            $aff = (int)@mysqli_stmt_affected_rows($upd);
+                            @mysqli_stmt_close($upd);
+                            if ($did && $aff > 0) {
+                                $b = @mysqli_prepare($ahk_conn, "UPDATE users SET balance = balance + ? WHERE phone=?");
+                                if ($b) {
+                                    $fbAmtF = (float)$fbAmount;
+                                    @mysqli_stmt_bind_param($b, 'ds', $fbAmtF, $mobileno);
+                                    @mysqli_stmt_execute($b);
+                                    @mysqli_stmt_close($b);
+                                }
+                                if (function_exists('gpGiveReferralBonusIfEligible')) gpGiveReferralBonusIfEligible($mobileno, $ahk_conn);
+                                echo "<script>Swal.fire({icon:'success',title:'Payment Successful',html:'<b>Amount:</b> $fbAmtStr<br><b>UTR:</b> $fbUtr<br><b>Date:</b> $fbDate',confirmButtonColor:'#4e54c8'}).then(()=>{window.location.href='wallet.php';});</script>";
+                                exit();
+                            }
+                        }
+                    }
+                } catch (Exception $e) { /* ignore, webhook will retry */ }
+            }
+        }
+    }
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check_order_status'])) {
+    $order_id = isset($_POST['order_id']) ? $_POST['order_id'] : '';
+    $gw_order_id = isset($_SESSION['gw_order_id']) ? $_SESSION['gw_order_id'] : $order_id;
+
+    if (!$order_id) {
+        echo json_encode(array('status' => 'error', 'message' => 'Missing order ID'));
+        exit;
+    }
+
+    if ($akpdfClient === null) {
+        echo json_encode(array('status' => 'error', 'message' => 'Gateway initialization failed'));
+        exit;
+    }
+
+    try {
+        $status = $akpdfClient->status($gw_order_id);
+        $isPaid = AKPDF\AkpdfClient::isPaid($status);
+
+        if ($isPaid) {
+            $sessOrderAmt = isset($_SESSION['order_amount']) ? $_SESSION['order_amount'] : '';
+            $txnAmount = akqr_extract_amount($status, (string)$sessOrderAmt);
+            $utr = akqr_extract_utr($status, $gw_order_id);
+            $datetime = akqr_extract_datetime($status);
+            $paymentModeFinal = 'AutoUPI';
+            $statusSuccess = 'success';
+
+            $didWalletTxn = false;
+            $checkRow = @mysqli_prepare($ahk_conn, "SELECT id, status FROM wallet WHERE txn_id = ? LIMIT 1");
+            $existingRowId = 0;
+            $existingStatus = '';
+            if ($checkRow) {
+                @mysqli_stmt_bind_param($checkRow, 's', $order_id);
+                @mysqli_stmt_execute($checkRow);
+                @mysqli_stmt_bind_result($checkRow, $existingRowId, $existingStatus);
+                @mysqli_stmt_fetch($checkRow);
+                @mysqli_stmt_close($checkRow);
+            }
+            if ($existingRowId > 0) {
+                // Only flip pending -> success. If already success (credited by webhook), skip.
+                $updStmt = @mysqli_prepare($ahk_conn, "UPDATE wallet SET BANKTXNID = ?, amount = ?, RESPMSG = ?, PAYMENTMODE = ?, status = ?, txn_date = ? WHERE id = ? AND status = 'pending' LIMIT 1");
+                if ($updStmt) {
+                    $txnAmtStr = (string)$txnAmount;
+                    $rowIdInt = (int)$existingRowId;
+                    @mysqli_stmt_bind_param($updStmt, 'ssssssi', $utr, $txnAmtStr, $paymentModeFinal, $paymentModeFinal, $statusSuccess, $datetime, $rowIdInt);
+                    @mysqli_stmt_execute($updStmt);
+                    if ((int)@mysqli_stmt_affected_rows($updStmt) > 0) $didWalletTxn = true;
+                    @mysqli_stmt_close($updStmt);
+                }
+            }
+            if (!$didWalletTxn && !wallet_txn_exists($ahk_conn, $utr, $mobileno)) {
+                $stmt = @mysqli_prepare($ahk_conn, "INSERT INTO wallet (txn_id, phone, BANKTXNID, amount, RESPMSG, PAYMENTMODE, status, txn_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                if ($stmt) {
+                    $txnAmtStr = (string)$txnAmount;
+                    @mysqli_stmt_bind_param($stmt, 'ssssssss', $order_id, $mobileno, $utr, $txnAmtStr, $paymentModeFinal, $paymentModeFinal, $statusSuccess, $datetime);
+                    if (@mysqli_stmt_execute($stmt)) $didWalletTxn = true;
+                    @mysqli_stmt_close($stmt);
+                }
+            }
+
+            if ($didWalletTxn) {
+                $stmt = @mysqli_prepare($ahk_conn, "UPDATE users SET balance = balance + ? WHERE phone=?");
+                if ($stmt) {
+                    @mysqli_stmt_bind_param($stmt, 'ds', $txnAmount, $mobileno);
+                    @mysqli_stmt_execute($stmt);
+                    @mysqli_stmt_close($stmt);
+                }
+            }
+
+            if (function_exists('gpGiveReferralBonusIfEligible')) {
+                gpGiveReferralBonusIfEligible($mobileno, $ahk_conn);
+            }
+
+            unset($_SESSION['order_id']);
+            unset($_SESSION['gw_order_id']);
+            unset($_SESSION['order_amount']);
+            unset($_SESSION['order_generated_time']);
+            if (isset($_SESSION['order_verify_mode'])) unset($_SESSION['order_verify_mode']);
+
+            $dataObj = array(
+                'amount' => $txnAmount,
+                'utr' => $utr,
+                'date' => $datetime
+            );
+            echo json_encode(array(
+                'status' => 'success',
+                'message' => 'Payment successful',
+                'data' => $dataObj
+            ));
+            exit;
+        }
+
+        $rawStatus = isset($status['status']) ? strtolower(trim((string)$status['status'])) : 'pending';
+        if ($rawStatus !== 'paid' && $rawStatus !== 'failed' && $rawStatus !== 'expired' && $rawStatus !== 'cancelled') {
+            echo json_encode(array('status' => 'pending', 'message' => 'Waiting for payment completion...'));
+            exit;
+        }
+
+        if (!empty($order_id)) {
+            $stFail = @mysqli_prepare($ahk_conn, "UPDATE wallet SET status = 'rejected', RESPMSG = ? WHERE txn_id = ? AND status = 'pending' LIMIT 1");
+            if ($stFail) {
+                $reason = 'Payment ' . ucfirst($rawStatus);
+                @mysqli_stmt_bind_param($stFail, 'ss', $reason, $order_id);
+                @mysqli_stmt_execute($stFail);
+                @mysqli_stmt_close($stFail);
+            }
+        }
+        echo json_encode(array('status' => 'error', 'message' => 'Payment ' . ucfirst($rawStatus)));
+        exit;
+    } catch (Exception $e) {
+        $msg = $e->getMessage();
+        if (!$msg) $msg = 'Unable to check order status';
+        echo json_encode(array('status' => 'error', 'message' => $msg));
+        exit;
+    }
+}
+
+
+// AutoUPI handles the redirect to success_url / failure_url specified at order creation
+?>
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Payment System</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<style>
+/* ============================================================
+   WALLET PAGE — PREMIUM TRUSTED LOOK (CSS-only, no logic change)
+   ============================================================ */
+
+/* --- Font + base polish inside page content --- */
+.page-content {
+    font-family: 'Inter','Nunito', system-ui, sans-serif;
+}
+
+/* ============================================================
+   1. WALLET HERO / TRUST BANNER (top section)
+   ============================================================ */
+.wallet-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    padding: 26px 28px 24px 28px;
+    margin-bottom: 28px;
+    color: #fff;
+    background:
+        radial-gradient(800px 250px at 100% 0%, rgba(255,255,255,0.20) 0%, transparent 55%),
+        radial-gradient(400px 200px at 0% 100%, rgba(255,255,255,0.14) 0%, transparent 55%),
+        linear-gradient(135deg, #0f172a 0%, #1e3a8a 35%, #6366f1 65%, #8b5cf6 85%, #ec4899 100%);
+    box-shadow:
+        0 20px 50px -20px rgba(99,102,241,0.65),
+        0 10px 25px -10px rgba(139,92,246,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.18);
+}
+/* animated shimmer sweep */
+.wallet-hero::before {
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(115deg,
+        transparent 0%, transparent 35%,
+        rgba(255,255,255,0.16) 50%,
+        transparent 65%, transparent 100%);
+    background-size: 200% 100%;
+    animation: walletShine 5.5s linear infinite;
+    pointer-events:none;
+}
+@keyframes walletShine {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -100% 0; }
+}
+/* decorative blobs */
+.wallet-hero::after {
+    content:"";
+    position:absolute;
+    width:260px; height:260px;
+    right:-80px; top:-90px;
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.14), transparent 70%);
+    pointer-events:none;
+}
+.wallet-hero > * { position:relative; z-index:2; }
+
+.wallet-hero-title {
+    display:flex; align-items:center; gap:12px;
+    font-size: 22px; font-weight: 800; margin-bottom: 6px;
+    letter-spacing: 0.2px;
+    font-family: 'Nunito', sans-serif;
+}
+.wallet-hero-title .wh-icon {
+    width:44px; height:44px; border-radius:12px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    font-size: 20px;
+}
+.wallet-hero-sub {
+    font-size: 13.5px;
+    opacity: 0.94;
+    line-height: 1.55;
+    max-width: 640px;
+    margin-bottom: 14px;
+}
+
+/* --- Trust Pills row --- */
+.trust-pills {
+    display:flex; flex-wrap:wrap; gap:10px;
+}
+.trust-pill {
+    display:inline-flex; align-items:center; gap:7px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(6px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+    letter-spacing: 0.2px;
+}
+.trust-pill i { font-size: 14px; }
+.tp-green i  { color: #86efac; }
+.tp-blue  i  { color: #93c5fd; }
+.tp-gold  i  { color: #fde68a; }
+.tp-pink  i  { color: #f9a8d4; }
+
+/* ============================================================
+   2. ADD MONEY FORM CARD (Premium)
+   ============================================================ */
+.wallet-card {
+    position: relative;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(139,92,246,0.06) 0%, transparent 45%),
+        radial-gradient(circle at 0% 100%, rgba(236,72,153,0.06) 0%, transparent 45%),
+        #ffffff;
+    padding: 26px 28px;
+    border: 1px solid rgba(139,92,246,0.12);
+    box-shadow:
+        0 14px 40px -20px rgba(99,102,241,0.35),
+        0 4px 10px rgba(0,0,0,0.04);
+    margin-bottom: 26px;
+    overflow:hidden;
+}
+/* Gradient border frame */
+.wallet-card::before {
+    content:""; position:absolute; inset:0; border-radius:22px; padding:1.5px;
+    background: linear-gradient(135deg,
+        rgba(99,102,241,0.45),
+        rgba(139,92,246,0.25),
+        rgba(236,72,153,0.4),
+        rgba(245,158,11,0.5));
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events:none;
+    z-index: 1;
+}
+.wallet-card > * { position:relative; z-index:2; }
+
+.wallet-card-head {
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:10px; margin-bottom: 18px;
+}
+.wallet-card-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px; font-weight: 800; color: #0f172a;
+    display:flex; align-items:center; gap:10px;
+}
+.wallet-card-title .wc-dot {
+    width:34px; height:34px; border-radius:10px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color:#fff; font-size:16px;
+    box-shadow: 0 4px 12px rgba(139,92,246,0.4);
+}
+
+/* --- Input group (override inline styles) --- */
+.wallet-card .input-group {
+    position: relative;
+    display:block;
+    margin-bottom: 18px;
+}
+.wallet-card .input-group label {
+    display:block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: #1e293b;
+    letter-spacing: 0.2px;
+}
+.wallet-card .input-group input {
+    width:100%;
+    padding: 14px 46px 14px 16px;
+    border: 1.5px solid rgba(139,92,246,0.22);
+    border-radius: 13px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #0f172a;
+    transition: all 0.3s ease;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(139,92,246,0.05), transparent 50%),
+        #fafbff;
+    box-shadow: inset 0 1px 2px rgba(15,23,42,0.04);
+}
+.wallet-card .input-group input::placeholder {
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 14px;
+}
+.wallet-card .input-group input:focus {
+    outline:none;
+    border-color: #8b5cf6;
+    background: #fff;
+    box-shadow:
+        0 0 0 4px rgba(139,92,246,0.12),
+        0 4px 12px rgba(139,92,246,0.12);
+    transform: translateY(-1px);
+}
+.wallet-card .input-group .input-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-8%);
+    width: 32px; height: 32px; border-radius: 9px;
+    display: inline-flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(236,72,153,0.12));
+    color: #7c3aed;
+    font-size: 15px;
+    font-weight: 800;
+    border: 1px solid rgba(139,92,246,0.18);
+}
+
+/* --- Quick amount buttons --- */
+.wallet-card .quick-btn {
+    display:inline-flex; align-items:center; gap:6px;
+    padding: 8px 14px;
+    margin: 0 6px 8px 0;
+    border-radius: 11px;
+    font-size: 13px; font-weight: 700;
+    color: #4f46e5;
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(236,72,153,0.08));
+    border: 1.5px solid rgba(139,92,246,0.22);
+    cursor:pointer;
+    transition: all 0.25s ease;
+    text-decoration:none !important;
+}
+.wallet-card .quick-btn:hover {
+    color: #fff;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(139,92,246,0.4);
+}
+
+/* --- Info line (Min/Max) --- */
+.wallet-minmax {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #f0f9ff, #eef2ff);
+    border: 1px solid rgba(99,102,241,0.12);
+    display:flex; align-items:center; gap:8px;
+    font-weight: 600;
+}
+.wallet-minmax i { color:#6366f1; }
+
+/* --- Proceed to Pay button --- */
+.wallet-pay-btn {
+    position: relative;
+    overflow: hidden;
+    width:100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.3px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(.2,.8,.2,1);
+    background:
+        radial-gradient(600px 100px at 100% 0%, rgba(255,255,255,0.28) 0%, transparent 55%),
+        linear-gradient(135deg, #10b981 0%, #0ea5e9 35%, #6366f1 70%, #8b5cf6 100%);
+    background-size: 200% 200%;
+    box-shadow:
+        0 14px 32px -10px rgba(16,185,129,0.45),
+        0 10px 24px -10px rgba(99,102,241,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.18);
+}
+.wallet-pay-btn i { font-size: 17px; }
+.wallet-pay-btn::before {
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(115deg,
+        transparent 0%, transparent 35%,
+        rgba(255,255,255,0.22) 50%,
+        transparent 65%, transparent 100%);
+    background-size: 200% 100%;
+    animation: walletShine 3.2s linear infinite;
+    pointer-events:none;
+}
+.wallet-pay-btn:hover {
+    transform: translateY(-3px) scale(1.01);
+    background-position: 100% 100%;
+    box-shadow:
+        0 20px 40px -12px rgba(16,185,129,0.5),
+        0 14px 28px -10px rgba(139,92,246,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+}
+.wallet-pay-btn:active { transform: translateY(-1px) scale(0.995); }
+
+/* --- old btn-custom compatibility (safety) --- */
+.btn-custom {
+    position: relative; overflow:hidden;
+    background: linear-gradient(135deg, #10b981, #0ea5e9, #6366f1, #8b5cf6);
+    background-size: 200% 200%;
+    color:#fff; border:none;
+    padding: 15px 20px; width:100%;
+    border-radius: 14px; font-size:16px; font-weight:800;
+    cursor:pointer; transition: all 0.3s ease;
+    display:flex; justify-content:center; align-items:center; gap:10px;
+    box-shadow:
+        0 14px 32px -10px rgba(16,185,129,0.45),
+        0 10px 24px -10px rgba(99,102,241,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.btn-custom:hover {
+    transform: translateY(-3px);
+    background-position: 100% 100%;
+    box-shadow: 0 20px 40px -12px rgba(16,185,129,0.5), 0 14px 28px -10px rgba(139,92,246,0.55);
+    filter: none;
+    color:#fff;
+    background-color: transparent !important;
+}
+
+/* ============================================================
+   3. TRUST STRIP — Payment Methods / Logos / Seals
+   ============================================================ */
+.trust-strip {
+    border-radius: 18px;
+    padding: 18px 20px;
+    margin-bottom: 28px;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(16,185,129,0.08), transparent 45%),
+        #ffffff;
+    border: 1px solid rgba(16,185,129,0.15);
+    box-shadow: 0 6px 18px -8px rgba(16,185,129,0.25);
+}
+.trust-strip-title {
+    font-size: 13px; font-weight: 800;
+    color: #166534;
+    display:flex; align-items:center; gap:8px;
+    margin-bottom: 14px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+.trust-strip-title i {
+    width:26px; height:26px; border-radius:8px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color:#fff; font-size: 13px;
+    box-shadow: 0 3px 8px rgba(16,185,129,0.4);
+}
+.trust-logos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 12px;
+}
+.trust-logo {
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column; gap:4px;
+    padding: 12px 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f8fafc, #ffffff);
+    border: 1px solid rgba(148,163,184,0.22);
+    transition: all 0.25s ease;
+}
+.trust-logo:hover {
+    border-color: rgba(99,102,241,0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px -10px rgba(99,102,241,0.4);
+}
+.trust-logo .tl-icon {
+    width:36px; height:36px; border-radius:10px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size: 18px; color:#fff;
+    margin-bottom: 2px;
+}
+.tl-upi    { background: linear-gradient(135deg, #0f766e, #10b981); box-shadow: 0 4px 10px rgba(16,185,129,0.45); }
+.tl-gpay   { background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335); background-size: 240% 240%; box-shadow:0 4px 10px rgba(66,133,244,0.45); }
+.tl-phonepe{ background: linear-gradient(135deg, #5b21b6, #7c3aed); box-shadow: 0 4px 10px rgba(124,58,237,0.45); }
+.tl-paytm  { background: linear-gradient(135deg, #1d4ed8, #0ea5e9); box-shadow: 0 4px 10px rgba(29,78,216,0.45); }
+.tl-bhim   { background: linear-gradient(135deg, #15803d, #facc15); box-shadow: 0 4px 10px rgba(21,128,61,0.45); }
+.tl-netb   { background: linear-gradient(135deg, #1e293b, #475569); box-shadow: 0 4px 10px rgba(51,65,85,0.45); }
+.tl-card   { background: linear-gradient(135deg, #ea580c, #f59e0b); box-shadow: 0 4px 10px rgba(234,88,12,0.45); }
+.tl-ssl    { background: linear-gradient(135deg, #082f49, #0369a1); box-shadow: 0 4px 10px rgba(3,105,161,0.45); }
+
+.trust-logo .tl-name {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #334155;
+    letter-spacing: 0.2px;
+}
+.trust-logo .tl-sub {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+/* ============================================================
+   4. SECURITY FEATURES 3-COL CARDS
+   ============================================================ */
+.security-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+.security-card {
+    position: relative;
+    border-radius: 16px;
+    padding: 18px 18px 16px 18px;
+    border: 1px solid rgba(139,92,246,0.14);
+    background: #fff;
+    transition: all 0.3s ease;
+    overflow:hidden;
+}
+.security-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 16px 32px -16px rgba(139,92,246,0.45),
+        0 4px 10px rgba(0,0,0,0.05);
+    border-color: rgba(139,92,246,0.3);
+}
+.security-card::before {
+    content:""; position:absolute; inset:0; border-radius:16px; padding:1.5px;
+    background: linear-gradient(135deg,
+        rgba(99,102,241,0.5), rgba(236,72,153,0.3), rgba(245,158,11,0.5));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events:none; opacity:0;
+    transition: opacity 0.3s ease;
+}
+.security-card:hover::before { opacity: 1; }
+.sc-icon {
+    width:46px; height:46px; border-radius:13px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:20px; color:#fff; margin-bottom:10px;
+}
+.sc-blue   { background: linear-gradient(135deg, #2563eb, #7c3aed); box-shadow:0 6px 14px rgba(124,58,237,0.45); }
+.sc-green  { background: linear-gradient(135deg, #059669, #10b981); box-shadow:0 6px 14px rgba(16,185,129,0.45); }
+.sc-gold   { background: linear-gradient(135deg, #d97706, #f59e0b); box-shadow:0 6px 14px rgba(245,158,11,0.45); }
+.sc-pink   { background: linear-gradient(135deg, #be123c, #ec4899); box-shadow:0 6px 14px rgba(236,72,153,0.45); }
+
+.sc-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14.5px; font-weight: 800; color:#0f172a; margin-bottom:4px;
+}
+.sc-text {
+    font-size: 12.5px; color:#64748b; font-weight:500; line-height:1.55;
+}
+
+/* ============================================================
+   5. PAYMENT HISTORY TABLE
+   ============================================================ */
+.wallet-table-card {
+    position: relative;
+    border-radius: 20px;
+    padding: 0;
+    overflow:hidden;
+    border: 1px solid rgba(139,92,246,0.12);
+    box-shadow:
+        0 14px 40px -20px rgba(99,102,241,0.3),
+        0 4px 10px rgba(0,0,0,0.04);
+    background:#fff;
+}
+.wallet-table-card::before {
+    content:""; position:absolute; inset:0; border-radius:20px; padding:1.5px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(236,72,153,0.3));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events:none; z-index:1;
+}
+.wallet-table-card > * { position:relative; z-index:2; }
+.wallet-table-head {
+    padding: 16px 22px;
+    background:
+        radial-gradient(600px 120px at 100% 0%, rgba(255,255,255,0.22) 0%, transparent 55%),
+        linear-gradient(135deg, #6366f1 0%, #8b5cf6 45%, #ec4899 100%);
+    color:#fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px; font-weight: 800;
+    display:flex; align-items:center; gap:10px;
+    letter-spacing: 0.2px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.wallet-table-head i {
+    width:32px; height:32px; border-radius:10px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 15px;
+}
+.wallet-table-card .table {
+    margin: 0;
+}
+.wallet-table-card thead.thead-premium {
+    background: linear-gradient(135deg, #f1f5f9, #eef2ff);
+}
+.wallet-table-card thead.thead-premium th {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12.5px; font-weight: 800;
+    color: #4338ca;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    border-bottom: 1.5px solid rgba(139,92,246,0.2);
+}
+.wallet-table-card tbody td {
+    font-size: 13px;
+    padding: 11px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-weight: 500;
+    color: #334155;
+}
+.wallet-table-card tbody tr:hover td {
+    background: linear-gradient(90deg, rgba(99,102,241,0.04), rgba(236,72,153,0.04));
+}
+.badge-wallet-success {
+    background: linear-gradient(135deg, #059669, #10b981) !important;
+    color: #fff !important;
+    padding: 4px 10px !important;
+    border-radius: 999px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 3px 8px rgba(16,185,129,0.35);
+    border: 1px solid rgba(255,255,255,0.4) !important;
+}
+.badge-wallet-danger {
+    background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+    color: #fff !important;
+    padding: 4px 10px !important;
+    border-radius: 999px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 3px 8px rgba(239,68,68,0.35);
+    border: 1px solid rgba(255,255,255,0.4) !important;
+}
+.badge-wallet-pending {
+    background: linear-gradient(135deg, #d97706, #f59e0b) !important;
+    color: #fff !important;
+    padding: 4px 10px !important;
+    border-radius: 999px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 3px 8px rgba(245,158,11,0.35);
+    border: 1px solid rgba(255,255,255,0.4) !important;
+}
+
+/* ============================================================
+   6. HOW-TO POPUP / MODAL (replace old look)
+   ============================================================ */
+.wallet-modal-overlay {
+    display: none;
+    position: fixed; z-index: 999999;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.2), rgba(15,23,42,0.7));
+    backdrop-filter: blur(3px);
+}
+.wallet-modal {
+    background: #fff;
+    width: 92%;
+    max-width: 560px;
+    margin: 4% auto;
+    border-radius: 20px;
+    position: relative;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow:
+        0 30px 60px -20px rgba(99,102,241,0.5),
+        0 15px 30px -10px rgba(0,0,0,0.3);
+    overflow: hidden;
+    animation: wmIn .35s cubic-bezier(.2,.9,.3,1.2) both;
+}
+@keyframes wmIn { from { transform: translateY(30px) scale(.95); opacity:0; } to { transform:none; opacity:1; } }
+.wallet-modal-head {
+    padding: 20px 24px 18px 24px;
+    color:#fff;
+    background:
+        radial-gradient(600px 120px at 100% 0%, rgba(255,255,255,0.25) 0%, transparent 55%),
+        linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.wallet-modal-head h5 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px; font-weight: 800; margin:0;
+    display:flex; align-items:center; gap:10px;
+    letter-spacing: 0.2px;
+}
+.wallet-modal-head i.wmh-icon {
+    width:34px; height:34px; border-radius:10px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 16px;
+}
+.wallet-modal-close {
+    width:34px; height:34px; border-radius:10px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    color:#fff; font-size:18px; cursor:pointer;
+    transition: all 0.2s ease;
+}
+.wallet-modal-close:hover {
+    background: rgba(255,255,255,0.3);
+    transform: rotate(90deg);
+}
+.wallet-modal-body { padding: 22px 24px; }
+
+.wm-box {
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(139,92,246,0.14);
+    background: linear-gradient(135deg, #ffffff, #fafafa);
+    position: relative;
+}
+.wm-box-info { background: linear-gradient(135deg, #eff6ff, #eef2ff); border-color: rgba(99,102,241,0.22); }
+.wm-box-sec  { background: linear-gradient(135deg, #ecfdf5, #f0fdfa); border-color: rgba(16,185,129,0.25); }
+.wm-box-lim  { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-color: rgba(245,158,11,0.28); }
+
+.wm-box-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 800; margin-bottom: 10px;
+    display:flex; align-items:center; gap:8px;
+}
+.wm-box-info .wm-box-title { color: #3730a3; }
+.wm-box-sec  .wm-box-title { color: #047857; }
+.wm-box-lim  .wm-box-title { color: #92400e; }
+
+.wm-box-title i {
+    width:28px; height:28px; border-radius:8px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#fff; font-size:13px;
+}
+.wm-box-info .wm-box-title i { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.wm-box-sec  .wm-box-title i { background: linear-gradient(135deg, #10b981, #059669); }
+.wm-box-lim  .wm-box-title i { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+.wm-list { list-style:none; padding:0; margin:0; }
+.wm-list li {
+    padding: 6px 0;
+    font-weight: 600;
+    font-size: 13px;
+    display:flex; align-items:center; gap:8px;
+    color: #334155;
+}
+.wm-list li i { color: #10b981; font-size: 13px; }
+.wm-box-sec .wm-list li i { color: #059669; }
+.wm-box-info .wm-list li i { color: #6366f1; }
+.wm-box-lim .wm-list li i { color: #d97706; }
+
+/* Open "How to Add Money" button premium */
+.wallet-help-btn {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    color: #fff;
+    font-weight: 800; font-size: 13px;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display:inline-flex; align-items:center; gap:8px;
+    box-shadow: 0 6px 14px rgba(139,92,246,0.45);
+    margin-bottom: 20px;
+}
+.wallet-help-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(236,72,153,0.5);
+}
+.wallet-help-btn i { font-size: 15px; }
+
+/* Old open-btn fallback */
+.open-btn {
+    padding: 11px 18px !important;
+    border-radius: 13px !important;
+    background: linear-gradient(135deg, #8b5cf6, #ec4899) !important;
+    color:#fff !important; font-weight:800 !important;
+    font-size:13px !important;
+    box-shadow: 0 6px 14px rgba(139,92,246,0.45) !important;
+    border:none !important;
+    cursor:pointer;
+}
+.open-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(236,72,153,0.5) !important;
+}
+
+/* ============================================================
+   7. Responsive
+   ============================================================ */
+@media (max-width: 768px) {
+    .wallet-hero { padding: 20px 18px; border-radius: 18px; }
+    .wallet-hero-title { font-size: 18px; }
+    .wallet-card, .trust-strip, .wallet-table-card { border-radius: 16px; }
+    .wallet-card { padding: 20px 18px; }
+    .wallet-pay-btn { padding: 13px; font-size: 15px; }
+    .security-grid { gap: 12px; }
+    .trust-logos { grid-template-columns: repeat(2, 1fr); }
+}
+/* ============================================================
+   V3 — SCREENSHOT JAISA EXACT CLEAN UI
+   Hero → Add Balance dark green card
+   → Step 1 Enter Amount
+   → Attractive input (min badge inside RIGHT)
+   → 6 Quick cards (3x2 + Popular ribbon)
+   → Mega green Proceed
+   → 4 trust circles
+   → SSL + PCI footer
+   ============================================================ */
+
+/* -------- 1. ADD BALANCE HERO CARD (COMPACT — no scroll) -------- */
+.ab-hero{
+    position:relative;
+    background:linear-gradient(135deg,#022c22 0%,#064e3b 45%,#065f46 75%,#047857 100%);
+    border-radius:16px;
+    padding:16px 20px;
+    margin-bottom:14px;
+    overflow:hidden;
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    box-shadow:0 8px 20px rgba(5,150,105,0.22), 0 2px 8px rgba(0,0,0,0.06);
+}
+.ab-hero::before{
+    content:""; position:absolute; inset:-20%; right:-10%; width:320px; height:320px;
+    background:radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 65%);
+    pointer-events:none;
+}
+.abh-left{display:flex; align-items:center; gap:14px; z-index:2;}
+.abh-icon{
+    position:relative;
+    width:56px; height:56px; border-radius:16px;
+    background:linear-gradient(135deg,#10b981 0%,#059669 60%,#047857 100%);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:24px;
+    box-shadow:0 6px 16px rgba(16,185,129,0.38), inset 0 1px 0 rgba(255,255,255,0.25);
+    border:1.5px solid rgba(52,211,153,0.4);
+    flex-shrink:0;
+}
+.abh-plus{
+    position:absolute; bottom:-3px; right:-3px;
+    width:22px; height:22px; border-radius:50%;
+    background:#fff; color:#059669;
+    display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-weight:900;
+    box-shadow:0 2px 5px rgba(0,0,0,0.15);
+    border:1.5px solid #065f46;
+}
+.abh-title-wrap{display:flex; flex-direction:column; gap:3px;}
+.abh-title{
+    margin:0;
+    font-size:26px; font-weight:900; line-height:1.05;
+    color:#fff;
+    letter-spacing:-0.3px;
+}
+.abh-title-accent{
+    background:linear-gradient(135deg,#86efac 0%,#34d399 50%,#22d3ee 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.abh-sub{
+    margin:0;
+    font-size:12.5px;
+    color:#a7f3d0;
+    max-width:420px;
+    line-height:1.35;
+    font-weight:500;
+    opacity:0.95;
+}
+.abh-right{position:relative; z-index:2;}
+.abh-coins{position:relative; width:120px; height:80px;}
+.abh-coin{
+    position:absolute;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,#fde68a 0%,#f59e0b 50%,#d97706 100%);
+    color:#78350f;
+    border-radius:50%;
+    font-weight:900;
+    border:2.5px solid #fbbf24;
+    box-shadow:0 4px 10px rgba(217,119,6,0.5);
+}
+.ac1{width:42px; height:42px; top:12px; right:22px; font-size:14px; z-index:2; transform:rotate(-12deg);}
+.ac2{width:38px; height:38px; top:34px; right:0; font-size:13px; z-index:1; opacity:0.92; transform:rotate(8deg);}
+.abh-sparkle{position:absolute; color:#fde68a; font-size:11px; opacity:0.9;}
+.sp1{top:2px; right:50px; animation:twinkle 1.8s ease-in-out infinite;}
+.sp2{top:22px; right:6px; color:#a7f3d0; animation:twinkle 2.2s ease-in-out infinite 0.3s;}
+.sp3{top:62px; right:62px; color:#fff; font-size:8px; animation:twinkle 2s ease-in-out infinite 0.6s;}
+@keyframes twinkle{0%,100%{opacity:0.3; transform:scale(0.7);} 50%{opacity:1; transform:scale(1.15);}}
+
+/* -------- 2. STEP HEAD (COMPACT numbered) -------- */
+.wallet-card-top{margin-top:0; padding-top:18px;}
+.step-head{
+    display:flex; align-items:center; gap:12px;
+    margin-bottom:14px;
+}
+.step-num{
+    width:38px; height:38px; border-radius:50%;
+    background:linear-gradient(135deg,#10b981 0%,#059669 100%);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 10px rgba(16,185,129,0.32);
+    flex-shrink:0;
+}
+.sn-inner{
+    width:27px; height:27px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #86efac, #10b981);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff;
+    font-size:15px; font-weight:900;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.step-text-wrap{display:flex; flex-direction:column; gap:2px;}
+.step-title{font-size:18px; font-weight:900; color:#0f172a; letter-spacing:-0.2px;}
+.step-sub{font-size:12px; color:#64748b; font-weight:500;}
+
+/* -------- 3. ATTRACTIVE AMOUNT INPUT (COMPACT — no scroll) */
+.ai-wrap{
+    position:relative;
+    display:flex; align-items:stretch;
+    background:linear-gradient(135deg,#022c22,#064e3b);
+    border-radius:14px;
+    padding:4px;
+    box-shadow:0 6px 18px rgba(5,150,105,0.18), inset 0 1px 0 rgba(255,255,255,0.06);
+    margin-bottom:20px;
+    transition:all 0.3s ease;
+}
+.ai-wrap::before{
+    content:""; position:absolute; inset:0; padding:2px; border-radius:14px;
+    background:linear-gradient(135deg,#34d399 0%,#10b981 50%,#0ea5e9 100%);
+    -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events:none;
+    opacity:0.9;
+}
+.ai-wrap:focus-within{
+    transform:translateY(-1.5px);
+    box-shadow:0 10px 26px rgba(16,185,129,0.28), 0 0 0 3px rgba(16,185,129,0.12);
+}
+.ai-wrap:focus-within::before{opacity:1;}
+.ai-left{
+    display:flex; align-items:center; justify-content:center;
+    padding:0 12px 0 14px;
+    border-right:1.5px solid rgba(52,211,153,0.25);
+    min-width:44px;
+}
+.ai-rupee{
+    font-size:26px; font-weight:900;
+    background:linear-gradient(135deg,#86efac 0%,#34d399 55%,#22d3ee 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    line-height:1;
+}
+.ai-mid{flex:1; min-width:0; display:flex; align-items:center;}
+.ai-input{
+    width:100%;
+    border:none; outline:none; background:transparent !important;
+    padding:14px 14px;
+    font-size:24px; font-weight:800; color:#ecfdf5;
+    letter-spacing:-0.3px;
+    min-height:44px;
+}
+.ai-input::placeholder{color:rgba(167,243,208,0.5); font-weight:600; font-size:20px;}
+.ai-right{
+    display:flex; align-items:center;
+    padding:0 14px 0 8px;
+    border-left:1.5px solid rgba(52,211,153,0.2);
+}
+.ai-minbadge{
+    display:inline-flex; align-items:center;
+    font-size:11px; font-weight:800; color:#a7f3d0;
+    background:rgba(16,185,129,0.14);
+    border:1.5px solid rgba(52,211,153,0.35);
+    padding:5px 11px;
+    border-radius:999px;
+    white-space:nowrap;
+}
+.winput-error{
+    position:absolute; left:0; right:0; bottom:-30px;
+    z-index:5;
+}
+.winput-error.we-err{
+    background:linear-gradient(135deg,#fef2f2,#fee2e2);
+    color:#991b1b; border:1.5px solid #fecaca;
+    animation:shake 0.35s ease;
+    padding:9px 14px;
+    border-radius:10px;
+    font-size:13px; font-weight:700;
+    display:flex; align-items:center; gap:8px;
+}
+@media (max-width: 575px){
+    .winput-error{
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: -68px !important;    /* niche dhakel diya — Quick amounts head pe overlap karega, card input pe NAHI */
+        width: 100% !important;
+        z-index: 10 !important;
+    }
+    .winput-error.we-err{
+        font-size: 12.5px;
+        padding: 10px 13px;
+        box-shadow: 0 6px 18px rgba(153, 27, 27, .18);
+    }
+}
+@keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    75%{transform:translateX(5px);}
+}
+
+/* -------- 4. QUICK AMOUNTS HEAD (COMPACT) */
+.qa-head{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:10px;
+}
+.qa-bolt{
+    width:32px; height:32px; border-radius:10px;
+    background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);
+    display:flex; align-items:center; justify-content:center;
+    color:#d97706;
+    font-size:14px;
+    border:1.5px solid #fcd34d;
+    flex-shrink:0;
+}
+.qa-title{font-size:15px; font-weight:900; color:#0f172a;}
+.qa-sub{font-size:11.5px; color:#64748b; margin-top:1px;}
+
+/* -------- 5. 6 QUICK AMOUNT CARDS 3x2 grid COMPACT (no extra height) */
+.qa-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+    margin-bottom:18px;
+}
+.qa-card{
+    position:relative;
+    border:none; cursor:pointer;
+    padding:14px 8px 12px 8px;
+    background:linear-gradient(135deg,#022c22 0%,#064e3b 100%);
+    color:#ecfdf5;
+    border-radius:13px;
+    transition:all 0.22s ease;
+    box-shadow:0 3px 10px rgba(0,0,0,0.05);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+}
+.qa-card::before{
+    content:""; position:absolute; inset:0; border-radius:13px; padding:2px;
+    background:linear-gradient(135deg,rgba(52,211,153,0.35), rgba(16,185,129,0.2), rgba(14,165,233,0.3));
+    -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events:none;
+    opacity:0.6;
+    transition:opacity 0.22s ease;
+}
+.qa-card:hover{
+    transform:translateY(-2px) scale(1.02);
+    background:linear-gradient(135deg,#064e3b 0%,#065f46 100%);
+    box-shadow:0 8px 18px rgba(16,185,129,0.22);
+}
+.qa-card:hover::before{opacity:1;}
+.qa-amt{font-size:20px; font-weight:900; letter-spacing:-0.2px; line-height:1.1;}
+.qa-label{
+    font-size:11px; font-weight:600;
+    color:#86efac;
+    letter-spacing:0.1px;
+    opacity:0.95;
+}
+.qa-popular{
+    background:linear-gradient(135deg,#065f46 0%,#047857 60%,#059669 100%);
+    box-shadow:0 5px 16px rgba(16,185,129,0.26);
+}
+.qa-popular::before{
+    background:linear-gradient(135deg,#34d399,#10b981 50%,#22d3ee);
+    opacity:1;
+}
+.qa-popular-ribbon{
+    position:absolute;
+    top:-8px; right:50%; transform:translateX(50%);
+    display:inline-flex; align-items:center; gap:4px;
+    background:linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#15803d 100%);
+    color:#fff;
+    font-size:10px; font-weight:800;
+    padding:3px 11px;
+    border-radius:999px;
+    box-shadow:0 3px 8px rgba(22,163,74,0.35);
+    border:1.5px solid #4ade80;
+    white-space:nowrap;
+}
+.qa-popular-ribbon i{font-size:10px;}
+
+/* -------- 6. PAY BUTTON — THINNER (no huge padding) -------- */
+.mega-pay-btn{
+    width:100%;
+    border:none; cursor:pointer;
+    padding:15px 22px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#34d399 0%,#22c55e 40%,#16a34a 80%,#15803d 100%);
+    color:#052e16;
+    display:flex; align-items:center; justify-content:center;
+    gap:12px;
+    transition:all 0.26s cubic-bezier(.2,.8,.2,1);
+    box-shadow:0 8px 22px rgba(34,197,94,0.35), 0 3px 10px rgba(0,0,0,0.06);
+    position:relative; overflow:hidden;
+    margin-bottom:18px;
+}
+.mega-pay-btn::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(120deg, transparent 22%, rgba(255,255,255,0.38) 50%, transparent 78%);
+    background-size:250% 100%; background-position:220% 0;
+    transition:background-position 0.7s ease;
+    pointer-events:none;
+}
+.mega-pay-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 32px rgba(34,197,94,0.45), 0 4px 12px rgba(0,0,0,0.08);
+}
+.mega-pay-btn:hover::before{background-position:-80% 0;}
+.mega-pay-btn:active{transform:translateY(-1px);}
+.mpb-icon{
+    width:34px; height:34px; border-radius:10px;
+    background:rgba(5,46,22,0.18);
+    border:1.5px solid rgba(5,46,22,0.25);
+    display:flex; align-items:center; justify-content:center;
+    color:#052e16; font-size:17px;
+    flex-shrink:0;
+}
+.mpb-text{
+    font-size:18px; font-weight:900;
+    letter-spacing:0.2px;
+    flex:1; text-align:center;
+}
+.mpb-arrow{
+    font-size:17px; font-weight:900;
+    color:#052e16;
+    transition:transform 0.3s ease;
+}
+.mega-pay-btn:hover .mpb-arrow{transform:translateX(6px);}
+
+/* -------- 7. 4 TRUST CIRCLES — COMPACT / MINI -------- */
+.trust4-row{
+    display:flex;
+    align-items:center; justify-content:space-between;
+    gap:8px; flex-wrap:wrap;
+    margin-bottom:14px;
+    padding:10px 14px;
+    background:linear-gradient(135deg,#f8fafc 0%,#f1f5f9 100%);
+    border-radius:13px;
+    border:1.5px solid #e2e8f0;
+}
+.t4-item{
+    display:flex; align-items:center; gap:8px;
+    padding:0;
+}
+.t4-circle{
+    width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:#10b981;
+    font-size:14px;
+    flex-shrink:0;
+    background:rgba(16,185,129,0.12);
+    border:1.5px solid rgba(16,185,129,0.2);
+}
+.t4-shield{color:#10b981; background:rgba(16,185,129,0.12); border-color:rgba(16,185,129,0.2);}
+.t4-bolt{color:#f59e0b; background:rgba(245,158,11,0.12); border-color:rgba(245,158,11,0.22);}
+.t4-lock{color:#6366f1; background:rgba(99,102,241,0.12); border-color:rgba(99,102,241,0.22);}
+.t4-users{color:#ec4899; background:rgba(236,72,153,0.12); border-color:rgba(236,72,153,0.22);}
+.t4-text{display:flex; flex-direction:column; gap:0; line-height:1.1;}
+.t4-main{font-size:11.5px; font-weight:800; color:#0f172a;}
+.t4-sub{font-size:10.5px; font-weight:600; color:#64748b;}
+
+/* -------- 8. TRUSTED FOOTER CARD (SSL + PCI DSS) — COMPACT -------- */
+.trustfoot-card{
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    background:linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 50%,#ecfeff 100%);
+    border-radius:13px;
+    padding:12px 16px;
+    border:1.5px solid rgba(134,239,172,0.5);
+}
+.tf-left{display:flex; align-items:center; gap:10px; flex:1; min-width:200px;}
+.tf-badge{
+    width:36px; height:36px; border-radius:10px;
+    background:linear-gradient(135deg,#10b981 0%,#059669 100%);
+    color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px;
+    box-shadow:0 4px 10px rgba(16,185,129,0.3);
+    flex-shrink:0;
+}
+.tf-title{font-size:13.5px; font-weight:900; color:#064e3b; line-height:1.1;}
+.tf-sub{font-size:11px; color:#047857; margin-top:2px; font-weight:500; line-height:1.2;}
+.tf-right{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.tf-chip{
+    display:flex; align-items:center; gap:8px;
+    padding:7px 12px;
+    background:#fff;
+    border-radius:10px;
+    border:2px solid #bbf7d0;
+    box-shadow:0 2px 6px rgba(0,0,0,0.04);
+}
+.tf-chip > i{
+    font-size:16px; color:#6366f1;
+    padding:6px 7px; border-radius:7px;
+    background:linear-gradient(135deg,#eef2ff,#e0e7ff);
+}
+.tf-chip:nth-child(2) > i{color:#10b981; background:linear-gradient(135deg,#ecfdf5,#d1fae5);}
+.tfc-top{font-size:12px; font-weight:900; color:#0f172a; line-height:1;}
+.tfc-bot{font-size:9.5px; font-weight:700; color:#64748b; margin-top:2px;}
+
+/* -------- 9. RESPONSIVE — ALL IN VIEWPORT NO SCROLL -------- */
+@media (max-width: 960px){
+    .qa-grid{grid-template-columns:repeat(3, 1fr);}
+}
+@media (max-width: 768px){
+    .ab-hero{padding:14px 18px; gap:10px; border-radius:14px;}
+    .abh-icon{width:48px; height:48px; font-size:20px; border-radius:14px;}
+    .abh-plus{width:20px; height:20px; font-size:8px;}
+    .abh-title{font-size:22px;}
+    .abh-sub{font-size:11.5px;}
+    .abh-coins{width:100px; height:60px;}
+    .ac1{width:36px; height:36px; top:8px; right:16px; font-size:12px;}
+    .ac2{width:32px; height:32px; top:24px; right:0; font-size:11px;}
+    .abh-sparkle{display:none;}
+    .ai-input{font-size:22px; padding:12px 12px; min-height:40px;}
+    .ai-rupee{font-size:24px;}
+    .ai-minbadge{font-size:10px; padding:4px 9px;}
+    .mpb-text{font-size:16px;}
+    .mega-pay-btn{padding:13px 18px; border-radius:13px; gap:10px;}
+    .qa-grid{grid-template-columns:repeat(3, 1fr); gap:8px;}
+    .qa-card{padding:12px 6px 10px 6px; border-radius:11px;}
+    .qa-amt{font-size:17px;}
+    .qa-label{font-size:10px;}
+    .qa-popular-ribbon{font-size:9px; padding:2px 9px;}
+    .t4-main{font-size:10.5px;}
+    .t4-sub{font-size:9.5px;}
+    .t4-circle{width:30px; height:30px; font-size:12px;}
+    .trust4-row{padding:8px 10px; gap:6px;}
+    .trustfoot-card{padding:10px 12px;}
+    .tf-badge{width:32px; height:32px; border-radius:9px; font-size:14px;}
+    .tf-chip{padding:5px 10px;}
+}
+@media (max-width: 560px){
+    .ab-hero{padding:12px 14px; margin-bottom:10px; border-radius:14px;}
+    .abh-left{gap:10px;}
+    .abh-icon{width:42px; height:42px; font-size:18px; border-radius:12px;}
+    .abh-title{font-size:20px;}
+    .abh-sub{font-size:11px;}
+    .abh-right{display:none;}
+    .wallet-card-top{padding-top:14px;}
+    .step-head{gap:10px; margin-bottom:10px;}
+    .step-num{width:32px; height:32px;}
+    .sn-inner{width:22px; height:22px; font-size:13px;}
+    .step-title{font-size:15px;}
+    .step-sub{font-size:11px;}
+    .ai-wrap{padding:3px; border-radius:12px; margin-bottom:14px;}
+    .ai-left{padding:0 10px; min-width:36px;}
+    .ai-rupee{font-size:20px;}
+    .ai-input{font-size:18px; padding:10px 8px; min-height:36px;}
+    .ai-input::placeholder{font-size:16px;}
+    .ai-right{padding:0 10px 0 6px;}
+    .ai-minbadge{padding:4px 8px; font-size:9.5px;}
+    .qa-head{margin-bottom:8px;}
+    .qa-bolt{width:28px; height:28px; border-radius:8px; font-size:12px;}
+    .qa-title{font-size:13px;}
+    .qa-sub{font-size:10.5px;}
+    .qa-grid{grid-template-columns:repeat(3, 1fr); gap:6px; margin-bottom:14px;}
+    .qa-card{padding:10px 4px 8px 4px; border-radius:10px;}
+    .qa-amt{font-size:15px;}
+    .qa-label{font-size:9px;}
+    .qa-popular-ribbon{font-size:8.5px; padding:2px 7px; top:-6px;}
+    .mpb-icon{width:30px; height:30px; border-radius:9px; font-size:15px;}
+    .mpb-text{font-size:15px;}
+    .mpb-arrow{font-size:15px;}
+    .mega-pay-btn{padding:12px 14px; border-radius:12px; gap:8px; margin-bottom:14px;}
+    .trust4-row{
+        display:grid;
+        grid-template-columns:repeat(2, 1fr);
+        gap:6px; padding:8px 10px;
+    }
+    .t4-circle{width:28px; height:28px; font-size:11px;}
+    .t4-text{align-items:flex-start;}
+    .t4-item{justify-content:flex-start;}
+    .tf-left{min-width:100%;}
+    .tf-right{width:100%; justify-content:center;}
+    .tf-chip{padding:5px 9px;}
+    .tf-badge{width:30px; height:30px; border-radius:8px; font-size:13px;}
+    .tf-title{font-size:12.5px;}
+    .tf-sub{font-size:10.5px;}
+    .tfc-top{font-size:11px;}
+    .tfc-bot{font-size:9px;}
+    .wallet-table-card thead.thead-premium th { font-size: 11px; padding: 10px 8px; }
+    .wallet-table-card tbody td { font-size: 12px; padding: 9px 8px; }
+}
+</style>
+</head>
+<body>
+<!--start page wrapper -->
+<div class="page-wrapper">
+    <div class="page-content">
+        <!--breadcrumb-->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">Wallet</div>
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Wallet Management</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="ms-auto">
+                <div class="btn-group">
+                    
+                    <span class="fw-bold fs-5" style="color:var(--gold);">⭐ Fast & Secure Payment ⭐</span>
+</div>
+<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
+                        data-bs-toggle="dropdown"> <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end"> 
+                        <a class="dropdown-item" href="javascript:;">Action</a>
+                        <a class="dropdown-item" href="javascript:;">Another action</a>
+                        <a class="dropdown-item" href="javascript:;">Something else here</a>
+                        <div class="dropdown-divider"></div> 
+                        <a class="dropdown-item" href="javascript:;">Separated link</a>
+                    </div>
+                </div>
+            </div>
+
+
+        <!-- =========================================================
+             HIDDEN POPUP MODAL (khuli jagah mein, render nahi hota)
+             ========================================================= -->
+        <div style="display:none !important;">
+            <!DOCTYPE html><html><head><title>x</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+            <style>
+            .open-btn{padding:12px 22px;border:none;background:#0ea5e9;color:#fff;border-radius:10px;cursor:pointer;font-weight:700;}
+            .modal{display:none;position:fixed;z-index:99999;inset:0;background:rgba(0,0,0,0.65);}
+            .modal-content{background:#fff;width:90%;max-width:520px;margin:5% auto;padding:20px;border-radius:16px;position:relative;max-height:85vh;overflow-y:auto;}
+            .close-btn{position:absolute;top:12px;right:15px;font-size:28px;cursor:pointer;color:#333;}
+            .info-box-title{font-size:16px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+            .info-list{list-style:none;padding:0;margin:0 0 20px 0;}
+            .info-list li{padding:6px 0;font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px;}
+            </style>
+            <button class="open-btn" onclick="openInfoPopup()">How to Add Money</button>
+            <div id="infoPopup" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" onclick="closeInfoPopup()">&times;</span>
+                    <div class="info-box">
+                        <div class="info-box-title"><i class="fas fa-info-circle"></i>How to Add Money?</div>
+                        <ul class="info-list">
+                            <li><i class="fas fa-check" style="color:#10b981;"></i> Amount daalo ya quick button dabao</li>
+                            <li><i class="fas fa-check" style="color:#10b981;"></i> "Proceed to Payment" button dabao</li>
+                            <li><i class="fas fa-check" style="color:#10b981;"></i> UPI / Card / NetBanking se pay karo</li>
+                            <li><i class="fas fa-check" style="color:#10b981;"></i> Paisa wallet mein instant aa jayega</li>
+                        </ul>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#e0f2fe,#bae6fd);border:2px solid #0ea5e9;border-radius:12px;padding:18px;margin-bottom:20px;">
+                        <div class="info-box-title" style="color:#075985;"><i class="fas fa-shield-check"></i> Security Features</div>
+                        <ul class="info-list">
+                            <li><i class="fas fa-lock"></i> 256-bit SSL Encryption</li>
+                            <li><i class="fas fa-check-circle"></i> RBI Approved Gateway</li>
+                            <li><i class="fas fa-bolt"></i> Instant Credit</li>
+                            <li><i class="fas fa-headset"></i> 24/7 Support</li>
+                        </ul>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #22c55e;border-radius:12px;padding:18px;">
+                        <div class="info-box-title" style="color:#166534;"><i class="fas fa-rupee-sign"></i> Transaction Limits</div>
+                        <ul class="info-list">
+                            <li><i class="fas fa-arrow-down"></i> Minimum: ₹120</li>
+                            <li><i class="fas fa-arrow-up"></i> Maximum: ₹50,000</li>
+                            <li><i class="fas fa-clock"></i> Processing: Instant</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <script>
+            function openInfoPopup(){document.getElementById("infoPopup").style.display="block";}
+            function closeInfoPopup(){document.getElementById("infoPopup").style.display="none";}
+            </script>
+        </div>
+
+        <!-- =========================================================
+             1. ADD BALANCE HERO CARD (screenshot jaisa)
+             ========================================================= -->
+        <div class="ab-hero">
+            <div class="abh-left">
+                <div class="abh-icon">
+                    <i class="fas fa-wallet"></i>
+                    <span class="abh-plus"><i class="fas fa-plus"></i></span>
+                </div>
+                <div class="abh-title-wrap">
+                    <h1 class="abh-title">Add <span class="abh-title-accent">Balance</span></h1>
+                    <p class="abh-sub">Recharge your wallet to access all services without any interruption.</p>
+                </div>
+            </div>
+            <div class="abh-right">
+                <div class="abh-coins">
+                    <span class="abh-coin ac1"><i class="fas fa-indian-rupee-sign"></i></span>
+                    <span class="abh-coin ac2"><i class="fas fa-indian-rupee-sign"></i></span>
+                    <span class="abh-sparkle sp1"><i class="fas fa-star-of-life"></i></span>
+                    <span class="abh-sparkle sp2"><i class="fas fa-star"></i></span>
+                    <span class="abh-sparkle sp3"><i class="fas fa-plus"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================
+             2. STEP 1 — ENTER AMOUNT  (screenshot jaisa numbered + attractive input)
+             ========================================================= -->
+        <div class="wallet-card wallet-card-top">
+
+            <div class="step-head">
+                <span class="step-num"><span class="sn-inner">1</span></span>
+                <div class="step-text-wrap">
+                    <div class="step-title">Enter Amount</div>
+                    <div class="step-sub">Enter the amount you want to add to your wallet.</div>
+                </div>
+            </div>
+
+            <!-- =========== FORM =========== -->
+            <form method="POST" action="">
+
+                <!-- ATTRACTIVE INPUT BOX (min info inside box right side!) -->
+                <div class="ai-wrap">
+                    <div class="ai-left">
+                        <div class="ai-rupee">₹</div>
+                    </div>
+                    <div class="ai-mid">
+                        <input
+                            type="number"
+                            id="amount"
+                            name="amount"
+                            class="ai-input"
+                            placeholder="Enter amount"
+                            autocomplete="off"
+                            required step="1" min="120" max="50000"
+                        >
+                    </div>
+                    <div class="ai-right">
+                        <span class="ai-minbadge">Min. ₹120</span>
+                    </div>
+                    <div class="winput-error" id="amtError" style="display:none;"></div>
+                </div>
+
+                <!-- QUICK AMOUNTS CARDS (6 cards, 3x2 grid with subtitle + Popular ribbon) -->
+                <div class="qa-head">
+                    <span class="qa-bolt"><i class="fas fa-bolt"></i></span>
+                    <div>
+                        <div class="qa-title">Quick Amounts</div>
+                        <div class="qa-sub">Select a quick amount or enter custom amount above.</div>
+                    </div>
+                </div>
+
+                <div class="qa-grid">
+                    <button type="button" onclick="setAmount(120)"  class="qa-card">
+                        <div class="qa-amt">₹120</div>
+                        <div class="qa-label">Starter</div>
+                    </button>
+                    <button type="button" onclick="setAmount(250)"  class="qa-card qa-popular">
+                        <div class="qa-popular-ribbon"><i class="fas fa-fire"></i> Popular</div>
+                        <div class="qa-amt">₹250</div>
+                        <div class="qa-label">Popular</div>
+                    </button>
+                    <button type="button" onclick="setAmount(500)"  class="qa-card">
+                        <div class="qa-amt">₹500</div>
+                        <div class="qa-label">Good Value</div>
+                    </button>
+                    <button type="button" onclick="setAmount(1000)" class="qa-card">
+                        <div class="qa-amt">₹1,000</div>
+                        <div class="qa-label">Best for Regular</div>
+                    </button>
+                    <button type="button" onclick="setAmount(2000)" class="qa-card">
+                        <div class="qa-amt">₹2,000</div>
+                        <div class="qa-label">More Savings</div>
+                    </button>
+                    <button type="button" onclick="setAmount(5000)" class="qa-card">
+                        <div class="qa-amt">₹5,000</div>
+                        <div class="qa-label">Business Use</div>
+                    </button>
+                </div>
+
+                <!-- MEGA PROCEED BUTTON (screenshot jaisa solid green) -->
+                <button type="submit" class="mega-pay-btn" onclick="return validateAmt()">
+                    <span class="mpb-icon"><i class="fas fa-wallet"></i></span>
+                    <span class="mpb-text">Proceed to Payment</span>
+                    <span class="mpb-arrow"><i class="fas fa-arrow-right-long"></i></span>
+                </button>
+
+                <!-- 4 TRUST CIRCLES (screenshot jaisa) -->
+                <div class="trust4-row">
+                    <div class="t4-item">
+                        <span class="t4-circle t4-shield"><i class="fas fa-shield"></i></span>
+                        <div class="t4-text">
+                            <span class="t4-main">100% Secure</span>
+                            <span class="t4-sub">Payments</span>
+                        </div>
+                    </div>
+                    <div class="t4-item">
+                        <span class="t4-circle t4-bolt"><i class="fas fa-bolt"></i></span>
+                        <div class="t4-text">
+                            <span class="t4-main">Instant</span>
+                            <span class="t4-sub">Credit</span>
+                        </div>
+                    </div>
+                    <div class="t4-item">
+                        <span class="t4-circle t4-lock"><i class="fas fa-lock"></i></span>
+                        <div class="t4-text">
+                            <span class="t4-main">Secure</span>
+                            <span class="t4-sub">Gateway</span>
+                        </div>
+                    </div>
+                    <div class="t4-item">
+                        <span class="t4-circle t4-users"><i class="fas fa-users"></i></span>
+                        <div class="t4-text">
+                            <span class="t4-main">Trusted by</span>
+                            <span class="t4-sub">Thousands</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SSL + PCI-DSS TRUST FOOTER CARD -->
+                <div class="trustfoot-card">
+                    <div class="tf-left">
+                        <span class="tf-badge"><i class="fas fa-shield-halved"></i></span>
+                        <div>
+                            <div class="tf-title">Trusted &amp; Secure Payment</div>
+                            <div class="tf-sub">Your payment is processed through secure and trusted payment gateways.</div>
+                        </div>
+                    </div>
+                    <div class="tf-right">
+                        <div class="tf-chip">
+                            <i class="fas fa-lock"></i>
+                            <div>
+                                <div class="tfc-top">SSL</div>
+                                <div class="tfc-bot">Encrypted</div>
+                            </div>
+                        </div>
+                        <div class="tf-chip">
+                            <i class="fas fa-shield-virus"></i>
+                            <div>
+                                <div class="tfc-top">PCI DSS</div>
+                                <div class="tfc-bot">Compliant</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <script>
+              function setAmount(v){
+                  document.getElementById('amount').value = v;
+                  document.getElementById('amount').focus();
+              }
+              function validateAmt(){
+                  var v = parseFloat(document.getElementById('amount').value) || 0;
+                  if(v < 120){
+                      document.getElementById('amtError').style.display = 'flex';
+                      document.getElementById('amtError').className = 'winput-error we-err';
+                      document.getElementById('amtError').innerHTML = '<i class="fas fa-circle-xmark"></i> Amount kam hai — Minimum ₹120 chahiye';
+                      document.getElementById('amount').focus();
+                      return false;
+                  }
+                  if(v > 50000){
+                      document.getElementById('amtError').style.display = 'flex';
+                      document.getElementById('amtError').className = 'winput-error we-err';
+                      document.getElementById('amtError').innerHTML = '<i class="fas fa-circle-xmark"></i> ₹50,000 se zyada nahi ho sakta';
+                      document.getElementById('amount').focus();
+                      return false;
+                  }
+                  return true;
+              }
+            </script>
+        </div>
+        <!-- END wallet-card -->
+
+        <!-- =============================================
+             3. RECENT PAYMENT HISTORY (FORM KE BAAD)
+             ============================================= -->
+        <div class="wallet-table-card">
+            <div class="wallet-table-head">
+                <i class="fas fa-clock-rotate-left"></i>
+                Recent Payment History
+                <span style="margin-left:auto; font-size:11.5px; font-weight:700; background:rgba(255,255,255,0.18); padding:4px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.3);">
+                    Last 10
+                </span>
+            </div>
+            <div class="card-body" style="padding:14px 0 0 0;">
+                <div class="table-responsive">
+                    <table id="example2" class="table table-striped">
+                        <thead class="thead-premium">
+                            <tr>
+                                <th>#</th>
+                                <th>Phone</th>
+                                <th>UTR</th>
+                                <th>Amount</th>
+                                <th>Remarks</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $i = 1;
+                            if ($udata['type'] == 'admin') {
+                                $res = mysqli_query($ahk_conn, "SELECT * FROM wallet ORDER BY txn_date DESC LIMIT 10");
+                            } else {
+                                $phone = mysqli_real_escape_string($ahk_conn, $udata['phone']);
+                                $res = mysqli_query($ahk_conn, "SELECT * FROM wallet WHERE phone='$phone' ORDER BY txn_date DESC LIMIT 10");
+                            }
+                            while ($row = mysqli_fetch_assoc($res)) {
+                                $_s = strtolower(trim((string)$row['status']));
+                                if ($_s === 'success') {
+                                    $_badgeCls = 'badge-wallet-success';
+                                    $_badgeTxt = 'Success';
+                                } elseif ($_s === 'rejected' || $_s === 'failed' || $_s === 'fail' || $_s === 'error') {
+                                    $_badgeCls = 'badge-wallet-danger';
+                                    $_badgeTxt = ($_s === 'rejected') ? 'Rejected' : 'Failed';
+                                } elseif ($_s === 'pending') {
+                                    $_badgeCls = 'badge-wallet-pending';
+                                    $_badgeTxt = 'Pending';
+                                } else {
+                                    $_badgeCls = 'badge-wallet-pending';
+                                    $_badgeTxt = htmlspecialchars($row['status']);
+                                }
+                                echo "<tr>
+                                    <td>{$i}</td>
+                                    <td>".htmlspecialchars($row['phone'])."</td>
+                                    <td>".htmlspecialchars($row['BANKTXNID'])."</td>
+                                    <td><strong style='color:#111827;'>₹".htmlspecialchars($row['amount'])."</strong></td>
+                                    <td>".htmlspecialchars($row['RESPMSG'])."</td>
+                                    <td>".htmlspecialchars($row['PAYMENTMODE'])."</td>
+                                    <td><span class='{$_badgeCls}'>{$_badgeTxt}</span></td>
+                                    <td>".htmlspecialchars($row['txn_date'])."</td>
+                                </tr>";
+                                $i++;
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END TABLE CARD -->
+
+    </div>
+</div>
+		
+
+<?php
+?>
+
+<script>
+function checkOrderStatus(order_id) {
+    const statusDiv = document.getElementById("txnStatus");
+    let checkCount = 0;
+    const maxChecks = 120; // 10 minutes (120 * 5 seconds)
+    
+    const intervalId = setInterval(async () => {
+        try {
+            checkCount++;
+            statusDiv.innerText = `Checking payment status... (${Math.floor(checkCount * 5 / 60)} min)`;
+            
+            const formData = new FormData();
+            formData.append('check_order_status', '1');
+            formData.append('order_id', order_id);
+            
+            const response = await fetch('', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                clearInterval(intervalId);
+                Swal.close();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful',
+                    html: `<b>Amount:</b> ${data.data.amount}<br><b>UTR:</b> ${data.data.utr}<br><b>Date:</b> ${data.data.date}`,
+                    confirmButtonColor: '#4e54c8'
+                }).then(() => { 
+                    window.location.href = 'wallet.php'; 
+                });
+            } else if (data.status === 'error') {
+                clearInterval(intervalId);
+                statusDiv.innerText = data.message;
+            }
+            
+            if (checkCount >= maxChecks) {
+                clearInterval(intervalId);
+                statusDiv.innerText = "Payment check timeout. Please contact support if payment was made.";
+            }
+        } catch (error) {
+            console.error('Error checking payment status:', error);
+            statusDiv.innerText = "Error checking status. Retrying...";
+        }
+    }, 5000);
+}
+</script>
+
+<!--end page wrapper -->
+<?php
+include('../template/ahkweb/footer.php');
+?>
+<!-- Bootstrap JS -->
+<script src="../template/ahkweb/assets/js/bootstrap.bundle.min.js"></script>
+<!--plugins-->
+<script src="../template/ahkweb/assets/js/jquery.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/simplebar/js/simplebar.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+<!--app JS-->
+<script src="../template/ahkweb/assets/js/app.js"></script>
+<!-- datatable -->
+<script src="../template/ahkweb/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+<script src="../template/ahkweb/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+
+<script>
+    $(document).ready(function() {
+        var table = $('#example2').DataTable( {
+            lengthChange: false,
+            buttons: [ 'copy', 'excel', 'pdf', 'print']
+        } );
+     
+        table.buttons().container()
+            .appendTo( '#example2_wrapper .col-md-6:eq(0)' );
+    } );
+</script>
+</body>
+</html>

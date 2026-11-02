@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<rect x="8" y="22" width="78" height="50" rx="7" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<path d="M8 29a7 7 0 0 1 7-7h64a7 7 0 0 1 7 7v6H8z" fill="#0c4a6e"/><text x="47" y="33" font-family="Arial,sans-serif" font-size="9" font-weight="900" fill="#fff" text-anchor="middle">PAN CARD</text>
+<rect x="18" y="44" width="34" height="5" rx="2" fill="#94a3b8"/><rect x="18" y="55" width="50" height="5" rx="2" fill="#cbd5e1"/>
+<rect x="38" y="66" width="84" height="44" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="2.5"/>
+<text x="80" y="93" font-family="Arial,sans-serif" font-size="13" font-weight="900" fill="#c2410c" text-anchor="middle">XXXX 56</text>
+<path d="M52 102h56" stroke="#fdba74" stroke-width="3" stroke-linecap="round"/>
+<circle cx="104" cy="30" r="16" fill="#f97316"/><path d="M95 30c3-6 15-6 18 0-3 6-15 6-18 0z" fill="#fff"/><circle cx="104" cy="30" r="3" fill="#f97316"/>
+</svg>

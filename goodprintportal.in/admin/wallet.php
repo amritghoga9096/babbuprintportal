@@ -1,0 +1,102 @@
+<?php
+@ini_set('display_errors', 1);
+@ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+if (function_exists('ob_start')) @ob_start();
+
+include_once(__DIR__ . '/../includes/session.php');
+include_once(__DIR__ . '/../includes/config.php');
+
+if (function_exists('checkSession')) {
+    @checkSession();
+}
+
+$GLOBALS['_gw_mode_cols_done'] = false;
+function _gwEnsureWallet($conn) {
+    if (!empty($GLOBALS['_gw_mode_cols_done'])) return;
+    @mysqli_report(MYSQLI_REPORT_OFF);
+    // Try the SELECT first (fast path — columns already exist in production).
+    // Only if it fails do we run the expensive SHOW COLUMNS + ALTER TABLE.
+    $test = @mysqli_query($conn, "SELECT gateway_mode, manual_upi_id, manual_qr_path, manual_qr_updated_at FROM settings WHERE id=1 LIMIT 1");
+    if ($test) {
+        @mysqli_free_result($test);
+        $GLOBALS['_gw_mode_cols_done'] = true;
+        return;
+    }
+    // Slow path: columns missing — add them once.
+    $cols = array();
+    $r = @mysqli_query($conn, "SHOW COLUMNS FROM settings");
+    if ($r) while ($row = @mysqli_fetch_assoc($r)) $cols[] = $row['Field'];
+    $had_gateway_mode = in_array('gateway_mode', $cols);
+    if (!$had_gateway_mode) @mysqli_query($conn, "ALTER TABLE settings ADD COLUMN gateway_mode VARCHAR(20) NOT NULL DEFAULT 'gateway'");
+    if (!in_array('manual_upi_id', $cols)) @mysqli_query($conn, "ALTER TABLE settings ADD COLUMN manual_upi_id VARCHAR(255) NULL DEFAULT NULL");
+    if (!in_array('manual_qr_path', $cols)) @mysqli_query($conn, "ALTER TABLE settings ADD COLUMN manual_qr_path VARCHAR(500) NULL DEFAULT NULL");
+    if (!in_array('manual_qr_updated_at', $cols)) @mysqli_query($conn, "ALTER TABLE settings ADD COLUMN manual_qr_updated_at DATETIME NULL DEFAULT NULL");
+    if (!$had_gateway_mode) {
+        @mysqli_query($conn, "UPDATE settings SET gateway_mode='gateway' WHERE id=1 LIMIT 1");
+    }
+    $GLOBALS['_gw_mode_cols_done'] = true;
+}
+_gwEnsureWallet($ahk_conn);
+
+$_gw = array('gateway_mode' => 'gateway', 'manual_upi_id' => '', 'manual_qr_path' => '');
+$_gr = @mysqli_query($ahk_conn, "SELECT gateway_mode, manual_upi_id, manual_qr_path FROM settings WHERE id=1 LIMIT 1");
+if ($_gr && ($_row = @mysqli_fetch_assoc($_gr))) $_gw = array_merge($_gw, $_row);
+// Modes: vapay | akpdf | akqr | drpay | manual   ('gateway' = old value, treated as akpdf)
+$_gw_files = array(
+    'vapay' => __DIR__ . '/../vapay/wallet.php',
+    'akpdf' => __DIR__ . '/../akpdf/wallet.php',
+    'akqr'  => __DIR__ . '/../akqr/wallet.php',
+    'drpay' => __DIR__ . '/../drpay/wallet2.php',
+);
+$_gateway_mode = isset($_gw['gateway_mode']) ? strtolower(trim((string)$_gw['gateway_mode'])) : 'akpdf';
+if ($_gateway_mode === 'gateway' || $_gateway_mode === '') $_gateway_mode = 'akpdf';
+if ($_gateway_mode !== 'manual' && !isset($_gw_files[$_gateway_mode])) $_gateway_mode = 'akpdf';
+
+if ($_gateway_mode === 'manual' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['amount'])) {
+    $amt = $_POST['amount'];
+    $mobileno = (isset($udata['phone']) && $udata['phone']) ? $udata['phone'] : '';
+    if ($amt && is_numeric($amt) && (float)$amt > 119 && $mobileno) {
+        $order_id = 'WLT_' . $mobileno . '_' . time();
+        $_SESSION['order_id'] = $order_id;
+        $_SESSION['order_amount'] = $amt;
+        $_SESSION['order_generated_time'] = time();
+
+        $pending = 'pending';
+        $paymentModeInitial = 'ManualUPI';
+        $remark = 'Manual UPI Recharge - Awaiting UTR & Approval';
+        $todayStr = date('Y-m-d');
+        $amtStr = (string)$amt;
+        $alreadyPending = false;
+        $checkPending = @mysqli_prepare($ahk_conn, "SELECT id FROM wallet WHERE txn_id = ? LIMIT 1");
+        if ($checkPending) {
+            @mysqli_stmt_bind_param($checkPending, 's', $order_id);
+            @mysqli_stmt_execute($checkPending);
+            @mysqli_stmt_store_result($checkPending);
+            if (@mysqli_stmt_num_rows($checkPending) > 0) $alreadyPending = true;
+            @mysqli_stmt_close($checkPending);
+        }
+        if (!$alreadyPending) {
+            $insPend = @mysqli_prepare($ahk_conn, "INSERT INTO wallet (txn_id, phone, amount, PAYMENTMODE, RESPMSG, status, txn_date, date) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)");
+            if ($insPend) {
+                @mysqli_stmt_bind_param($insPend, 'sssssss', $order_id, $mobileno, $amtStr, $paymentModeInitial, $remark, $pending, $todayStr);
+                @mysqli_stmt_execute($insPend);
+                @mysqli_stmt_close($insPend);
+            }
+        }
+        header('Location: manual_payment.php?order=' . urlencode($order_id));
+        exit;
+    } else {
+        if ((float)$amt <= 119) {
+            echo '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script></head><body><script>Swal.fire({icon:"error",title:"Invalid Amount!",text:"Minimum wallet top-up amount is Rs. 120. Please enter a valid amount.",confirmButtonColor:"#4e54c8"}).then(function(){window.history.back();});</script></body></html>';
+            exit;
+        }
+    }
+}
+
+// Manual mode only intercepts the "add money" POST above; the page itself is rendered by the AKPDF UI.
+$__gw_inc = ($_gateway_mode === 'manual') ? $_gw_files['akpdf'] : $_gw_files[$_gateway_mode];
+if (!file_exists($__gw_inc) || !is_readable($__gw_inc)) {
+    die("<b>[Gateway FATAL]</b> Missing include for mode <code>" . htmlspecialchars($_gateway_mode) . "</code>: <code>" . htmlspecialchars($__gw_inc) . "</code>");
+}
+include($__gw_inc);

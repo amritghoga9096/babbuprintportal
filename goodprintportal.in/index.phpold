@@ -1,0 +1,985 @@
+<?php
+include('./includes/config.php');
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Home | <?php echo ahkweb('webname'); ?></title>
+  <meta name="description" content="<?php echo ahkweb('webname'); ?> - India's Premium Digital Print Portal. Aadhaar, PAN, Voter, DL, RC, PVC Card Print & Online Services for CSC, Jan Seva & Cyber Cafes.">
+  <meta name="keywords" content="Print Portal, Aadhaar PVC Print, PAN Card, Voter ID, Driving License, RC Card, CSC Services, Digital Print, PVC Card Online, Good Print Portal">
+  <meta name="robots" content="index, follow">
+  <meta name="Author" content="<?php echo ahkweb('webname'); ?>">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="<?php echo ahkweb('webname'); ?> - India's Premium Digital Print Portal">
+  <meta property="og:description" content="Aadhaar, PAN, Voter, DL, RC, PVC Card Print & 30+ Online Services. Instant Quality Output.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://goodprintportal.in/">
+
+  <!-- Favicons / Logo (served from ROOT /logof.png via LogoUpdate upload) -->
+  <link rel="icon" href="/logof.png" type="image/png">
+  <link rel="apple-touch-icon" href="/logof.png">
+
+  <!-- ============================================================
+       PREMIUM LIGHTWEIGHT PERFORMANCE TUNING
+       - Fonts: ONLY required weights (400,600,700,800) — removed 100,200,300,900 + italic variants (saves ~200KB)
+       - Removed glightbox + swiper (Watch Video feature removed → saves 200+KB CSS/JS)
+       - Keep AOS only for smooth reveal animations
+       ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS (Lightened — NO glightbox, NO swiper) -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- ============================================================
+       PREMIUM CUSTOM THEME OVERRIDES
+       Palette: Deep Indigo (Primary) · Gold (Accent) · White/Stone
+       Mobile-first + responsive
+       ============================================================ -->
+  <style>
+    :root{
+      --gp-primary:    #2a2469;   /* Deep Indigo */
+      --gp-primary-2:  #4f46e5;   /* Vibrant Indigo */
+      --gp-accent:     #d97706;   /* Gold */
+      --gp-accent-2:   #f59e0b;   /* Amber */
+      --gp-slate:      #0f172a;   /* Ink */
+      --gp-muted:      #64748b;   /* Muted */
+      --gp-bg:         #f8fafc;   /* Off white */
+      --gp-bg-grad:    linear-gradient(135deg,#eef2ff 0%, #fdf4ff 45%, #fff7ed 100%);
+      --gp-radius:     14px;
+      --gp-shadow-sm:  0 2px 10px rgba(15,23,42,.06);
+      --gp-shadow:     0 10px 30px rgba(42,36,105,.12);
+      --gp-shadow-lg:  0 20px 50px rgba(42,36,105,.18);
+    }
+
+    html,body{ background:var(--gp-bg); color:var(--gp-slate); font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+
+    /* ============================================================
+       ✨ FRESH PROFESSIONAL HEADER — OUR OWN DRAWER (no navmenu bugs)
+       Layout: LOGO (left) → Login → Register → ☰ (far right)
+       All devices: LOGIN + REGISTER show FULL TEXT (no icon-only ever)
+       ============================================================ */
+    #header{
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      background: rgba(255,255,255,.94);
+      border-bottom: 1px solid rgba(42,36,105,.08);
+      padding-top: 8px;
+      padding-bottom: 8px;
+      min-height: 60px;
+      z-index: 99998 !important;
+      box-shadow: 0 2px 14px rgba(15,23,42,.05);
+    }
+    #header > .container-fluid,
+    #header > .container-xl{
+      flex-wrap: nowrap !important;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0;
+      padding-left: 14px !important;
+      padding-right: 14px !important;
+      max-width: 1400px !important;
+    }
+
+    /* --- 1. LOGO --- */
+    .gp-header-logo{
+      display: flex;
+      align-items: center;
+      flex: 0 0 auto;
+      margin: 0;
+      padding: 2px 0;
+    }
+    .gp-header-logo img{
+      max-height: 36px !important;
+      height: 36px !important;
+      width: auto;
+      max-width: 180px;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(42,36,105,.15);
+      display: block;
+    }
+
+    /* --- 2. DESKTOP NAV LINKS (XL screens and up) --- */
+    .gp-desktop-nav{
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-left: 22px;
+      flex: 0 0 auto;
+    }
+    .gp-desktop-nav a{
+      padding: 8px 14px;
+      border-radius: 10px;
+      color: var(--gp-slate);
+      font-weight: 600;
+      font-size: 14.5px;
+      text-decoration: none;
+      transition: all .2s ease;
+      white-space: nowrap;
+      position: relative;
+    }
+    .gp-desktop-nav a:hover,
+    .gp-desktop-nav a.active{
+      color: var(--gp-primary-2);
+      background: rgba(79,70,229,.07);
+    }
+
+    /* --- 3. CTA GROUP (Login + Register) + MENU TOGGLE single row --- */
+    .gp-header-right{
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+    }
+    .gp-header-cta{
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .gp-btn{
+      display:inline-flex; align-items:center; gap:7px;
+      padding:9px 16px; border-radius:999px; font-weight:800; font-size:13.5px;
+      text-decoration:none; transition: all .22s cubic-bezier(.33,1,.68,1);
+      border: 1.5px solid transparent;
+      cursor:pointer; letter-spacing:.2px; white-space:nowrap;
+      flex-shrink: 0;
+      line-height: 1.1;
+    }
+    .gp-btn i{
+      font-size: 14.5px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .gp-btn .gp-btn-text{
+      display: inline-block !important;   /* NEVER hide button text per user */
+      line-height: 1;
+      font-weight: 800;
+    }
+    .gp-btn-primary{
+      background: linear-gradient(135deg, var(--gp-primary) 0%, #6366f1 40%, var(--gp-primary-2) 100%);
+      color:#fff; box-shadow: 0 8px 20px rgba(79,70,229,.28);
+    }
+    .gp-btn-primary:hover{
+      transform: translateY(-2px);
+      color:#fff;
+      box-shadow: 0 12px 28px rgba(79,70,229,.38);
+    }
+    .gp-btn-accent{
+      background: linear-gradient(135deg, #f97316 0%, var(--gp-accent) 40%, var(--gp-accent-2) 100%);
+      color:#fff; box-shadow: 0 8px 20px rgba(245,158,11,.3);
+    }
+    .gp-btn-accent:hover{
+      transform: translateY(-2px);
+      color:#fff;
+      box-shadow: 0 12px 28px rgba(245,158,11,.4);
+    }
+    .gp-btn-outline{
+      background:#fff; color:var(--gp-primary); border-color:rgba(99,102,241,.3);
+      box-shadow: 0 2px 6px rgba(79,70,229,.06);
+    }
+    .gp-btn-outline:hover{
+      background: linear-gradient(135deg, var(--gp-primary) 0%, var(--gp-primary-2) 100%);
+      color:#fff; border-color:transparent; transform: translateY(-2px);
+    }
+
+    /* --- 4. MENU TOGGLE (hamburger — our custom, not navmenu toggle class) --- */
+    .gp-menu-toggle{
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: none;
+      display: none;       /* hidden on desktop */
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(99,102,241,.10), rgba(99,102,241,.18));
+      color: var(--gp-primary);
+      font-size: 20px;
+      cursor: pointer;
+      transition: all .22s ease;
+      line-height: 1;
+      z-index: 999999;  /* always on top */
+      box-shadow: 0 4px 12px rgba(79,70,229,.10), inset 0 1px 0 rgba(255,255,255,.8);
+      border: 1px solid rgba(99,102,241,.15);
+    }
+    .gp-menu-toggle:hover{
+      transform: translateY(-2px);
+      color: var(--gp-primary-2);
+      box-shadow: 0 8px 18px rgba(79,70,229,.22);
+    }
+    .gp-menu-toggle.is-active{
+      background: linear-gradient(135deg, var(--gp-primary), var(--gp-primary-2));
+      color: #fff;
+    }
+
+    /* ============================================================
+       DRAWER (our own custom mobile drawer — slides from right)
+       ============================================================ */
+    .gp-drawer-overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.55);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .25s ease, visibility .25s ease;
+      z-index: 999998;
+    }
+    .gp-drawer-overlay.is-open{
+      opacity: 1;
+      visibility: visible;
+    }
+    .gp-drawer{
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: min(86vw, 340px);
+      background: #fff;
+      z-index: 999999;
+      box-shadow: -20px 0 50px rgba(15,23,42,.2);
+      transform: translateX(105%);
+      transition: transform .32s cubic-bezier(.33,1,.68,1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .gp-drawer.is-open{ transform: translateX(0); }
+
+    /* Drawer header */
+    .gp-drawer-header{
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(15,23,42,.06);
+      background: linear-gradient(135deg, rgba(99,102,241,.06), rgba(245,158,11,.06));
+    }
+    .gp-drawer-header img{
+      max-height: 34px;
+      max-width: 160px;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(42,36,105,.12);
+    }
+    .gp-drawer-close{
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(239,68,68,.08);
+      color: #ef4444;
+      border: none;
+      font-size: 19px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .2s ease;
+      line-height: 1;
+    }
+    .gp-drawer-close:hover{
+      background: #ef4444;
+      color: #fff;
+      transform: scale(1.06);
+    }
+
+    /* CTA section inside drawer (shows LOGIN + REGISTER FULL TEXT big gradient buttons) */
+    .gp-drawer-ctas{
+      padding: 16px 18px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(250,250,255,1), rgba(255,255,255,1));
+      border-bottom: 1px dashed rgba(15,23,42,.08);
+    }
+    .gp-drawer-ctas .gp-btn{
+      width: 100%;
+      justify-content: center;
+      padding: 12px 18px !important;
+      font-size: 14.5px !important;
+    }
+    .gp-drawer-ctas .gp-btn i{
+      font-size: 16px !important;
+    }
+
+    /* Nav links inside drawer */
+    .gp-drawer-links{
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 10px 10px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .gp-drawer-links a{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: var(--gp-slate);
+      font-weight: 600;
+      font-size: 14.5px;
+      text-decoration: none;
+      transition: all .18s ease;
+    }
+    .gp-drawer-links a i{
+      font-size: 17px;
+      color: var(--gp-primary);
+      flex-shrink: 0;
+      width: 24px;
+      text-align: center;
+    }
+    .gp-drawer-links a:hover,
+    .gp-drawer-links a.active{
+      background: linear-gradient(135deg, rgba(99,102,241,.10), rgba(99,102,241,.04));
+      color: var(--gp-primary-2);
+      transform: translateX(2px);
+    }
+
+    /* Drawer footer */
+    .gp-drawer-footer{
+      padding: 12px 18px 18px;
+      font-size: 12px;
+      color: var(--gp-muted);
+      text-align: center;
+      border-top: 1px solid rgba(15,23,42,.05);
+      background: #fafaff;
+    }
+
+    /* DESKTOP: hide drawer, show inline nav */
+    @media (min-width: 1200px){
+      .gp-desktop-nav{ display: flex; }
+      .gp-menu-toggle{ display: none; }
+      .gp-drawer, .gp-drawer-overlay{ display: none !important; }
+    }
+    /* LAPTOP + MOBILE: hide desktop nav, show menu button */
+    @media (max-width: 1199.98px){
+      .gp-desktop-nav{ display: none !important; }
+      .gp-menu-toggle{ display: inline-flex; }
+      #header{ min-height: 58px; padding-top: 7px; padding-bottom: 7px; }
+      #header > .container-fluid,
+      #header > .container-xl{ padding-left: 12px !important; padding-right: 12px !important; }
+      .gp-header-logo img{ max-height: 34px !important; height: 34px !important; }
+      .gp-btn{ padding: 8px 14px; font-size: 13px; gap: 6px; }
+      .gp-btn i{ font-size: 14px; }
+    }
+
+    @media (max-width: 992px){
+      #header{ min-height: 56px; padding-top: 6px; padding-bottom: 6px; }
+      .gp-header-logo{ margin-right: 4px; }
+      .gp-header-logo img{ max-height: 32px !important; height: 32px !important; }
+      .gp-header-right{ gap: 6px; }
+      .gp-btn{ padding: 8px 13px; font-size: 12.5px; gap: 5px; }
+      .gp-btn i{ font-size: 13px; }
+      .gp-menu-toggle{ width: 38px; height: 38px; font-size: 19px; }
+    }
+
+    @media (max-width: 768px){
+      .gp-header-logo img{ max-height: 30px !important; height: 30px !important; }
+      .gp-btn{ padding: 8px 12px; font-size: 12px; }
+      .gp-btn i{ font-size: 12.5px; }
+      .gp-menu-toggle{ width: 37px; height: 36px; border-radius: 10px; }
+    }
+
+    @media (max-width: 576px){
+      #header{
+        padding-top: 7px;
+        padding-bottom: 7px;
+        min-height: 54px;
+      }
+      #header > .container-fluid,
+      #header > .container-xl{
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
+      .gp-header-logo img{
+        max-height: 28px !important;
+        height: 28px !important;
+        max-width: 140px;
+      }
+      .gp-header-right{ gap: 5px; }
+      .gp-btn{
+        padding: 7px 11px !important;
+        font-size: 11.5px !important;
+        gap: 5px;
+      }
+      .gp-btn i{ font-size: 12px; }
+      .gp-menu-toggle{
+        width: 35px;
+        height: 34px;
+        font-size: 18px;
+        border-radius: 10px;
+      }
+    }
+
+    /* Tiny phones (< 420px) — still full text, just super compact */
+    @media (max-width: 420px){
+      #header{ padding-top: 6px; padding-bottom: 6px; }
+      .gp-header-logo img{
+        max-height: 26px !important;
+        height: 26px !important;
+        max-width: 120px;
+      }
+      .gp-header-right{ gap: 4px; }
+      .gp-btn{
+        padding: 7px 10px !important;
+        font-size: 11px !important;
+        gap: 4px;
+        letter-spacing: .1px;
+      }
+      .gp-btn i{ font-size: 11.5px; }
+      .gp-menu-toggle{
+        width: 33px;
+        height: 32px;
+        font-size: 17px;
+        border-radius: 9px;
+      }
+      .gp-drawer{ width: 88vw; }
+    }
+
+    /* Hero padding-tops tuned per header height */
+    @media (min-width: 1200px){ #hero{ padding-top: 130px !important; } }
+    @media (max-width: 1199.98px){ #hero{ padding-top: 96px !important; } }
+    @media (max-width: 992px){ #hero{ padding-top: 90px !important; } }
+    @media (max-width: 768px){ #hero{ padding-top: 86px !important; } }
+    @media (max-width: 576px){ #hero{ padding-top: 80px !important; } }
+    @media (max-width: 420px){ #hero{ padding-top: 76px !important; } }
+
+    /* ---------- HERO ---------- */
+    #hero{
+      background: var(--gp-bg-grad);
+      position:relative; overflow:visible !important; padding-top: 120px;
+      z-index: 1 !important;
+    }
+    #hero::before{
+      content:""; position:absolute; top:-10%; left:-5%;
+      width:520px; height:520px; border-radius:50%;
+      background: radial-gradient(circle, rgba(79,70,229,.18), transparent 70%);
+      filter: blur(40px); pointer-events:none;
+      z-index: 0;
+    }
+    #hero::after{
+      content:""; position:absolute; bottom:-15%; right:-5%;
+      width:600px; height:600px; border-radius:50%;
+      background: radial-gradient(circle, rgba(245,158,11,.16), transparent 70%);
+      filter: blur(45px); pointer-events:none;
+      z-index: 0;
+    }
+    #hero .hero-bg{ opacity:.35; mix-blend-mode:multiply; }
+
+    /* ============================================================
+       GLOBAL CONTENT VISIBILITY OVERRIDE (fix AOS hiding bug ALL SECTIONS)
+       ============================================================ */
+    [data-aos], [data-aos-delay], [data-aos-duration], [data-aos-easing],
+    section, main, section > .container,
+    section h2, section h3, section h4, section p, section a, section img, section i, section button, section div,
+    .section, .section-title, .section-title *,
+    .service-item, .service-item *,
+    .more-features, .more-features *, .icon-box, .icon-box *,
+    .faq *,
+    .call-to-action, .call-to-action *,
+    #footer, #footer *,
+    .hero *,
+    .gp-hero-tagline, .gp-tag-pill, .gp-hero-cta, .gp-hero-img{
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+      animation-duration: 0s !important;
+      animation-delay: 0s !important;
+      animation-fill-mode: none !important;
+      filter: none !important;
+      clip-path: none !important;
+      -webkit-clip-path: none !important;
+    }
+    /* ensure section padding still respected */
+    section, .section{ overflow: visible !important; scroll-margin-top: 90px; }
+
+    #hero h1{
+      font-family:'Nunito', sans-serif; font-weight:800;
+      font-size: clamp(1.8rem, 4vw, 3.1rem); line-height:1.15;
+      color:var(--gp-slate); letter-spacing:-.5px;
+    }
+    #hero h1 span{
+      background: linear-gradient(135deg, var(--gp-primary) 0%, var(--gp-primary-2) 60%, var(--gp-accent) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+
+    .gp-hero-tagline{
+      font-size: clamp(.95rem, 1.6vw, 1.1rem); line-height:1.65;
+      color:var(--gp-muted); max-width:780px; margin:18px auto 0;
+    }
+    .gp-hero-tagline strong{ color:var(--gp-primary); }
+
+    .gp-tag-pill{
+      display:inline-block; padding:6px 12px; border-radius:999px;
+      font-size:13px; font-weight:700; margin:4px 3px;
+      background:#fff; border:1px solid rgba(15,23,42,.08);
+      box-shadow: var(--gp-shadow-sm);
+    }
+    .gp-tag-pill.t-aadhaar{ color:#6f42c1; }
+    .gp-tag-pill.t-pan   { color:#b45309; }
+    .gp-tag-pill.t-voter { color:#15803d; }
+    .gp-tag-pill.t-dl    { color:#b91c1c; }
+    .gp-tag-pill.t-rc    { color:#0e7490; }
+
+    .gp-hero-cta{
+      display:flex; flex-wrap:wrap; gap:14px; justify-content:center;
+      margin-top:28px;
+    }
+
+    .gp-hero-img{
+      margin-top:36px; max-width: 260px;
+      filter: drop-shadow(0 20px 40px rgba(42,36,105,.2));
+    }
+
+    /* ---------- SERVICES ---------- */
+    .section-title h2{
+      font-family:'Nunito', sans-serif; font-weight:800;
+      color:var(--gp-slate); font-size: clamp(1.6rem, 3vw, 2.2rem);
+    }
+    .section-title h2::after, .section-title h2::before{ background: var(--gp-accent-2) !important; }
+    .service-item{
+      background:#fff; border-radius:var(--gp-radius); padding:28px;
+      box-shadow: var(--gp-shadow-sm); border:1px solid rgba(15,23,42,.05);
+      transition: all .3s ease;
+    }
+    .service-item:hover{ transform:translateY(-5px); box-shadow: var(--gp-shadow); }
+    .service-item h3{ font-family:'Nunito', sans-serif; font-weight:800; color:var(--gp-slate); }
+    .service-item .icon{
+      background: linear-gradient(135deg, var(--gp-primary) 0%, var(--gp-primary-2) 100%);
+      color:#fff; border-radius: 12px;
+      width:56px; height:56px; display:flex; align-items:center; justify-content:center;
+      font-size: 26px; box-shadow: 0 8px 18px rgba(79,70,229,.2);
+    }
+    .read-more{ font-weight:700; color:var(--gp-primary-2); }
+    .read-more:hover{ color:var(--gp-accent); }
+
+    /* ---------- FAQ / MORE FEATURES ---------- */
+    .more-features h3{ font-family:'Nunito', sans-serif; font-weight:800; color:var(--gp-slate); }
+    .icon-box h4{ font-family:'Nunito', sans-serif; font-weight:700; color:var(--gp-primary); font-size:15px; }
+    .icon-box i.bi{
+      font-size: 22px; color:#fff;
+      background: linear-gradient(135deg, var(--gp-accent) 0%, var(--gp-accent-2) 100%);
+      border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+      margin-right:12px; flex-shrink:0; box-shadow:0 6px 14px rgba(217,119,6,.25);
+    }
+
+    /* ---------- FOOTER ---------- */
+    #footer{
+      background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
+      border-top:1px solid rgba(42,36,105,.08);
+    }
+    #footer h4{
+      font-family:'Nunito', sans-serif; font-weight:800; color:var(--gp-primary);
+    }
+    #footer a{ color:var(--gp-slate); text-decoration:none; }
+    #footer a:hover{ color:var(--gp-primary-2); }
+    .footer-about .sitename{
+      font-family:'Nunito', sans-serif; font-weight:800; color:var(--gp-primary); font-size:22px;
+    }
+    .social-links a{
+      background:#fff; border:1px solid rgba(42,36,105,.12); color:var(--gp-primary);
+      border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+      transition:all .25s ease;
+    }
+    .social-links a:hover{
+      background: linear-gradient(135deg, var(--gp-primary), var(--gp-primary-2));
+      color:#fff; transform:translateY(-2px);
+    }
+    .copyright{ padding-bottom: 30px; }
+
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+      <!-- ===== 1. LOGO (far left) ===== -->
+      <a href="index" class="gp-header-logo" aria-label="Home">
+        <img src="/logomain.png" alt="<?php echo ahkweb('webname'); ?>" onerror="this.onerror=null;this.src='/logof.png';">
+      </a>
+
+      <!-- ===== 2. DESKTOP INLINE NAV (hidden <1200px) ===== -->
+      <div class="gp-desktop-nav" aria-label="Primary">
+        <a href="index#hero" class="active"><i class="bi bi-house-door" style="margin-right:6px;"></i>Home</a>
+        <a href="index#services"><i class="bi bi-stars" style="margin-right:6px;"></i>Features</a>
+        <a href="index#services"><i class="bi bi-grid-3x3-gap" style="margin-right:6px;"></i>Services</a>
+        <a href="contact"><i class="bi bi-envelope" style="margin-right:6px;"></i>Contact</a>
+      </div>
+
+      <!-- ===== Right Group: LOGIN + REGISTER + MENU TOGGLE (single row) ===== -->
+      <div class="gp-header-right" aria-label="Account">
+
+        <!-- 3A. LOGIN (icon + FULL TEXT always visible per user) -->
+        <a class="gp-btn gp-btn-primary" href="auth" aria-label="Login">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span class="gp-btn-text">Login</span>
+        </a>
+
+        <!-- 3B. REGISTER (icon + FULL TEXT — never hidden) -->
+        <a class="gp-btn gp-btn-accent" href="register" aria-label="Register">
+          <i class="bi bi-person-plus-fill"></i>
+          <span class="gp-btn-text">Register</span>
+        </a>
+
+        <!-- 3C. MENU TOGGLE (hamburger — our custom, not navmenu class) -->
+        <button type="button" class="gp-menu-toggle" id="gpMenuBtn" aria-label="Open menu" aria-controls="gpDrawer" aria-expanded="false">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================
+       CUSTOM DRAWER (slides from right) + OVERLAY
+       Login + Register show BIG FULL-TEXT buttons ON TOP inside drawer.
+       Guaranteed visibility — no z-index fight with header children.
+       ============================================================ -->
+  <div class="gp-drawer-overlay" id="gpOverlay" aria-hidden="true"></div>
+  <aside class="gp-drawer" id="gpDrawer" role="dialog" aria-modal="true" aria-label="Main menu" aria-hidden="true">
+    <div class="gp-drawer-header">
+      <img src="/logomain.png" alt="<?php echo ahkweb('webname'); ?>" onerror="this.onerror=null;this.src='/logof.png';">
+      <button type="button" class="gp-drawer-close" id="gpDrawerClose" aria-label="Close menu">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- ====== BIG LOGIN + REGISTER BUTTONS (FULL TEXT, gradient) ====== -->
+    <div class="gp-drawer-ctas" aria-label="Account actions">
+      <a class="gp-btn gp-btn-accent" href="register">
+        <i class="bi bi-person-plus-fill"></i>
+        <span class="gp-btn-text">Register</span>
+      </a>
+      <a class="gp-btn gp-btn-primary" href="auth">
+        <i class="bi bi-box-arrow-in-right"></i>
+        <span class="gp-btn-text">Login</span>
+      </a>
+    </div>
+
+    <!-- ====== Nav Links ====== -->
+    <nav class="gp-drawer-links" aria-label="Menu links">
+      <a href="index#hero" class="active" data-close>
+        <i class="bi bi-house-door"></i> Home
+      </a>
+      <a href="index#services" data-close>
+        <i class="bi bi-stars"></i> Features
+      </a>
+      <a href="index#services" data-close>
+        <i class="bi bi-grid-3x3-gap"></i> Services
+      </a>
+      <a href="contact" data-close>
+        <i class="bi bi-envelope"></i> Contact
+      </a>
+    </nav>
+
+    <div class="gp-drawer-footer">
+      © <?php echo date('Y'); ?> <?php echo ahkweb('webname'); ?> · All Rights Reserved
+    </div>
+  </aside>
+
+  <!-- Drawer toggle script (inline, runs immediately — no dependency on main.js/bootstrap) -->
+  <script>
+  (function(){
+    var btn     = document.getElementById('gpMenuBtn');
+    var closeB  = document.getElementById('gpDrawerClose');
+    var overlay = document.getElementById('gpOverlay');
+    var drawer  = document.getElementById('gpDrawer');
+    if(!btn || !drawer || !overlay) return;
+
+    function openDrawer(){
+      overlay.classList.add('is-open');
+      drawer.classList.add('is-open');
+      overlay.setAttribute('aria-hidden','false');
+      drawer.setAttribute('aria-hidden','false');
+      btn.setAttribute('aria-expanded','true');
+      btn.classList.add('is-active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer(){
+      overlay.classList.remove('is-open');
+      drawer.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden','true');
+      drawer.setAttribute('aria-hidden','true');
+      btn.setAttribute('aria-expanded','false');
+      btn.classList.remove('is-active');
+      document.body.style.overflow = '';
+    }
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      if(drawer.classList.contains('is-open')) closeDrawer();
+      else openDrawer();
+    });
+    closeB  && closeB.addEventListener('click', closeDrawer);
+    overlay && overlay.addEventListener('click', closeDrawer);
+    // ESC key closes
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer();
+    });
+    // [data-close] inside drawer links closes drawer on click
+    var lnks = drawer.querySelectorAll('[data-close]');
+    for(var i=0;i<lnks.length;i++){
+      lnks[i].addEventListener('click', function(){ setTimeout(closeDrawer, 60); });
+    }
+  })();
+  </script>
+
+  <main class="main">
+
+    <!-- ===== HERO SECTION ===== -->
+    <section id="hero" class="hero section">
+      <div class="hero-bg">
+        <img src="assets/img/hero-bg-light.webp" alt="" loading="lazy">
+      </div>
+      <div class="container text-center position-relative">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <h1 data-aos="fade-up">Welcome to <span><?php echo ahkweb('webname'); ?></span></h1>
+
+          <div class="gp-hero-tagline" data-aos="fade-up" data-aos-delay="80">
+            <strong>भारत का सबसे Trusted</strong> · Premium Digital Services &amp; PVC Print Portal
+            <br>
+            जन सेवा केंद्र · CSC सेंटर · साइबर कैफे · ऑनलाइन सेवा केंद्रों के लिए
+            <strong>Complete Digital Solution</strong>
+            <br>
+            <div style="margin-top:14px;">
+              <span class="gp-tag-pill t-aadhaar"><i class="bi bi-person-vcard-fill me-1"></i>Aadhaar PVC</span>
+              <span class="gp-tag-pill t-pan"><i class="bi bi-credit-card-2-front-fill me-1"></i>PAN Card</span>
+              <span class="gp-tag-pill t-voter"><i class="bi bi-patch-check-fill me-1"></i>Voter ID</span>
+              <span class="gp-tag-pill t-dl"><i class="bi bi-car-front-fill me-1"></i>Driving License</span>
+              <span class="gp-tag-pill t-rc"><i class="bi bi-truck me-1"></i>RC Card</span>
+            </div>
+            <div style="margin-top:10px; color:var(--gp-slate); opacity:.92;">
+              Original Quality Print · <strong>Instant Download</strong> · 30+ Government Services
+            </div>
+          </div>
+
+          <!-- ===== HERO CTA: REGISTER + LOGIN (Watch Video REMOVED) ===== -->
+          <div class="gp-hero-cta" data-aos="fade-up" data-aos-delay="160">
+            <a href="register" class="gp-btn gp-btn-accent">
+              <i class="bi bi-person-plus-fill"></i> Start Free — Register Now
+            </a>
+            <a href="auth" class="gp-btn gp-btn-outline">
+              <i class="bi bi-box-arrow-in-right"></i> Secure Login
+            </a>
+          </div>
+
+          <img src="/logomain.png" class="img-fluid gp-hero-img" alt="<?php echo ahkweb('webname'); ?> Logo" data-aos="zoom-out" data-aos-delay="260" loading="lazy" onerror="this.style.display='none';">
+        </div>
+      </div>
+    </section><!-- /Hero -->
+
+    <!-- ===== SERVICES SECTION ===== -->
+    <section id="services" class="services section light-background">
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Our Premium Services</h2>
+        <p>Fastest, easiest and most reliable Pancard + Aadhaar + Voter + DL + RC service platform</p>
+      </div>
+
+      <div class="container">
+        <div class="row g-4 g-lg-5">
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item">
+              <i class="bi bi-fingerprint icon"></i>
+              <div class="mt-3">
+                <h3>Biometric PAN Card</h3>
+                <p>Aadhaar e-KYC through UIDAI — PAN issued instantly by Income Tax Department. 100% valid, same as physical PAN card.</p>
+                <a href="terms-and-condition" class="read-more stretched-link">T&amp;C Apply <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-item">
+              <i class="bi bi-shield-lock-fill icon"></i>
+              <div class="mt-3">
+                <h3>OTP Based PAN Card</h3>
+                <p>Instant e-PAN for taxpayers having Aadhaar. Paperless, no documents — Aadhaar OTP based e-KYC registration.</p>
+                <a href="terms-and-condition" class="read-more stretched-link">T&amp;C Apply <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item">
+              <i class="bi bi-graph-up-arrow icon"></i>
+              <div class="mt-3">
+                <h3>Real-time Reports</h3>
+                <p>Detailed delivery &amp; status reports directly from operator / department end on your dashboard.</p>
+                <a href="terms-and-condition" class="read-more stretched-link">T&amp;C Apply <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="service-item">
+              <i class="bi bi-pen-fill icon"></i>
+              <div class="mt-3">
+                <h3>e-Sign PAN Card</h3>
+                <p>Aadhaar / VID based e-KYC + e-Sign PAN application. Fully digital flow — no forms, no scans, instant processing.</p>
+                <a href="terms-and-condition" class="read-more stretched-link">T&amp;C Apply <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
+            <div class="service-item">
+              <i class="bi bi-wallet2 icon"></i>
+              <div class="mt-3">
+                <h3>Instant QR / UPI Wallet</h3>
+                <p>Add money to your wallet instantly with Auto Gateway or Manual UPI. Lowest service charges, fastest settlement.</p>
+                <a href="terms-and-condition" class="read-more stretched-link">T&amp;C Apply <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="600">
+            <div class="service-item">
+              <i class="bi bi-headset icon"></i>
+              <div class="mt-3">
+                <h3>24/7 Priority Support</h3>
+                <p>Technical &amp; billing support team always available. WhatsApp, Call &amp; Ticket based resolution.</p>
+                <a href="terms-and-condition" class="read-more stretched-link">T&amp;C Apply <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section><!-- /Services -->
+
+    <!-- ===== FAQ SECTION ===== -->
+    <section id="more-features" class="more-features section">
+      <div class="container">
+        <div class="row justify-content-around gy-4 align-items-center">
+
+          <div class="col-lg-6 d-flex flex-column justify-content-center order-2 order-lg-1" data-aos="fade-up" data-aos-delay="100">
+            <h3>FAQ — Frequently Asked</h3>
+            <p class="text-muted mb-4">Quick answers for our most common questions.</p>
+
+            <div class="row gy-3">
+              <div class="col-12 icon-box d-flex align-items-start">
+                <i class="bi bi-question-circle-fill"></i>
+                <div>
+                  <h4>What is e-KYC in PAN application?</h4>
+                  <p class="mb-0" style="color:var(--gp-muted);">In Aadhaar e-KYC, your Name, DOB, Gender, Address, Email, Mobile &amp; Photo are auto-pulled from UIDAI and forwarded to Income Tax Department — no manual document upload needed.</p>
+                </div>
+              </div>
+              <div class="col-12 icon-box d-flex align-items-start">
+                <i class="bi bi-check2-circle"></i>
+                <div>
+                  <h4>Is e-PAN printout valid everywhere?</h4>
+                  <p class="mb-0" style="color:var(--gp-muted);">Yes. e-PAN downloaded from NSDL / UTIITSL is legally equivalent to physical PAN. Hardcopy reaches your home within 45 days; e-PAN works everywhere instantly.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="features-image col-lg-5 order-1 order-lg-2 text-center" data-aos="fade-up" data-aos-delay="200">
+            <img src="assets/img/7.png" alt="Services Preview" class="img-fluid" loading="lazy" style="border-radius:18px; box-shadow:var(--gp-shadow-lg);">
+          </div>
+
+        </div>
+      </div>
+    </section><!-- /FAQ -->
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer" class="footer position-relative light-background">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="index" class="logo d-flex align-items-center">
+            <span class="sitename"><?php echo ahkweb('webname'); ?></span>
+          </a>
+          <div class="footer-contact pt-3" style="color:var(--gp-muted); line-height:1.7;">
+            <p><strong><?php echo ahkweb('webname'); ?></strong></p>
+            <p>PAN Card Application · Correction · Update · Apply</p>
+            <p class="mt-2"><strong>Aadhaar, Voter, DL, RC, Recharge &amp; 30+ Services</strong></p>
+            <p>100% Paperless · Secure · Trusted by 12,000+ VLEs</p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Useful Links</h4>
+          <ul class="list-unstyled">
+            <li><a href="index">Home</a></li>
+            <li><a href="index#services">Services</a></li>
+            <li><a href="register">Register</a></li>
+            <li><a href="terms-and-condition">Terms of Service</a></li>
+            <li><a href="privacy_policy">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Popular Services</h4>
+          <ul class="list-unstyled">
+            <li><a href="auth">e-KYC PAN</a></li>
+            <li><a href="auth">OTP PAN Card</a></li>
+            <li><a href="auth">Aadhaar PVC</a></li>
+            <li><a href="auth">Mobile Recharge</a></li>
+            <li><a href="auth">DTH Recharge</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-12 footer-newsletter">
+          <h4>Get Started Today</h4>
+          <p class="text-muted mb-3">Create your free account in 60 seconds. Zero setup fees. Start earning from Day 1.</p>
+          <div class="d-flex flex-wrap gap-2">
+            <a class="gp-btn gp-btn-accent" href="register">
+              <i class="bi bi-person-plus-fill"></i> Free Registration
+            </a>
+            <a class="gp-btn gp-btn-outline" href="contact">
+              <i class="bi bi-telephone-fill"></i> Contact Us
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4 pt-4 border-top" style="border-color:rgba(42,36,105,.08);">
+      <p>© <?php echo date('Y'); ?> <span>Copyright</span> <strong class="px-1 sitename" style="color:var(--gp-primary);"><?php echo ahkweb('webname'); ?></strong> · <span>All Rights Reserved</span></p>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center" style="background:linear-gradient(135deg,var(--gp-primary),var(--gp-primary-2)); box-shadow:0 8px 20px rgba(79,70,229,.35);"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader hidden for speed -->
+  <style>#preloader, .preloader { display:none !important; }</style>
+  <div id="preloader"></div>
+
+  <!-- ===== Vendor JS (Lightweight — removed glightbox + swiper = ~300KB saved) ===== -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="assets/vendor/aos/aos.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+
+  <!-- WhatsApp Floating Button -->
+  <?php include('./includes/whatsapp-float.php'); ?>
+
+</body>
+</html>
